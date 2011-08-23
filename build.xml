@@ -1,0 +1,619 @@
+<project name="Im2Learn" default="compile">
+    <description>
+        Build Im2Learn
+    </description>
+
+	<property environment="env"/>
+	
+	<!-- load useful defaults -->
+	<import file="properties.xml"/>
+
+	<!-- what os are we running -->
+    <condition property="iswindows">
+        <os family="windows"/>
+    </condition>
+    <condition property="ismac">
+        <os family="mac"/>
+    </condition>
+    <condition property="isunix">
+        <and>
+            <os family="unix"/>
+            <not>
+                <os family="mac"/>
+            </not>
+        </and>
+    </condition>
+
+    <!-- ==== global properties change these to get things to compile  ==== -->
+
+    <!-- set global properties for this build -->
+    <property name="main" value="Im2Learnext"/>
+    <property name="mainpath" value="ncsa.im2learn.main"/>
+    <property name="mainfile" value="ncsa/im2learn/main"/>
+	    
+    <property name="debug" value="yes"/>
+    <property name="deprecation" value="no"/>
+
+    <!-- if defined compile all source code -->
+    <property name="makelib" value="anything" />
+	
+	<!-- if defined skip dialogs and UI 
+	<property name="skipui" value="anything" /> -->
+	
+    <!--    <property name="addjmf" value="yes"/>-->
+    <property name="addjai" value="yes"/>
+
+    <!-- install locations -->
+    <property name="installpath.win" location="C:\Program Files\NCSA"/>
+    <property name="installpath.mac" location="/Applications"/>
+    <property name="installpath.unix" location="/usr/local"/>
+
+    <!-- output of the build will go here -->
+    <property name="build" location="build"/>
+    <property name="class" location="${build}/classes"/>
+    <property name="ciclass" location="${build}/ciclasses"/>
+    <property name="javadoc" location="doc/api"/>
+    <property name="jar" location="${build}/jar"/>
+    <property name="installer" location="installer"/>
+    <property name="lib" location="lib"/>
+
+    <!-- ================= no need to  modify after this  ================= -->
+
+    <fileset dir="src">
+        <!-- create global sets for the source -->
+        <patternset id="source">
+            <include name="${mainfile}/${main}.java"/>
+        	
+            <!-- make sure appender is compiled even if not used -->
+            <include name="**/PopupAppender.java"/>
+
+			<!-- always add the AnalyzeLoader -->
+        	<include name="**/AnalyzeLoader.java"/>
+
+            <!-- following lines compile all code except dialogs and UI -->
+            <include name="**/core/**/*.java" if="makelib"/>
+            <include name="**/ext/**/*.java" if="makelib"/>
+            <exclude name="**/**/*Dialog.java" if="skipui"/>
+            <exclude name="**/**/*UI.java" if="skipui"/>
+        	
+        	<!-- exclude all test files -->
+        	<exclude name="**/*test*.java"/>
+        	
+        	<!-- exclude cyberintegrator tools -->
+            <exclude name="**/cyberintegrator/**/*.java"/>
+        </patternset>
+
+        <!-- Cyberintegrator source code -->
+        <patternset id="source.cyberintegrator">
+            <include name="**/cyberintegrator/**/*.java"/>
+        </patternset>
+    </fileset>
+
+    <!-- jar files needed to to run on a Mac -->
+    <fileset dir="${lib}" id="dist.mac">
+        <patternset id="jar.mac">
+            <!-- commons logging libraries -->
+            <include name="commons-logging.jar"/>
+
+            <!-- log4j libraries -->
+            <include name="log4j*.jar"/>
+
+            <!-- hdf libraries -->
+            <include name="jhdf*.jar"/>
+
+            <!-- jama libraries -->
+            <include name="Jama*.jar"/>
+
+            <!-- jpeg 2000 libraries -->
+            <include name="jj2000-5.1.jar"/>
+
+        	<!-- jai libraries -->
+            <include name="jai_*.jar" if="addjai"/>
+            <include name="mlibwrapper_jai.jar" if="addjai"/>
+
+            <!-- jmf libraries -->
+            <include name="jmf.jar" if="addjmf"/>
+            <include name="sound.jar" if="addjmf"/>
+
+            <!-- trove libraries -->
+            <include name="trove*.jar"/>
+
+            <!-- PDF libraries -->
+            <include name="*jpedal*.jar"/>
+            <include name="pdfbox_svn.jar"/>
+
+            <!-- Dods libraries -->
+            <include name="dods/dods.jar"/>
+        	
+            <!-- Excel libraries -->
+            <include name="jxl.jar"/>
+        </patternset>
+    </fileset>
+
+    <!-- jar files needed to to run on a non Mac -->
+    <fileset dir="${lib}" id="dist.rest">
+        <patternset>
+            <patternset refid="jar.mac"/>
+            <!-- minimal apple lib to compile on non mac -->
+            <include name="apple.jar"/>
+        </patternset>
+    </fileset>
+
+    <!-- libraries needed to run on a Unix box -->
+    <fileset dir="${lib}" id="lib.unix">
+        <patternset>
+            <include name="Linux/libjhdf*.so"/>
+        </patternset>
+    </fileset>
+
+    <!-- libraries needed to run on a windows box -->
+    <fileset dir="${lib}" id="lib.windows">
+        <patternset>
+            <include name="windows/jhdf*.dll"/>
+            <include name="windows/mlib_jai*.dll" if="addjai"/>
+        </patternset>
+    </fileset>
+
+    <!-- libraries needed to run on a mac -->
+    <fileset dir="${lib}" id="lib.mac">
+        <patternset>
+            <include name="mac/libhdf*.dylib"/>
+            <include name="mac/libjhdf*.jnilib"/>
+            <include name="mac/libsz*.dylib"/>
+            <include name="mac/libz*.dylib"/>
+        </patternset>
+    </fileset>
+
+    <!-- jar files needed to compile both test and normal code -->
+    <path id="classpath">
+        <fileset dir="${lib}">
+            <patternset>
+                <include name="*.jar"/>
+                <include name="dods/dods.jar"/>
+                <exclude name="apple.jar" if="${os.name}=mac"/>
+                <exclude name="cyberintegratortool.jar"/>
+            </patternset>
+        </fileset>
+    </path>
+	
+    <path id="classpath.cyberintegrator">
+        <path refid="classpath"/>
+        <fileset dir="${build}">
+            <patternset>
+                <include name="Im2Learn.jar"/>
+            </patternset>
+        </fileset>
+        <fileset dir="${lib}">
+            <patternset>
+                <include name="cyberintegratortool.jar"/>
+            </patternset>
+        </fileset>
+    </path>
+	
+    <!-- =================== global timestamp of build  =================== -->
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}"/>
+        <mkdir dir="${class}"/>
+        <mkdir dir="${ciclass}"/>
+        <mkdir dir="${jar}"/>
+    	
+        <!-- Update version date stamp -->
+    	<propertyfile file="src/ncsa/im2learn/core/display/about.properties">
+    		<entry  key="build" type="date" value="now" pattern="yyyyMMddHHmm"/>
+    	</propertyfile>
+
+        <!-- Check the dependencies -->
+        <depend srcdir="${basedir}" destdir="${class}" cache="${class}" closure="yes" dump="yes">
+            <patternset refid="source"/>
+        </depend>
+    	
+    </target>
+
+    <!-- useful target to copy resources -->
+    <target name="resources" depends="init">
+        <copy todir="${class}">
+            <fileset dir="src">
+                <include name="**/*.gif"/>
+			    <include name="**/*.jpg"/>
+			    <include name="**/*.JPG"/>
+                <include name="**/*.png"/>
+                <include name="**/*.html"/>
+                <exclude name="**/doc-files/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- CVS update                                                         -->
+    <!-- ================================================================== -->
+    <target name="cvs" depends="init" description="do a update from cvs">
+       <cvs command="update -Pd" cvsrsh="${cvs.rsh}" quiet="yes" failonerror="no"/>
+    </target>
+
+	<!-- ========================== JavaDOC  ============================== -->
+
+    <target name="javadoc" description="build the documentation">
+        <mkdir dir="${javadoc}"/>
+
+        <javadoc access="public" windowtitle="Im2Learn Documentation" author="true" source="1.5" destdir="${javadoc}">
+            <fileset dir="src">
+                <patternset includes="**/*.java"/>
+                <patternset excludes="**/main/*.java"/>
+                <patternset excludes="**/cyberintegrator/*.java"/>
+            </fileset>
+        </javadoc>
+    	
+    	<copy todir="${javadoc}">
+    		<fileset dir="src">
+    			<include name="**/*.jpg"/>
+    			<include name="**/*.gif"/>
+    		</fileset>
+    	</copy>
+    </target>
+	
+	<target name="src" description="zip up source code">
+		<zip destfile="im2learn-src.zip">
+			<zipfileset dir="${basedir}">
+				<include name="build.xml"/>
+				<include name="properties.xml"/>
+	
+				<include name="lib/**/*.jar"/>
+				<exclude name="lib/jpedalSTD.jar"/>
+	
+				<include name="src/**/core/**/*"/>
+				<include name="src/**/ext/calculator/**/*"/>
+				<include name="src/ncsa/im2learn/ext/geo/MaskListModel.java"/>
+				<include name="src/**/ext/info/**/*"/>
+				<include name="src/**/ext/math/**/*"/>
+				<include name="src/**/ext/misc/**/*"/>
+				<include name="src/**/ext/panel/**/*"/>
+				<include name="src/**/ext/segment/**/*"/>
+				<exclude name="src/**/ext/segment/HSVThresholdDialog.java"/>
+				<include name="src/**/ext/statistics/**/*"/>
+				<include name="src/**/ext/vis/**/*"/>
+
+				<exclude name="**/CVS/*"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+    <!-- ===================== Im2Learn stand-alone build  ===================== -->
+
+    <target name="compile" depends="init" description="compile the source ">
+        <javac srcdir="src" destdir="${class}" debug="${debug}" deprecation="${deprecation}" target="1.5" source="1.5">
+            <classpath refid="classpath"/>
+            <patternset refid="source"/>
+        </javac>
+    </target>
+	
+    <target name="compile.core" depends="clean, init" description="compile the core source ">
+	    <javac srcdir="src" destdir="${class}" debug="${debug}" deprecation="${deprecation}" target="1.5" source="1.5">
+	        <classpath refid="classpath"/>
+	        <patternset>
+				<include name="**/core/**/*.java"/>
+			</patternset>
+	    </javac>
+		<jar jarfile="${jar}/Im2LearnCore.jar" basedir="${class}"/>
+	</target>
+
+
+    <target name="run" depends="compile, resources" description="run the Im2Learn project">
+        <java classname="${mainpath}.${main}" dir="${class}" fork="yes" maxmemory="512M">
+            <jvmarg value="-Djava.library.path=lib/${os.name}"/>
+            <jvmarg value="-Djava.library.path=lib/windows"/>
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement path="${class}"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="jar" depends="clean, compile, resources" description="create jar file of Im2Learn">
+        <!-- Put everything in ${build} into the ${DSTAMP}-${TSTAMP}.jar file -->
+        <jar jarfile="${jar}/Im2Learn-${DSTAMP}-${TSTAMP}.jar" basedir="${class}"/>
+        <copy file="${jar}/Im2Learn-${DSTAMP}-${TSTAMP}.jar" tofile="${build}/Im2Learn.jar"/>
+    </target>
+
+    <target name="minjar" depends="clean, compile" description="create minimal jar file of Im2Learn">
+        <!-- Put everything in ${build} into the ${DSTAMP}-${TSTAMP}.jar file -->
+        <jar jarfile="${jar}/Im2Learn-${DSTAMP}-${TSTAMP}.jar" basedir="${class}"/>
+        <copy file="${jar}/Im2Learn-${DSTAMP}-${TSTAMP}.jar" tofile="${build}/Im2Learn.jar"/>
+    </target>
+
+    <!-- ==========================  installers  ========================== -->
+
+    <target name="installer" depends="clean, installer.unix, installer.win, installer.mac" description="Generate installers"/>
+
+    <target name="install" depends="install.win, install.mac, install.unix" description="Install Im2Learn"/>
+
+    <target name="installer.win" depends="jar">
+    	<!-- convert paths windows use -->
+        <pathconvert targetOS="windows" property="windows.jar" refid="dist.rest">
+            <map from="${lib}" to="ext"/>
+        </pathconvert>
+
+        <!-- create the directory structure -->
+        <mkdir dir="${build}/win"/>
+        <mkdir dir="${build}/win/ext"/>
+        <mkdir dir="${build}/win/lib"/>
+
+        <copy file="${installer}/win/Im2Learn.jsmooth" todir="${build}"/>
+        <copy file="${installer}/win/Im2Learn.ico" todir="${build}"/>
+        <copy file="${installer}/win/Im2Learn.iss" todir="${build}"/>
+
+        <!-- replace tokens in installer files -->
+        <replace file="${build}/Im2Learn.jsmooth" token="@MAIN@" value="${mainpath}.${main}"/>
+        <replace file="${build}/Im2Learn.jsmooth" token="@CLASSPATH@" value="${windows.jar}"/>
+        <replace file="${build}/Im2Learn.iss" token="@BUILD@" value="${build}"/>
+
+
+        <!-- copy jar files and libs -->
+        <copy todir="${build}/win/ext">
+            <fileset refid="dist.rest"/>
+        </copy>
+        <copy todir="${build}/win/lib">
+            <fileset refid="lib.windows"/>
+        </copy>
+
+        <!-- copy installer files -->
+        <copy file="${installer}/license.txt" todir="${build}/win"/>
+        <copy file="${installer}/log4j.properties" todir="${build}/win/ext"/>
+        <copy file="${build}/Im2Learn.jar" todir="${build}/win/ext"/>
+
+        <!-- task to create an EXE for windows -->
+        <taskdef name="jsmoothgen"
+            classname="net.charabia.jsmoothgen.ant.JSmoothGen"
+            classpath="installer/win/jsmoothgen-ant.jar"/>
+
+        <!-- generate the exe file -->
+        <jsmoothgen project="${build}/Im2Learn.jsmooth" skeletonroot="${installer}/win/skeletons"/>
+        <move file="${build}/Im2Learn.exe" todir="${build}/win"/>
+
+    	<!-- call installer creator for windows / non windows -->
+    	<antcall target="installer.win.iss"/>
+
+        <!-- zip up final result -->
+        <zip destfile="${build}/Im2Learn_win.zip">
+            <zipfileset dir="${build}/win" prefix="Im2Learn"/>
+        </zip>
+
+        <!-- delete temp dir -->
+        <delete dir="${build}/win"/>
+        <delete file="${build}/Im2Learn.iss"/>
+    </target>
+	
+    <target name="installer.win.iss" if="iswindows">
+	<!-- create a setup program this needs Inno Setup (http://www.jrsoftware.org/isinfo.php) -->
+        <exec executable="C:\Program Files\Inno Setup 5\ISCC.exe" failifexecutionfails="false">
+            <arg line='"${build}/Im2Learn.iss"'/>
+        </exec>
+    </target>
+
+    <target name="install.win" depends="installer.win" if="iswindows">
+        <!-- windows place executable in C:\Program Files\NCSA\Im2Learn -->
+        <delete dir="${installpath.win}/Im2Learn"/>
+        <unzip dest="${installpath.win}" src="${build}/Im2Learn_win.zip"/>
+    </target>
+
+    <target name="installer.unix" depends="jar">
+        <!-- convert paths unix use -->
+        <pathconvert targetOS="unix" property="unix.jar" refid="dist.rest">
+            <map from="${lib}" to="ext"/>
+        </pathconvert>
+
+        <!-- create the directory structure -->
+        <mkdir dir="${build}/unix"/>
+        <mkdir dir="${build}/unix/ext"/>
+        <mkdir dir="${build}/unix/lib"/>
+
+        <!-- copy installer files -->
+        <copy file="${installer}/unix/Im2Learn.sh" todir="${build}/unix"/>
+        <copy file="${installer}/license.txt" todir="${build}/unix"/>
+        <copy file="${installer}/log4j.properties" todir="${build}/unix"/>
+
+        <!-- replace tokens in installer files -->
+        <replace file="${build}/unix/Im2Learn.sh" token="@MAIN@" value="${mainpath}.${main}"/>
+        <replace file="${build}/unix/Im2Learn.sh" token="@CLASSPATH@" value="${unix.jar}"/>
+
+        <!-- copy jar files and libs -->
+        <copy file="${build}/Im2Learn.jar" todir="${build}/unix/ext"/>
+        <copy todir="${build}/unix/ext">
+            <fileset refid="dist.rest"/>
+        </copy>
+        <copy todir="${build}/unix/lib">
+            <fileset refid="lib.unix"/>
+        </copy>
+        <chmod file="${build}/unix/Im2Learn.sh" perm="0755"/>
+
+        <tar destfile="${build}/Im2Learn_unix.tar.gz" compression="gzip">
+            <tarfileset dir="${build}/unix" prefix="Im2Learn"/>
+        </tar>
+
+        <!-- delete temp dir -->
+        <delete dir="${build}/unix"/>
+    </target>
+
+    <target name="install.unix" depends="installer.unix" if="isunix">
+        <delete dir="${installpath.unix}/Im2Learn"/>
+        <untar dest="${installpath.unix}" compression="gzip" src="${build}/Im2Learn_unix.tar.gz"/>
+        <!--
+        <symlink link="/usr/local/bin/Im2Learn" resource="/usr/local/lib/Im2Learn/Im2Learn.sh" />
+        -->
+    </target>
+
+    <target name="installer.mac" depends="jar">
+        <!-- convert paths unix use -->
+        <pathconvert targetOS="unix" property="mac.jar" refid="dist.mac">
+            <map from="${lib}" to="$JAVAROOT"/>
+        </pathconvert>
+
+        <!-- create the directory structure -->
+        <mkdir dir="${build}/mac/Im2Learn.app"/>
+        <mkdir dir="${build}/mac/Im2Learn.app/Contents"/>
+        <mkdir dir="${build}/mac/Im2Learn.app/Contents/MacOS"/>
+        <mkdir dir="${build}/mac/Im2Learn.app/Contents/Resources"/>
+        <mkdir dir="${build}/mac/Im2Learn.app/Contents/Resources/Java"/>
+
+        <!-- copy installer files -->
+        <copy file="${installer}/license.txt" todir="${build}/mac"/>
+        <copy file="${installer}/mac/JavaApplicationStub" todir="${build}/mac/Im2Learn.app/Contents/MacOS"/>
+        <copy file="${installer}/mac/Im2Learn.icns" todir="${build}/mac/Im2Learn.app/Contents/Resources"/>
+        <copy file="${build}/Im2Learn.jar" todir="${build}/mac/Im2Learn.app/Contents/Resources/Java"/>
+        <copy file="${installer}/log4j.properties" todir="${build}/mac/Im2Learn.app/Contents/Resources/Java"/>
+
+        <!-- run code to update the plist file -->
+        <mkdir dir="${build}/mac/classes"/>
+        <javac srcdir="${basedir}" destdir="${build}/mac/classes" debug="${debug}" target="1.5" source="1.5">
+            <sourcepath path="src"/>
+            <classpath refid="classpath"/>
+            <include name="installer/mac/InfoPlist.java"/>
+        </javac>
+		<echo message="${os.name}"/>
+        <java classname="InfoPlist" dir="${build}/mac/classes" fork="yes">
+            <jvmarg value="-Djava.library.path=lib/${os.name}"/>
+            <jvmarg value="-Djava.library.path=lib/windows"/>
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement path="${build}/mac/classes"/>
+            </classpath>
+            <arg value="${installer}/mac/Info.plist"/>
+            <arg value="${build}/mac/Im2Learn.app/Contents/Info.plist"/>
+        </java>
+        <delete dir="${build}/mac/classes"/>
+
+        <!-- replace tokens in installer files -->
+        <replace file="${build}/mac/Im2Learn.app/Contents/Info.plist" token="@MAIN@" value="${mainpath}.${main}"/>
+        <replace file="${build}/mac/Im2Learn.app/Contents/Info.plist" token="@CLASSPATH@" value="${mac.jar}"/>
+
+        <!-- copy jar files and libs -->
+        <copy todir="${build}/mac/Im2Learn.app/Contents/Resources/Java" flatten="true">
+            <fileset refid="dist.mac"/>
+            <fileset refid="lib.mac"/>
+        </copy>
+
+    	<!-- call installer creator for mac -->
+        <chmod file="${build}/mac/Im2Learn.app/Contents/MacOS/Im2Learn" perm="0755"/>
+    	<antcall target="installer.mac.yes"/>
+
+        <!-- create tar file -->
+        <copy file="${installer}/mac/README.txt" todir="${build}/mac"/>
+        <tar destfile="${build}/Im2Learn_mac.tar.gz" compression="gzip">
+			<tarfileset dir="${build}/mac"  prefix="Im2Learn" mode="755">
+				<include name="Im2Learn.app/Contents/MacOS/JavaApplicationStub"/>
+			</tarfileset>
+            <tarfileset dir="${build}/mac" prefix="Im2Learn">
+				<exclude name="Im2Learn.app/Contents/MacOS/JavaApplicationStub"/>
+        	</tarfileset>
+        </tar>
+
+        <!-- delete temp dir -->
+        <delete dir="${build}/mac"/>
+    </target>
+	
+	<target name="installer.mac.yes" if="ismac">
+        <!-- make the app executable -->
+        <chmod file="${build}/mac/Im2Learn.app/Contents/MacOS/Im2Learn" perm="0755"/>
+        <exec executable="/Developer/Tools/SetFile" failifexecutionfails="false">
+            <arg line=" -a B ${build}/mac/Im2Learn.app"/>
+        </exec>
+
+		<!-- create dmg file -->
+        <exec executable="/usr/bin/hdiutil" failifexecutionfails="false">
+            <arg line="create -ov -srcfolder ${build}/mac/ -volname Im2Learn ${build}/Im2Learn.dmg"/>
+        </exec>
+	</target>
+
+    <target name="install.mac" depends="installer.mac" if="ismac">
+        <delete dir="${installpath.mac}/Im2Learn.app"/>
+        <untar dest="${installpath.mac}" compression="gzip" src="${build}/Im2Learn_mac.tar.gz"/>
+        <chmod file="${installpath.mac}/Im2Learn.app/Contents/MacOS/Im2Learn" perm="0755"/>
+    </target>
+
+    <!-- ===========================  cyberintegrator build  ========================== -->
+
+    <target name="cyberintegrator.compile" depends="init, jar" description="compile the Cyberintegrator tools">
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac srcdir="cisrc" destdir="${ciclass}" debug="${debug}" deprecation="${deprecation}" target="1.5" source="1.5">
+            <patternset refid="source.cyberintegrator"/>
+			<classpath>
+				<path location="${build}/Im2Learn.jar" />
+				<path location="${lib}/cyberintegratortool.jar" />
+				<path refid="classpath"/>
+			</classpath>
+        </javac>
+    </target>
+
+    <target name="cyberintegrator.jar" depends="clean, cyberintegrator.compile, resources" description="Create jar file with all files for Cyberintegrator.">
+        <!-- Put everything in ${build} into the ${DSTAMP}-${TSTAMP}.jar file -->
+        <jar jarfile="${jar}/Im2Learn-CI-${DSTAMP}-${TSTAMP}.jar" basedir="${ciclass}"/>
+        <copy file="${jar}/Im2Learn-CI-${DSTAMP}-${TSTAMP}.jar" tofile="${build}/Im2Learn-CI.jar"/>
+    </target>
+
+    <!-- ============================  test ============================= -->
+    <target name="test" depends="init">
+        <delete dir="${build}/test" failonerror="false"/>
+      	<mkdir dir="${build}/test/classes"/>
+      	<mkdir dir="${build}/test/reports"/>
+
+        <javac srcdir="test" destdir="${build}/test/classes" debug="${debug}" deprecation="${deprecation}" target="1.5" source="1.5">
+            <sourcepath location="src"/>
+            <classpath refid="classpath"/>
+            <include name="**/*.java"/>
+        </javac>
+
+
+        <junit printsummary="yes" haltonfailure="no" failureproperty="tests.failed">
+            <classpath>
+            	<path refid="classpath"/>
+            	<path location="${build}/test/classes"/>
+        	</classpath>
+             <formatter type="xml" />
+            <batchtest todir="${build}/test/reports" failureproperty="tests.failed">
+                <fileset dir="test">
+                    <include name="**/*.java" />
+                	<exclude name="**/ImageLoaderTest.java"/>
+                	<exclude name="**/ImageObjectTypeTest.java"/>
+                	<exclude name="**/CameraMain.java"/>
+					<exclude name="**/test_Image3DPanel.java"/>
+					<exclude name="**/Test_Sampling.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <fail if="tests.failed" message="Some unit tests failed" />
+
+    </target>
+
+    <!-- ==========================  copy files  ========================== -->
+	<target name="copyisda" description="copy files to isda shared">
+		<copy todir="/home/shared/build">
+			<fileset dir="${build}">
+				<include name="Im2Learn.jar"/>
+				<include name="Im2Learn-CI.jar"/>
+				<include name="Im2Learn_*"/>
+			</fileset>
+		</copy>
+	</target>
+
+    <!-- ===========================  clean up  =========================== -->
+
+    <target name="clean" description="clean up">
+        <!-- remove temp from win exe files -->
+        <delete file="${build}/Im2Learn.jsmooth"/>
+        <delete file="${build}/Im2Learn.ico"/>
+
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${class}"/>
+        <delete dir="${ciclass}"/>
+    </target>
+
+    <target name="realclean" depends="clean" description="remove dist files as well.">
+        <delete dir="${build}"/>
+        <delete dir="${javadoc}"/>
+    </target>
+</project>
+

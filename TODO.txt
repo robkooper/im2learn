@@ -1,0 +1,85 @@
+-------------------------------------------------------------------------------
+--                               TODO                                        --
+-------------------------------------------------------------------------------
+
+Documentation
+ - general documentation
+ - check @version, @author all java
+ - most classes are missing function and class documentation
+ - most packages are missing package doc
+
+ - CORE
+  - package.html
+  - DATATYPE
+   - package.html
+   - ImageObject*.java
+   - SubArea.java
+  - DISPLAY
+   - package.html
+   - Im2LearnMainFrame.java
+   - ImageComponent.java
+   - ImageMarker.java
+   - ImagePanel.java
+   - ImageUpdateEvent.java
+   - MinMaxLayout.java
+  - IO
+   - FileChooser.java
+   - FileChooserHDF.java
+   - SimpleFilter.java
+
+ - EXT
+  - package.html
+  - CONVERSION
+   - package.html
+   - PCA.java
+
+-------------------------------------------------------------------------------
+Implementation
+ - test functions
+ - sanity checks on functions, esp getData() == null
+
+- CORE
+ - DATATYPE
+  - ImageObject optimize
+ - IO
+  - IIP
+   - subarea and sampling
+  - PNM
+   - subarea and sampling
+  - TIFF
+   - image strips
+
+- EXT
+ - Any other HyperSpectralToRGB methods?
+ - Calibrate if select new image should disable preview etc buttons.
+
+- D2K
+ - createimage module (is this needed?)
+ - every dialog if possible should have D2K counter
+
+
+ Use java.util.ArrayList not vector, unsynced faster.
+ Use Hashmap, not hashtable, unsynced faster.
+-------------------------------------------------------------------------------
+--                            KNOWN ISSUES                                   --
+-------------------------------------------------------------------------------
+- CORE
+ - IO
+  - HDF
+   - Only write image of byte
+   - No write after a read
+
+D2K
+ - Can not do AddImages() on a single input since it is unknown how many
+   images are coming. Will only work if user sends some value to tell how many
+   images are coming down the pipe.
+-------------------------------------------------------------------------------
+--                               NOTES                                       --
+-------------------------------------------------------------------------------
+ - Doulbe.MIN_VALUE  is not smallest double, but is smallest double close to
+   zero. It should be save to use -Double.MAX_VAlUE. Same goes for Float.
+ - should crop/HS2RGB have dialog, asking user to confirm?
+ - To get HDF on Mac to work needed to change the binding. This is done with:
+   otool -L libjhdf5.jnilib
+   # note path to libhdf5.*.dylib
+   install_name_tool -change <path>libhdf5.0.dylib libhdf5.dylib libjhdf5.jnilib

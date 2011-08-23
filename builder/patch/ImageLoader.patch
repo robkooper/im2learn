@@ -1,0 +1,42 @@
+--- im2learn/src/ncsa/im2learn/core/io/ImageLoader.java.orig	2005-06-30 15:21:22.000000000 -0500
++++ im2learn/src/ncsa/im2learn/core/io/ImageLoader.java	2005-06-30 15:21:43.000000000 -0500
+@@ -8,10 +8,8 @@
+ import ncsa.im2learn.core.io.dem.DEMLoader;
+ import ncsa.im2learn.core.io.srtm.SRTMLoader;
+ import ncsa.im2learn.core.io.envi.ENVILoader;
+-import ncsa.im2learn.core.io.hdf.HDFLoader;
+ import ncsa.im2learn.core.io.iip.IIPLoader;
+ import ncsa.im2learn.core.io.imageio.ImageIOLoader;
+-import ncsa.im2learn.core.io.jai.JAILoader;
+ import ncsa.im2learn.core.io.object.ObjectLoader;
+ import ncsa.im2learn.core.io.pnm.PNMLoader;
+ import ncsa.im2learn.core.io.tiff.TIFFLoader;
+@@ -68,14 +68,6 @@
+         }
+ 
+         try {
+-            HDFLoader loader = new HDFLoader();
+-            readers.add(loader);
+-            writers.add(loader);
+-        } catch (Throwable thr) {
+-            logger.warn("Error registring HDFLoader, will not be able to handle HDF files.");
+-        }
+-
+-        try {
+             ENVILoader loader = new ENVILoader();
+             readers.add(loader);
+             writers.add(loader);
+@@ -166,13 +155,6 @@
+         } catch (Throwable thr) {
+             logger.warn("Error registring ImageIOLoader, will not have ImageIO support.");
+         }
+-
+-        // TODO no write in JAI yet.
+-        try {
+-            readers.add(new JAILoader());
+-        } catch (Throwable thr) {
+-            logger.warn("Error registring JAILoader, will not have JAI support.");
+-        }
+     }
+ 
+     /**

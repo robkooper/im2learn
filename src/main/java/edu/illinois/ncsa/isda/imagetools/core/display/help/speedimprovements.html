@@ -1,0 +1,98 @@
+<html>
+<head>
+<title>Speeding up Im2Learn</title>
+</head>
+<body>
+<h1>Speeding up Im2Learn</h1>
+
+<p>The generic method of accessing the data is slowest (about 4 times). You can
+speed things up by adding a simple switch statement to typecast the generic
+object to the correct type object. Having seperate loops for each type will
+speed this even more up. Fastest is to do a getData() typecast the result to
+the correct type and access the array directly. However this is also the most
+code and most errorprone, while generic methods is the least code and less
+errorprone. Best is to use the generics while developping code, and switch to
+specifics when optimizing the code.</p>
+
+<table border=0>
+<tr><th align="left">loop size is</th><td>7500000</td></tr>
+<tr><th align="left">Testing direct</th><td>151.6ms</td><td>100%</td></tr>
+<tr><th align="left">Testing function</th><td>181.2ms</td><td>120%</td></tr>
+<tr><th align="left">Testing image type</th><td>204.7ms</td><td>135%</td></tr>
+<tr><th align="left">Testing image check</th><td>225.0ms</td><td>148%</td></tr>
+<tr><th align="left">Testing image generic</th><td>435.9ms</td><td>288%</td></tr>
+</table>
+
+<p>As you can see doing a simple check inside the loop, what imagetype it is and
+typecasting the ImageObject to this this type will speed things up. The reason
+for the slowdown, is the fact that the abstract class will need to do a runtime
+check to see what class it really is and call the right function.</p>
+
+So instead of using:
+<pre>
+    ImageObject imageobject;
+    for(i = 0; i &lt; size; i++) {
+        imageobject.set(i, 0);
+    }
+</pre>
+use:
+<pre>
+    ImageObject imageobject;
+    for(i = 0; i &lt; size; i++) {
+        switch (imageobject.getType()) {
+            case ImageObject.TYPE_BYTE:
+                ((ImageObjectByte)imageobject).set(i, 0);
+                break;
+            case ImageObject.TYPE_SHORT:
+                ((ImageObjectShort)imageobject).set(i, 0);
+                break;
+            case ImageObject.TYPE_INT:
+                ((ImageObjectInt)imageobject).set(i, 0);
+                break;
+            case ImageObject.TYPE_LONG:
+                ((ImageObjectLong)imageobject).set(i, 0);
+                break;
+            case ImageObject.TYPE_FLOAT:
+                ((ImageObjectFloat)imageobject).set(i, 0);
+                break;
+            case ImageObject.TYPE_DOUBLE:
+                ((ImageObjectDouble)imageobject).set(i, 0);
+                break;
+        }
+    }
+</pre>
+of course better is:
+<pre>
+    switch (imageobject.getType()) {
+        case ImageObject.TYPE_BYTE:
+            ImageObjectByte imgbyte = (ImageObjectByte)imageobject;
+            for(i = 0; i &lt; size; i++) {
+                imgbyte.set(i, 0);
+            }
+            break;
+        ....
+        case ImageObject.TYPE_DOUBLE:
+            ImageObjectDouble imgdouble = (ImageObjectDouble)imageobject;
+            for(i = 0; i &lt; size; i++) {
+                imgdouble.set(i, 0);
+            }
+            break;
+    }
+</pre>
+finally nothing beats:
+<pre>
+    switch (imageobject.getType()) {
+        case ImageObject.TYPE_BYTE:
+            java.util.Arrays.fill((byte[])(imageobject.getData()), (byte)0);
+            break;
+        ....
+        case ImageObject.TYPE_DOUBLE:
+            java.util.Arrays.fill((double[])(imageobject.getData()), (double)0);
+            break;
+    }
+</pre>
+Basicly what I am trying to say is, code smart and the speed will follow. If
+possible use built-in java code like System.arraycopy (which is a single
+assembly instruction on a x86).
+</body>
+</html>

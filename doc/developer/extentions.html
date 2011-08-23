@@ -1,0 +1,154 @@
+<html>
+<head>
+  <title>Extending Im2Learn</title>
+</head>
+<body>
+<h1>Extending Im2Learn</h1>
+
+<p>The Im2Learn framework allows the easy addition of additional tools. The  developer
+needs to create the tool, and implement the Im2LearnMenu interface. This  document
+will create a tool that allows the user to right click on the  imagepanel and
+convert the image to type byte. It will also add the same option to the
+Example menu in the menubar. The tool itself will not have a dialog.  For it to
+be added to the menu's of Im2Learn you will need to add it to create an  instance and
+call <code>mainframe.addMenu()</code>, most likely this entails adding  your tool
+to the Im2LearnNCSA class, or appropriate ncsa.im2learn.main class, in the function
+<code>addMenus()</code>. The order in which menus are added to the  mainframe is
+also the order in which they will appear.</p>
+
+<h1>Im2LearnMenu Interface</h1>
+
+<p>The interface defines 4 methods. Two of these methods are used to  get the
+menu items to be added to the menus (<code>getPanelMenuItems()</code>  and
+<code>getMainMenuItems()</code>), one option to set the imagepanel  which this
+menu works with (<code>setImagePanel()</code>) and one callback  function when
+something changes on the image or imagepanel  (<code>imageUpdated()</code>).
+Since the user can create a new frame of the Im2Learn shell your class  should not
+use any static variables, each frame will have a unique instance so instance
+variables are ok.</p>
+
+<h1>Example code</h1>
+
+<p>Following is a full implementation of an extention that creates a  simple
+extention to Im2Learn that allows quick conversion of the currently showing  image
+to type byte.</p>
+
+<pre>
+import ncsa.im2learn.core.display.Im2LearnMenu;
+import ncsa.im2learn.core.display.ImagePanel;
+import ncsa.im2learn.core.display.ImageUpdateEvent;
+import ncsa.im2learn.core.datatype.ImageObject;
+import ncsa.im2learn.core.datatype.ImageException;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import org.apache.log4j.Logger;
+
+/**
+ * This will add menu entries to both the imagepanel and the ncsa.im2learn.main menubar to
+ * quickly convert the currently shown image to type byte.
+ */
+public class ConvertByteDialog implements Im2LearnMenu, ActionListener {
+    private ImagePanel imagepanel = null;
+
+    /**
+     * Default constructor.
+     */
+    public ConvertByteDialog() {
+    }
+
+    //  ------------------------------------------------------------------------
+    // Im2LearnMenu implementation
+    //  ------------------------------------------------------------------------
+
+    /**
+     * Remember the imagepanel for later. This function is called after the menu
+     * is associated with an imagepanel. The imagepanel it is associated is
+     * passed back to here, allowing the dialog to have access to the
+     * ImageObject currently displayed, as well as any panel functions.
+     */
+    public void setImagePanel(ImagePanel imagepanel) {
+        this.imagepanel = imagepanel;
+    }
+
+    /**
+     * Create a menu item that will be added to the panel menu. This is called
+     * before setImagePanel(). If you want to add multiple entries to the popup
+     * menu on the imagepanel simply create them to array returned. To create a
+     * submenu, create a JMenu add the submenus to this menu and return it. This
+     * will NOT check to see if the submenu already exists, the user will end up
+     * with 2 submenus.
+     *
+     * This should only be used for those menu options that either interact with
+     * selection, or the way the image is displayed.
+     */
+    public JMenuItem[] getPanelMenuItems() {
+        JMenuItem menuByte;
+        menuByte = new JMenuItem("Convert to byte");
+        menuByte.addActionListener(this);
+        return new JMenuItem[]{menuByte};
+    }
+
+    /**
+     * Create a menu that is added to the ncsa.im2learn.main menubar. Most often this will
+     * create a submenu to which menuitems are added. If this submenu or its
+     * submenus already exist the exisiting submenu is reused and the menuitems
+     * are added to the end of the existing submenu. This is unlike the
+     * panelmenu.
+     */
+    public JMenuItem[] getMainMenuItems() {
+        JMenu example;
+        JMenuItem menuByte;
+
+        example = new JMenu("Example Menu");
+        menuByte = new JMenuItem("Convert to byte");
+        menuByte.addActionListener(this);
+        example.add(menuByte);
+
+        return new JMenuItem[]{example};
+    }
+
+    /**
+     * Whenever the imagepanel is modified, either a new image is shown, the
+     * zoomfactor has changed etc. A smarter implementation of this class would
+     * check the imagetype of the ImageObject in case of a new image and disable
+     * the menuoptions if the image is already of type byte.
+     */
+    public void imageUpdated(ImageUpdateEvent event) {
+    }
+
+    //  ------------------------------------------------------------------------
+    // ActionListener implementation
+    //  ------------------------------------------------------------------------
+
+    /**
+     * Called when the menu is selected. This code will take the current shown
+     * image, convert it to type byte, and display this converted image in the
+     * original imagepanel. If an exception is thrown, use log4j to show the
+     * error.
+     */
+    public void actionPerformed(ActionEvent e) {
+        try {
+            ImageObject imgobj;
+            ImageObject byteimage;
+
+            // get the currently showing image
+            imgobj = imagepanel.getImageObject();
+
+            // convert the image to to type byte
+            byteimage = imgobj.convert(ImageObject.TYPE_BYTE, false);
+
+            // show the converted image.
+            imagepanel.setImageObject(byteimage);
+        } catch (ImageException exc) {
+            // in case of error use log4j to display error
+            Logger.getRootLogger().error("Error converting.", exc);
+        }
+    }
+}
+</pre>
+</body>
+</html>
+

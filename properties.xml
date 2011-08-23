@@ -1,0 +1,168 @@
+<!-- ====================================================================== -->
+<!-- This file contains a set of properties that can be used to in ant      -->
+<!-- build files. The properties are saved in ~/.build.properties and can   -->
+<!-- be edited by the user. If an entry does not exist in the file a        -->
+<!-- default value is used. Entries are automaticly saved overwriting any   -->
+<!-- comments added by the user, but missing keys are added to the file.    -->
+<!--                                                                        --> 
+<!-- This file contains also targets to create a key that can be used with  -->
+<!-- the signjar task. The target createkey will only create a key if       -->
+<!-- needed, reusing an existing key if possible. To force generation of a  -->
+<!-- new key use forcekey. For dependencies use createkey and only use      -->
+<!-- forcekey if any properties have changed.                               -->
+<!--                                                                        --> 
+<!-- The path d2k.classpath contains the bare minimum of files needed for   -->
+<!-- d2k compilation (modules and infrastructure). This can be used to      -->
+<!-- create a path for compiling custum modules.                            -->
+<!--                                                                        --> 
+<!-- To use this file import it into your main build file using <import/>   -->
+<!-- ====================================================================== -->
+
+<project name="default properties">
+    <!-- ================================================================== -->
+    <!-- Create a properties file with defaults if need be.                 -->
+    <!-- ================================================================== -->
+	<target name="createProperties" description="Create an empty properties file.">
+	    <propertyfile file="${user.home}/.build.properties">    	
+	        <!-- ============================================================== -->
+	        <!-- CVS entries                                                    -->
+	        <!-- ============================================================== -->
+	        <entry key="cvs.rsh" default="ssh"/>
+	        <entry key="cvs.cvsroot" default=":ext:${user.name}@isda.ncsa.uiuc.edu/home/cvs"/>
+	
+	        <!-- ============================================================== -->
+	        <!-- D2K entries                                                    -->
+	        <!-- ============================================================== -->
+	        <entry key="d2k.path" default="C:\Program Files\D2KToolkit"/>
+	        <entry key="d2k.modules" default="${d2k.path}/modules"/>
+	
+	        <!-- ============================================================== -->
+	        <!-- Key entries used for key generator                             -->
+	        <!-- ============================================================== -->
+	        <entry key="key.file" default="${user.home}/.keyfile"/>
+	        <entry key="key.alias" default="${user.name}"/>
+	        <entry key="key.password" default="password"/>
+	        <entry key="key.CN" default="${user.name}"/>
+	        <entry key="key.OU" default="ISDA"/>
+	        <entry key="key.O" default="NCSA"/>
+	        <entry key="key.C" default="${user.country}"/>
+	    </propertyfile>
+	</target>
+
+    <!-- ================================================================== -->
+    <!-- Now actually load the properties file.                             -->
+    <!-- ================================================================== -->
+	<property file="${user.home}/.build.properties"/>
+	
+    <!-- ============================================================== -->
+    <!-- CVS entries                                                    -->
+    <!-- ============================================================== -->
+    <condition property="cvs.rsh" value="ssh">
+    	<not>
+    		<isset property="cvs.rsh"/>
+		</not>
+	</condition>
+    <condition property="cvs.cvsroot" value=":ext:${user.name}@isda.ncsa.uiuc.edu/home/cvs">
+    	<not>
+    		<isset property="cvs.cvsroot"/>
+		</not>
+	</condition>
+
+    <!-- ============================================================== -->
+    <!-- D2K entries                                                    -->
+    <!-- ============================================================== -->
+    <condition property="d2k.path" value="C:\Program Files\D2KToolkit">
+    	<not>
+    		<isset property="d2k.path"/>
+		</not>
+	</condition>
+    <condition property="d2k.modules" value="${d2k.path}/modules">
+    	<not>
+    		<isset property="d2k.modules"/>
+		</not>
+	</condition>
+
+    <!-- ============================================================== -->
+    <!-- Key entries used for key generator                             -->
+    <!-- ============================================================== -->
+    <condition property="key.file" value="${user.home}/.keyfile">
+    	<not>
+    		<isset property="key.file"/>
+		</not>
+	</condition>
+    <condition property="key.alias" value="${user.name}">
+    	<not>
+    		<isset property="key.alias"/>
+		</not>
+	</condition>
+    <condition property="key.password" value="password">
+    	<not>
+    		<isset property="key.password"/>
+		</not>
+	</condition>
+    <condition property="key.CN" value="${user.name}">
+    	<not>
+    		<isset property="key.CN"/>
+		</not>
+	</condition>
+    <condition property="key.OU" value="ISDA">
+    	<not>
+    		<isset property="key.OU"/>
+		</not>
+	</condition>
+    <condition property="key.O" value="NCSA">
+    	<not>
+    		<isset property="key.O"/>
+		</not>
+	</condition>
+    <condition property="key.C" value="${user.country}">
+    	<not>
+    		<isset property="key.C"/>
+		</not>
+	</condition>
+
+    <!-- ================================================================== -->
+    <!-- Classpath for use with D2K                                         -->
+    <!-- ================================================================== -->
+    <path id="d2k.classpath">
+        <pathelement path="${d2k.modules}"/>
+        <fileset dir="${d2k.modules}">
+            <patternset>
+                <include name="modules.jar"/>
+            </patternset>
+        </fileset>
+        <fileset dir="${d2k.path}/lib">
+            <patternset>
+                <include name="d2k.jar"/>
+                <include name="infrastructure.jar"/>
+            </patternset>
+        </fileset>
+    </path>
+
+    <!-- ================================================================== -->
+    <!-- create the keyfile used for signing jar files.                     -->
+    <!-- ================================================================== -->
+    <!-- Check for the keyfile -->
+    <condition property="haskey">
+        <available file="${key.file}"/>
+    </condition>
+
+    <!-- only create a key if not exists -->
+    <target name="createkey" unless="haskey">
+        <antcall target="forcekey"/>
+    </target>
+
+    <!-- generate a key with a lifetime of 10 years. -->
+    <target name="forcekey" description="Force key creation">
+        <delete file="${key.file}"/>
+        <genkey keystore="${key.file}" alias="${key.alias}" storepass="${key.password}" validity="3650">
+            <dname>
+                <param name="CN" value="${key.CN}"/>
+                <param name="OU" value="${key.OU}"/>
+                <param name="O" value="${key.O}"/>
+                <param name="C" value="${key.C}}"/>
+            </dname>
+        </genkey>
+    </target>
+
+</project>

@@ -1,0 +1,87 @@
+/*******************************************************************************
+ * University of Illinois/NCSA
+ * Open Source License according to
+ * http://www.otm.uiuc.edu/faculty/forms/opensource.asp
+ * 
+ * Copyright (c) 2006,    NCSA/UIUC.  All rights reserved.
+ * 
+ * Developed by:
+ * 
+ * Name of Development Groups:
+ * Image Spatial Data Analysis Group (ISDA Group)
+ * http://isda.ncsa.uiuc.edu/
+ * 
+ * Name of Institutions:
+ * National Center for Supercomputing Applications (NCSA)
+ * http://www.ncsa.uiuc.edu/
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the 
+ * "Software"), to deal with the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * - Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimers.
+ * - Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimers in the
+ *   documentation and/or other materials provided with the distribution.
+ *   Neither the names of University of Illinois/NCSA, nor the names
+ *   of its contributors may be used to endorse or promote products
+ *   derived from this Software without specific prior written permission.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
+ *******************************************************************************/
+package edu.illinois.ncsa.isda.imagetools.main;
+
+import org.apache.commons.logging.LogFactory;
+
+import edu.illinois.ncsa.isda.imagetools.core.Im2Learn;
+
+import javax.swing.*;
+
+/**
+ * This version will try and find extensions in the ext folder, or in the
+ * classpath pointed to by im2learn.ext. Any classes implementing Im2Learnmenu
+ * will be added automaticly to the menu system.
+ * <p/>
+ * When running in a development environment, use the im2learn.ext flag to point to
+ * the location of your class files. For example add: -Dim2learn.ext="classes" to
+ * your command line to tell Im2Learn where to find the classes that contain the Im2Learn
+ * extensions.
+ *
+ * @author Rob Kooper
+ * @version 1.0
+ */
+public class Im2Learnext {
+    /**
+     * Start the application. The argument is assumed to be an image that needs
+     * to be loaded.
+     *
+     * @param args name of a image file to load.
+     */
+    static public void main(String[] args) {
+
+        // change L&F to system default
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            LogFactory.getLog("").error("Unable to load native look and feel");
+        }
+
+        // start Im2Learn
+        if (args.length > 0) {
+            new Im2Learn(args[0]);
+        } else {
+            new Im2Learn(null);
+        }
+    }
+}

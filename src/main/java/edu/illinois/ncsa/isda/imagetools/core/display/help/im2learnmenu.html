@@ -1,0 +1,85 @@
+<html>
+<body>
+<h1>Im2LearnMenu</h1>
+<p>The Im2LearnMenu class is an
+interface that needs to be implemented if the class is to be appended
+to either the ncsa.Im2Learn.main menu or the panel. It returns a list
+of menu entries that will be added to the ncsa.Im2Learn.main menu
+bar. If the menuitem is a menu it will be only added to the menu if
+it does not already exist. If it exists the menu entries are appended
+to then end of the existing menu.</p>
+<pre>
+// ------------------------------------------------------------
+// Im2LearnMenu implementation
+// ------------------------------------------------------------
+/**
+ * Store the reference to the imagepanel for later use.
+ * The imagepanel passed in as argument is the
+ * imagepanel to which this tools is associated.
+ */
+public void setImagePanel(ImagePanel imagepanel) {
+  this.imagepanel = imagepanel;
+}
+
+/**
+ * For this tool there is no operation that works on the
+ * imagepanel directly and thus we return null
+ * indicating that no menu entries need to be created on
+ * the panel.
+ */
+public JMenuItem[] getPanelMenuItems() {
+  return null;
+}
+
+/**
+ * Create a menu entry called Tools, and attach a
+ * submenu entry to this for this class, called swap. If
+ * the user selects this class
+ */
+public JMenuItem[] getMainMenuItems() {
+  JMenu menu = new JMenu(&quot;Tools&quot;);
+  JMenuItem item = new JMenuItem(new AbstractAction(&quot;Swap&quot;) {
+    public void actionPerformed(ActionEvent e) {
+      if (!isVisible()) {
+        Window win = SwingUtilities.getWindowAncestor(imagepanel);
+        setLocationRelativeTo(win);
+        setVisible(true);
+      }
+      toFront();
+    }
+  });
+  menu.add(item);
+
+  return new JMenuItem[] { menu };
+}
+
+/**
+ * When a new image is loaded make sure that the current
+ * swapped image is removed, i.e. perform a reset. Only
+ * need to reset the image if this frame is visible.
+ */
+public void imageUpdated(ImageUpdateEvent event) {
+  if (!isVisible()) {
+    return;
+  }
+
+  if (event.getId() == ImageUpdateEvent.NEW_IMAGE) {
+    reset();
+  }
+}
+
+/**
+ * Return the right documentation depending on what node
+ * is selected, in this case only the Swap node should
+ * exist.
+ */
+public URL getHelp(String menu) {
+  if (menu.equals(&quot;Swap&quot;)) {
+    return getClass().getResource(&quot;help/swap.html&quot;);
+  } else {
+    return null;
+  }
+}
+</pre>
+</body>
+</html>

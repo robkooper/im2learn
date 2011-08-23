@@ -1,0 +1,53 @@
+<html>
+<body>
+<h1>HelpEntry</h1>
+<p>The Im2Learn system comes with a
+build in help system. By using the HelpEntry interface the developer
+can create help that is specific for the code that is written and add
+it to the build in help system. The help system for Im2Learn is a
+tree of nodes, each node can have subnodes and so on. When the user
+clicks on a node, the help system will first check to see if this
+node is a leaf node (i.e. no subnodes are available), if this is the
+case the system will find the class that added the leaf node to the
+help system and ask for a URL to the help documentation.</p>
+<p>The URL that is returned can be
+either a URL to a webpage outside of Im2Learn or, the preferred
+method, a URL that points to a HTML file that is shipped with
+Im2Learn. The easiest method for the developer to create a URL to the
+help page, is to place the HTML file, and all associated images, in a
+directory called help. In the code the developer can than point to
+the HTML file using <code>this.getClass().getResource(&quot;help/file.html&quot;)</code>.
+Using this code will make sure that the help file can be found even
+if the class files (and the HTML and image files) are put in a jar
+file for distribution.</p>
+<pre>
+// ------------------------------------------------------------
+// HelpEntry implementation
+// ------------------------------------------------------------
+
+/**
+ * Create a node for the help system called Tools, and a
+ * leafnode called Swap. The leafnode will contain the
+ * documentation about this function.
+ */
+public HelpTopic[] getTopics() {
+  HelpTopic topic = new HelpTopic(&quot;Tools&quot;);
+  new HelpTopic(&quot;Swap&quot;, topic);
+  return new HelpTopic[] { topic };
+}
+
+/**
+ * Return the right documentation depending on what node
+ * is selected, in this case only the Swap node should
+ * exist.
+ */
+public URL getHelp(String menu) {
+  if (menu.equals(&quot;Swap&quot;)) {
+    return getClass().getResource(&quot;help/swap.html&quot;);
+  } else {
+    return null;
+  }
+}
+</pre>
+</body>
+</html>

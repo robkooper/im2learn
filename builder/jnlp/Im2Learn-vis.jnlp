@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<jnlp spec="1.0+" codebase="@CODEBASE@" href="ext/Im2Learn-vis.jnlp">
+    <information>
+        <title>Im2Learn - VIS</title>
+        <vendor>NCSA</vendor>
+    </information>
+
+    <!-- I need all security permissions -->
+    <security>
+        <all-permissions/>
+    </security>
+
+    <!-- All jar files needed for this -->
+    <resources>
+        <jar href="ext/Im2Learn-vis.jar"/>
+    </resources>
+
+    <component-desc/>
+</jnlp>

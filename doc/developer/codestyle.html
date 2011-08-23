@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>Coding Style</title>
+</head>
+<body>
+
+<h1>Coding Style</h1>
+
+<p>This document will help with a few guidelines on how to write code such that
+it is easier for others to understand, maintain and extend. The code should be
+grouped in directories that combine similar code, for instance all the code that
+deal with hyperspectral images is in one directory.</p>
+
+<h1>Documentation</h1>
+
+<p>Im2Learn being a large project on which many people work, some useful coding
+guides will help make it easier for others to extends your code. The first step
+to this is documentation. There are two types of documentation that needs to
+be written. One is the javadoc that is with the code, this is the documentation
+that developers will use. Next is the user documentation. Each dialog and module
+should have a document explaining how to use it.</p>
+
+<h2>javadoc</h2>
+
+<p>
+<p>All your code should have javdoc explaining what a
+function does, what parameters it takes and what the result is. If the function
+throws any exceptions try not to use <code>Exception</code> instead use
+ImageException, or subclass ImageException to create a specific exception. For
+For a description of javadoc and the tags see:
+<a href="http://java.sun.com/j2se/javadoc/writingdoccomments/">http://java.sun.com/j2se/javadoc/writingdoccomments/</a>
+</p>
+
+<p>Images for the javadoc are kept in the source tree. At the same directory
+where the source code lives, a directory called doc-files is created. In this
+directory you store any images that are relevant to the class. The images
+should be named class-x.[gif/jpg] (where x is an increasing number). When you
+want to reference them in your javadoc, simply use
+&lt;img src="doc-files/class-x.jpg"&gt;.</p>
+
+<p>Directories are now grouped logically. Simmilar tasks belong in the same
+directory, for instance all masking methods, or all hyperspectral methods. To
+explain what the files in the directory do, a file called package.html is in
+each directory. When creating javadoc, this file will be used to describe the
+package itself. Following is a simple package.html file.</p>
+<pre>
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;/head&gt;
+&lt;body bgcolor="white"&gt;
+
+Oneliner about package. Bigger description about package. This will be used
+when generating javadocs.
+
+@since 2.0
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<h1>Code Guidelines</h1>
+
+<p>All variables should be private or protected and have simple getters/setters.
+Using these simple getters (just immediatly return the variable) or setters
+(set the variable no computation) will have minimal speed impact. This way if
+you do need to do some computation to make sure the internal data of the class
+is valid you can do it, and the developer can not invalidate this by modifying
+other variables in the class.
+</p>
+
+<h1>UI Guidelines</h1>
+
+<p>Any images used by the classfile are placed in the source tree with the class
+  that uses the images. You can access the images using
+  classname.class.getResource("image.gif"); this will return a URL.</p>
+
+<p>All dialogs in Im2Learn, including the menus you add to Im2Learn, will have  their class
+end with Dialog. The UserInterface should as much as possible try and  use the
+Swing framework, advantage of the Swing framework is that it matches  closer the
+native windowing environment of the user.</p>
+
+<p>As a general guideline it is best to extend JDialog if you want to  create a
+user interface. Have the constructor take a Frame as argument and call
+<code>super(frame, "title")</code> in the constructor. In the ncsa.im2learn.main  class create
+a new instance of your extention passing the Im2LearnMainFrame as argument.  Now if
+the user minimizes the ncsa.im2learn.main panel, your extention will minimize as  well.</p>
+
+<p>The disadventage of a dialog is that it will be on top, so if you  bring the
+mainframe to the front your dialog will be on top. If this behavious is  not
+acceptable extends JFrame.</p>
+
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+At 10:34 AM 8/18/2005, John L Dwyer wrote:
+
+Peter - 
+
+We consider the MRT to be open source with no constraints on redistribution or integration into other software. 
+The MRT GUI is Java-based, I believe, but if you have technical questions please contact Gail Schmist 
+(cc'd on this response) since she is the principal developer of the MRT and MRTSwath tools. 
+
+Thanks, 
+
+John 
+
+------------------------------------------------------------------------------
+John L. Dwyer
+LP DAAC Project Scientist
+SAIC, Contractor to the USGS National Center for 
+Earth Resources Observation and Science
+Sioux Falls, SD 57198
+Voice: +1 605 594-6060
+Fax: +1 605 594-6567
+Email: dwyer@usgs.gov
+http://lpdaac.usgs.gov
+------------------------------------------------------------------------------- 
+
+
