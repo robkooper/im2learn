@@ -64,6 +64,7 @@ import edu.illinois.ncsa.isda.imagetools.core.display.ProgressListener;
 import edu.illinois.ncsa.isda.imagetools.core.io.csv.CSVLoader;
 import edu.illinois.ncsa.isda.imagetools.core.io.dem.DEMLoader;
 import edu.illinois.ncsa.isda.imagetools.core.io.envi.ENVILoader;
+import edu.illinois.ncsa.isda.imagetools.core.io.fits.FitsLoader;
 import edu.illinois.ncsa.isda.imagetools.core.io.hgt.HGTLoader;
 import edu.illinois.ncsa.isda.imagetools.core.io.iip.IIPLoader;
 import edu.illinois.ncsa.isda.imagetools.core.io.imageio.ImageIOLoader;
@@ -71,6 +72,7 @@ import edu.illinois.ncsa.isda.imagetools.core.io.object.ObjectLoader;
 import edu.illinois.ncsa.isda.imagetools.core.io.pnm.PNMLoader;
 import edu.illinois.ncsa.isda.imagetools.core.io.srtm.SRTMLoader;
 import edu.illinois.ncsa.isda.imagetools.core.io.tiff.TIFFLoader;
+import edu.illinois.ncsa.isda.imagetools.core.io.xml.XMLLoader;
 
 /**
  * This class contains only static methods. The class will be able to read and
@@ -176,6 +178,23 @@ public class ImageLoader
             writers.add( loader );
         } catch ( Throwable thr ) {
             logger.warn( "Error registering ObjectLoader, will not be able to handle serialized files." );
+            logger.debug( thr );
+        }
+
+        try {
+            XMLLoader loader = new XMLLoader();
+            readers.add( loader );
+            writers.add( loader );
+        } catch ( Throwable thr ) {
+            logger.warn( "Error registering XMLLoader, will not be able to handle XML files." );
+            logger.debug( thr );
+        }
+
+        try {
+            FitsLoader loader = new FitsLoader();
+            readers.add( loader );
+        } catch ( Throwable thr ) {
+            logger.warn( "Error registering FitsLoader, will not be able to handle FITS files." );
             logger.debug( thr );
         }
 
