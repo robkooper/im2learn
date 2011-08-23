@@ -1,0 +1,66 @@
+<html>
+  <head>
+  	<title> Illuminate Image  
+  </title></head>
+  	<body>
+
+	<h2>Illuminate Image </h2>
+	
+	<p>
+	<B>The class IlluminateImage provides a tool for re-illuminating any reflectance image 
+	with a white image acquired under a specific illumination. 
+	 </B>
+	 </p>
+
+	 <p>
+	 <b>Description:</b>
+This class was developed to generate images under multiple illuminations from a reflectance image. The class was 
+originally designed for operating on hyperspectral images and predicting hyperspectral appearance of scenes
+under fluorescent light (indoor ceiling light), Oriel Xenon lamp (flat power spectrum in the visible spectral range),
+and incandescent light (regular desktop lamp).
+
+ The dialog for image re-illumination is shown below.
+ <BR>
+ <BR>
+	 <img src="illuminateImageDialog.jpg">
+<BR>
+<BR>
+First, the calibrated reflectance image, the black image (e.g., acquired with lens cap on) and the illumination 
+images are selected using the file choosers invoked by clicking on the button "...". 
+The images can be previewed using the adjacent buttons 
+labeled as "View". The re-illumination formula is the reverse formula of the calibration equation (see Image Calibration tool).
+After clicking the button "Illuminate", the following formula is applied:
+
+<pre>
+ re-illuminated pix[i, j] = calibrated pix[i,j]*( illumination pix[i,j] - black pix[i,j]) + black pix[i,j]
+ </pre>
+
+<BR>
+If the black image is not specified then the black image values are assumed to be zero. 
+The resulting image will have a data type according to the selection labeled as "Type". Th edata type can be byte, short, int, long,
+float, double or the original input image data type.
+
+Examples of calibrated, illumination and the result are shown below.
+
+<BR>
+<BR>
+Calibrated input image: <BR>
+	 <img src="illuminateImageDialog1.jpg">
+<BR>
+<BR>
+Illumination input image: <BR>
+	 <img src="illuminateImageDialog2.jpg">
+<BR>
+<BR>
+Re-illuminated output image: <BR>
+	 <img src="illuminateImageDialog3.jpg">
+<BR>
+<BR>
+
+  <br>
+ 
+ 	<b>Author:</b> Rob Kooper. 
+	<BR>
+  	<b>Documentation:</b> Peter Bajcsy.	 
+  </body>
+</html>

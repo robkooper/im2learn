@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title>edu.uiuc.ncsa.isda.clustering package</title>
+<!--
+
+  @(#)package.html	1.60 2008/11/04
+
+  Copyright 2008-2009 NCSA, UIUC, U.S.A.  All Rights Reserved.
+
+  This software is the confidential and proprietary information of NCSA/UIUC ("Confidential Information").  You shall not
+  disclose such Confidential Information and shall use it only in
+  accordance with the terms of the license agreement you entered into
+  with Sun.
+
+  CopyrightVersion 1.0
+
+-->
+</head>
+<body bgcolor="white">
+
+This package provides classes and data structures for clustering image data. 
+<BR>
+
+<BR>
+
+
+<p>
+Clustering is the partitioning of a data set into subsets where every element in a subset shares some common trait. The common trait among elements in a subset is usually their proximity to a common center.  
+These classes are capable of clustering the different types of data into one "map".
+For example, an image with different shades of red, green and blue can be clustered in those pixels that are red, those that are green and those that are blue. A legend can be created showing the map and its data.
+Also, clustering statistics can be computed on the final clustering, including information about the different clusters and centroids.
+<BR>
+<BR>
+These classes are capable of clustering two different algorithms - ISODATA and KMeans.  Both of these algorithms are heuristic methods, meaning that when given an arbitrary starting point they iteratively calculate better results. The algorithms use the information that is in the current iteration to generate more accurate results and then move on to the next iteration and repeat the process. 
+The difference between the algorithms is the number of clusters that they produce. KMeans will yield a number of clusters that is equivalent to the number of clusters specified at the start of execution. ISODATA, however, is a more data driven method. This means that based on the data, the algorithm tries to find the appropriate number of clusters. As the algorithm executes it is able to lump clusters together or split clusters apart based on a few other parameters that were set at the beginning of the execution. 
+
+<BR>
+<BR>
+-The class that represents a piece of data is the Point class.
+<BR>
+-The class that represents a cluster which contains a center and a list of points in the cluster is the Cluster class.
+<BR>
+-The class responsible for providing a base for specific unsupervised clustering algorithms is the UnsupervisedClustering class.
+<BR>
+-The class responsible for performing Kmeans clustering on a set of data is the Kmeans class.
+<BR>
+-The class responsible for performing ISODATA clustering on a set of data is the ISODATA class.
+<BR>
+-The ClusteringDialog class handles setting up a GUI to perform both Kmeans and ISODATA clustering.
+<BR>
+<BR>
+
+
+<h2>Related Documentation </h2>
+
+For additional information, please see:
+<ul>
+  <li><a href="http://isda.ncsa.uiuc.edu/index.html">Image Spatial Data Analysis (ISDA), CET, NCSA/UIUC</a>
+
+</ul>
+<br>
+
+
+<!-- This file was created with Adobe Dreamweaver-->
+<!-- Last updated:  November 4th, 2008 -->
+
+</body>
+</html>

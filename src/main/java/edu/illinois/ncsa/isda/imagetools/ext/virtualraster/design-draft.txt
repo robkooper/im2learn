@@ -1,0 +1,71 @@
+Author: Yakov Keselman
+Date: 07/20/2006
+
+A draft of the overall design:
+
+ImageObject's functionality is implemented in some of the following classes as follows:
+
+- ImageObjectOutOfCore: a representation of large ImageObject's through multiple small
+ImageObject's (or, rather, through classes that support some ImageObject functionality).
+It is constructed based on an existing ImageObject, and it returns an ImageObject
+upon request. It supports several (few) operations defined on ImageObject's.
+Thus, it can be thought of as a partial implementation of the ImageObject's functionality,
+with the key difference being that it is an out-of-core implementation.
+Data can be accessed either via pixel-based or via projection-based coordinate system.
+
+- VirtualRaster: a single raster that results from several ImageObject's (or from several 
+ImageObjectOutOfCore's or any combination of them). Raster data can be accessed only through
+a projection-based coordinate system. There are virtual data rasters and virtual mask rasters.
+
+- VirtualRasterIntegrator: integrates data rasters and mask rasters to provide tables of data
+suitable for data mining. The data can also be represented as an ImageObject.
+
+========
+
+Auxiliary classes:
+
+- ProjectionTransformer and ModelProjectionTransformer: speed up transformations between
+representations in different projections.
+
+========
+
+Implementation notes:
+
+- For faster access of elements in a 1D array that is used for 2D/3D access, can use offset arrays.
+In the band offset, there will be the offset of the band. In the row offset array, there will be
+the offset of the row. In the column offset array there will be the offset of the column. Thus, 
+getData( row, col, band ) will be translated into data[ rowOffset[row] + colOffset[col] + band ].
+This will allow for bound checking at runtime through Java's bound check (assume bands are non-neg).
+
+Example:
+[a b c]
+[d e f]
+[g h i]
+[j k l]
+
+which is in 1D form: [a b c d e f g h i j k l]
+
+columnVector: [0, 3, 6, 9]. rowVector: [0 1 2]. Thus, "h" at (2, 1) is translated into:
+data[columnVector[2] + rowVector[1]] == data[6+1] = data[7].
+
+
+- In fact, we can use this in TiledImageObject: access to cells will be checked through the
+two arrays. the entries in the array will be related to the Tiles.
+
+- I can suggest this change in ImageObject to Rob (perhaps should try to measure whether array
+access is faster than multiplication by the number of bands and the number of columns).
+
+====
+
+How VirtualRasterIntegrator can be made aware of storage patterns in the underlying out-of-core
+implementation:
+
+- Since the ultimate objective of a VirtualRaster is to provide an ImageObject that can be saved
+and displayed (and a table corresponding to that ImageObject, but we can probably use some existing
+code for that), we can create that ImageObject (without the data), and then delegate it to an
+ImageObjectOutOfCore implementer for handling. The object will be split into tiles but that
+implementation, and those tile can be used as queries into mask and data rasters, providing very
+similar memory access patterns.
+
+- Note that this requires ImageObjectOutOfCore's to be made updatable, which should be fine.
+

@@ -1,0 +1,60 @@
+<html>
+  <head>
+  	<title> Calibrate Image
+  </title></head>
+  	<body>
+
+	<h2>Calibrate Image</h2>
+	
+	<p>
+	<B>The class CalibrateImage provides a tool for intensity calibration using 'black' and 'white' images.  </B>
+	 </p>
+
+	 <p>
+	 <b>Description:</b>
+This class is used for calibrating raw image values using black and white reference images.
+ The callibration proccess will take take 3 images, a black image (e.g., 
+ taken with the camera lens cap on), a white image (e.g., an image of a perfect white background with 100% reflectivity),
+ and the image that needs callibration. 
+ If no black image is specified, the black is assumed to be 0 everywhere. 
+ The dialog for choosing the three image files and vieweing each file is shown below.
+ <BR>
+ <BR>
+	 <img src="calibrateImageDialog.jpg">
+<BR>
+Example of a raw image: <BR>
+	 <img src="calibrateImageDialog1.jpg">
+<BR>
+Example of a black image: <BR>
+	 <img src="calibrateImageDialog2.jpg">
+<BR>
+Example of a white image: <BR>
+	 <img src="calibrateImageDialog3.jpg">
+<BR> 
+ <br>
+  Once the images are specified, the calibration is executed using the following formula.
+<br>
+ 
+ <pre>
+ calibrated pix[i, j] = { 1 if original pix[i, j] >= white pix[i, j],
+                          0 if original pix[i, j] =< black pix[i, j],
+                          (original pix[i, j] - black pix[i, j]) / (white
+ pix[i, j] - black pix[i, j]) else;
+ </pre>
+ This will result in a calibrated image with values between 0 and 1.
+The execution is triggered by clicking the buttom "Calibrate".
+<BR>
+Before calibrating the raw image, a user can also specify the data type of the resulting image (
+byte, short, int, long, float, double, original input type), the multiplier to widen the dynamic range 
+of the resulting image and clipping option (yes or no). The 'Clip result?' option enabled replaces
+values outside of the exepected range [0,1] to minimum or maximum values.
+<BR>
+	 <p>
+After previewing the calibrated image (button 'Preview'), a user can save the calibrated image (button 'Save') 
+or apply it to the main frame for further processing (button 'Apply'). The dialog is closed with the button 'Close'.
+	 </p>
+ 	<b>Authors:</b> Rob Kooper, T.J. Alumbaugh, Peter Bajcsy. 
+	<BR>
+  	<b>Documentation:</b> Peter Bajcsy.	 
+  </body>
+</html>
