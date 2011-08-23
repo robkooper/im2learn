@@ -46,7 +46,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -432,7 +431,8 @@ public class ImageCompare {
                 int n = 0;
 
                 // calculate pearson
-                // r = sum( (xi - xavg)*(yi - yavg) ) / ( sqrt( sum(xi - xavg)^2 ) * sqrt( sumg(yi - yavg) ^ 2 ) )
+                // r = sum( (xi - xavg)*(yi - yavg) ) / ( sqrt( sum(xi - xavg)^2
+                // ) * sqrt( sumg(yi - yavg) ^ 2 ) )
                 for (i = b; i < originalImage.getSize(); i += originalImage.getNumBands()) {
                     xt = originalImage.getDouble(i) - avgorg[b];
                     yt = testImage.getDouble(i) - avgtst[b];
@@ -442,18 +442,24 @@ public class ImageCompare {
                     sxy += xt * yt;
                     n++;
                 }
-                //Check whether sxx or syy are zero or not
+                // Check whether sxx or syy are zero or not
                 if ((sxx > LimitValues.EPSILON3) && (syy > LimitValues.EPSILON3)) {
                     result[0][b][0] = Math.abs(sxy / Math.sqrt(sxx * syy));
                 } else {
-                    // logger.warn("Could not compute correlation, no difference found in orig (syy=" + syy + ") or test (sxx=" + sxx + ") images (sxy=" + sxy + ").");
+                    // logger.warn("Could not compute correlation, no difference found in orig (syy="
+                    // + syy + ") or test (sxx=" + sxx + ") images (sxy=" + sxy
+                    // + ").");
                     if (sxx <= LimitValues.EPSILON3 && syy <= LimitValues.EPSILON3 && Math.abs(avgorg[b] - avgtst[b]) < LimitValues.EPSILON3) {
                         result[0][b][0] = 1;
                     } else if (sxx <= LimitValues.EPSILON3 && syy <= LimitValues.EPSILON3 && Math.abs(avgorg[b] - avgtst[b]) >= LimitValues.EPSILON3) {
                         result[0][b][0] = 0;
                     }
-                    /*check whether one of the regions is homogeneous and the other one is not
-                    in such cases we compute |original_image-testImage|/|original.size|*|max(dif) -min(dif)|;*/
+                    /*
+                     * check whether one of the regions is homogeneous and the
+                     * other one is not in such cases we compute
+                     * |original_image-testImage|/|original.size|*|max(dif)
+                     * -min(dif)|;
+                     */
                     else if (sxx <= LimitValues.EPSILON3 || syy <= LimitValues.EPSILON3) {
 
                         ImageCalculator cal = new ImageCalculator();
@@ -517,7 +523,8 @@ public class ImageCompare {
                     int n = 0;
 
                     // calculate pearson
-                    // r = sum( (xi - xavg)*(yi - yavg) ) / ( sqrt( sum(xi - xavg)^2 ) * sqrt( sumg(yi - yavg) ^ 2 ) )
+                    // r = sum( (xi - xavg)*(yi - yavg) ) / ( sqrt( sum(xi -
+                    // xavg)^2 ) * sqrt( sumg(yi - yavg) ^ 2 ) )
                     for (i = b, p = 0; i < originalImage.getSize(); i += originalImage.getNumBands(), p += maskImage.getNumBands()) {
                         key = new Double(maskImage.getDouble(p));
                         if (key.equals(mask.get(m))) {
@@ -530,19 +537,25 @@ public class ImageCompare {
                             n++;
                         }
                     }
-                    //Check whether sxx or syy are zero or not
+                    // Check whether sxx or syy are zero or not
 
                     if ((sxx > LimitValues.EPSILON3) && (syy > LimitValues.EPSILON3)) {
                         result[0][b][0] = Math.abs(sxy / Math.sqrt(sxx * syy));
                     } else {
-                        // logger.warn("Could not compute correlation, no difference found in orig (syy=" + syy + ") or test (sxx=" + sxx + ") images (sxy=" + sxy + ").");
+                        // logger.warn("Could not compute correlation, no difference found in orig (syy="
+                        // + syy + ") or test (sxx=" + sxx + ") images (sxy=" +
+                        // sxy + ").");
                         if (sxx <= LimitValues.EPSILON3 && syy <= LimitValues.EPSILON3 && Math.abs(avgorg[b] - avgtst[b]) < LimitValues.EPSILON3) {
                             result[0][b][0] = 1;
                         } else if (sxx <= LimitValues.EPSILON3 && syy <= LimitValues.EPSILON3 && Math.abs(avgorg[b] - avgtst[b]) >= LimitValues.EPSILON3) {
                             result[0][b][0] = 0;
                         }
-                        /*check whether one of the regions is homogeneous and the other one is not
-                        in such cases we compute |original_image-testImage|/|original.size|*|max(dif) -min(dif)|;*/
+                        /*
+                         * check whether one of the regions is homogeneous and
+                         * the other one is not in such cases we compute
+                         * |original_image-testImage|/|original.size|*|max(dif)
+                         * -min(dif)|;
+                         */
                         else if (sxx <= LimitValues.EPSILON3 || syy <= LimitValues.EPSILON3) {
 
                             ImageCalculator cal = new ImageCalculator();
@@ -666,7 +679,8 @@ public class ImageCompare {
                     originalint.set(i, (originalint.getInt(i) << 1) + ((originalImage.getByte(i * 3 + 2) & m) >> x));
                 }
             } else {
-                // two methods to convert 3 bands byte to int, simply make RGB tuple
+                // two methods to convert 3 bands byte to int, simply make RGB
+                // tuple
                 originalint.set(i, (originalImage.getByte(i * 3 + 0) & 0xff) << 16 + (originalImage.getByte(i * 3 + 1) & 0xff) << 8 + (originalImage.getByte(i * 3 + 2) & 0xff));
                 testint.set(i, (testImage.getByte(i * 3 + 0) & 0xff) << 16 + (testImage.getByte(i * 3 + 1) & 0xff) << 8 + (testImage.getByte(i * 3 + 2) & 0xff));
             }
@@ -802,10 +816,12 @@ public class ImageCompare {
                         hist_test.HistMask(testImage, b, maskImage, mask.doubleValue());
 
                         // copy array
-                        // set norm_orig to count percentage of pixels in wrong bin, or 0.5 to count pixels in wrong bin.
-                        // 1      = to get number of pixels wrong
+                        // set norm_orig to count percentage of pixels in wrong
+                        // bin, or 0.5 to count pixels in wrong bin.
+                        // 1 = to get number of pixels wrong
                         // #count = to get the percentage of pixels
-                        // * 2    = to count the number of pixels in wrong bin (i.e. in bin, but should be in bin 2)
+                        // * 2 = to count the number of pixels in wrong bin
+                        // (i.e. in bin, but should be in bin 2)
 
                         hist_orig.NumSamples();
                         float norm_orig = hist_orig.GetNumSamples() * 2.0f;
@@ -855,10 +871,12 @@ public class ImageCompare {
                 hist_test.Hist(testImage, b);
 
                 // copy array
-                // set norm_orig to count percentage of pixels in wrong bin, or 0.5 to count pixels in wrong bin.
-                // 1      = to get number of pixels wrong
+                // set norm_orig to count percentage of pixels in wrong bin, or
+                // 0.5 to count pixels in wrong bin.
+                // 1 = to get number of pixels wrong
                 // #count = to get the percentage of pixels
-                // * 2    = to count the number of pixels in wrong bin (i.e. in bin, but should be in bin 2)
+                // * 2 = to count the number of pixels in wrong bin (i.e. in
+                // bin, but should be in bin 2)
 
                 hist_orig.NumSamples();
                 float norm_orig = hist_orig.GetNumSamples() * 2.0f;
@@ -908,7 +926,8 @@ public class ImageCompare {
         }
 
         logger.debug("maximum error : " + result[0][0][0]); // max
-        logger.debug("total  error  : " + result[0][0][1]); // error_all per band
+        logger.debug("total  error  : " + result[0][0][1]); // error_all per
+                                                            // band
 
         return result;
     }
@@ -944,7 +963,7 @@ public class ImageCompare {
         double[] bin_orig = new double[hist_orig.GetNumBins()];
         double[] bin_test = new double[hist_orig.GetNumBins()];
 
-        ///////////////////////////
+        // /////////////////////////
         // initialize histogram to min and max values of the original image
         hist_orig.SetMaxDataVal(in1.getMax());
         hist_orig.SetMinDataVal(in1.getMin());
@@ -968,9 +987,11 @@ public class ImageCompare {
 
                 // copy array
                 hist_orig.NumSamples();
-                //float norm_orig = hist_orig.GetNumSamples() * (float)hist_orig.GetWideBins();
+                // float norm_orig = hist_orig.GetNumSamples() *
+                // (float)hist_orig.GetWideBins();
                 hist_test.NumSamples();
-                //float norm_test = hist_orig.GetNumSamples() * (float)hist_orig.GetWideBins();
+                // float norm_test = hist_orig.GetNumSamples() *
+                // (float)hist_orig.GetWideBins();
 
                 int[] hist_orig_data = hist_orig.GetHistData();
                 int[] hist_test_data = hist_test.GetHistData();
@@ -1011,9 +1032,11 @@ public class ImageCompare {
 
                         // copy array
                         hist_orig.NumSamples();
-                        //float norm_orig = hist_orig.GetNumSamples() * (float)hist_orig.GetWideBins();
+                        // float norm_orig = hist_orig.GetNumSamples() *
+                        // (float)hist_orig.GetWideBins();
                         hist_test.NumSamples();
-                        //float norm_test = hist_orig.GetNumSamples() * (float)hist_orig.GetWideBins();
+                        // float norm_test = hist_orig.GetNumSamples() *
+                        // (float)hist_orig.GetWideBins();
 
                         int[] hist_orig_data = hist_orig.GetHistData();
                         int[] hist_test_data = hist_test.GetHistData();
@@ -1164,43 +1187,44 @@ public class ImageCompare {
             return ImageObject.createImage(testImage.getNumRows(), testImage.getNumCols(), testImage.getNumBands(), resultType);
         }
     }
- //Housedorff Distance
-    
+
+    // Housedorff Distance
+
     double housedorff(ImageObject in1, ImageObject in2) throws Exception {
-    	double result=-1;
-    	int height=100;
-    	int width=100; 		 	
-    	ImageObject tmp1;
-    	ImageObject tmp2;
-    	int index=0;
-    	double size;
-    	if(originalImage.getNumCols()/width>testImage.getNumCols()/width)
-    		size=originalImage.getNumCols()/width;
-    	else
-    		size=testImage.getNumCols()/width;
-    	
-    	if(originalImage.getNumRows()/height>testImage.getNumRows()/height)
-    		size*=originalImage.getNumRows()/height;
-    	else
-    		size*=testImage.getNumRows()/height;
-    	double h12[]=new double[(int)size];
-		for (int i = 0; i <in1.getNumRows()-height;i+=height){
-			for (int j = 0; j <in1.getNumCols()-width; j+=width){ 
-				h12[index]=-1;
-				originalImage=in1.crop(new SubArea(j,i,width,height));
-				for (int k = 0; k <in2.getNumRows()-height;k+=height){
-					for (int l = 0; l <in2.getNumCols()-width; l+=width){ 
-						testImage=in2.crop(new SubArea(l,k,width,height));
-							double res[][][]=chiSquare();
-							if(res[0][0][0]<h12[index] || h12[index] < 0)
-								h12[index]=res[0][0][0];						
-					}
-				}
-				if(result<0 || result<h12[index])
-				result=h12[index];
-				index++;
-			}
-		}
-		return result;		
+        double result = -1;
+        int height = 100;
+        int width = 100;
+        ImageObject tmp1;
+        ImageObject tmp2;
+        int index = 0;
+        double size;
+        if (originalImage.getNumCols() / width > testImage.getNumCols() / width)
+            size = originalImage.getNumCols() / width;
+        else
+            size = testImage.getNumCols() / width;
+
+        if (originalImage.getNumRows() / height > testImage.getNumRows() / height)
+            size *= originalImage.getNumRows() / height;
+        else
+            size *= testImage.getNumRows() / height;
+        double h12[] = new double[(int) size];
+        for (int i = 0; i < in1.getNumRows() - height; i += height) {
+            for (int j = 0; j < in1.getNumCols() - width; j += width) {
+                h12[index] = -1;
+                originalImage = in1.crop(new SubArea(j, i, width, height));
+                for (int k = 0; k < in2.getNumRows() - height; k += height) {
+                    for (int l = 0; l < in2.getNumCols() - width; l += width) {
+                        testImage = in2.crop(new SubArea(l, k, width, height));
+                        double res[][][] = chiSquare();
+                        if (res[0][0][0] < h12[index] || h12[index] < 0)
+                            h12[index] = res[0][0][0];
+                    }
+                }
+                if (result < 0 || result < h12[index])
+                    result = h12[index];
+                index++;
+            }
+        }
+        return result;
     }
 }

@@ -41,7 +41,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
 //package ncsa.i2k.io.dlg;
-package edu.illinois.ncsa.isda.imagetools.core.io.dlg;
+package edu.illinois.ncsa.isda.imagetools.ext.geo.dlg;
 
 import java.io.*;
 import java.util.*;

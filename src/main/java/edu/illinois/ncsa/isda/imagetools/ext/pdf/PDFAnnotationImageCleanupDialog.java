@@ -42,94 +42,118 @@
  *******************************************************************************/
 package edu.illinois.ncsa.isda.imagetools.ext.pdf;
 
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import edu.illinois.ncsa.isda.imagetools.core.Im2LearnUtilities;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectByte;
-import edu.illinois.ncsa.isda.imagetools.core.display.*;
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFAnnotation;
-import edu.illinois.ncsa.isda.imagetools.ext.panel.ZoomDialog;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import edu.illinois.ncsa.isda.imagetools.core.Im2LearnUtilities;
+import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.imagetools.core.datatype.PDFAnnotation;
+import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnFrame;
+import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImageAnnotation;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.imagetools.ext.panel.ZoomDialog;
+
 /**
- *  <p>  
-  	This tool is designed specifically for PDF files that contain advertisement.
-  	The purpose is to clean up the bounding boxes drawn around all the objects contained in the 
-  	PDF file, which can be either text or picture elements. There are three options that the 
-  	user can utilize. The button 'Contained' eliminates all bounding boxes that are inside 
-  	of other, obviously, greater bounding boxes. This occurs because in PDF files many images are 
-  	put together by more than one image. For instance to achieve an effect of having a shadow, the image 
-  	will have the item itself and then the shadow image. 
-  	Other images can be choped into more than one object, to the visual appearence this makes no difference
-  	but inside the PDF file they are stored as 3 different images. The 'Merge Choped' option is designed to rid these.
-  	</p>
-  	<p>
-  	The GUI contains two sliding bars at the top which determine the parameters for the action, buttons for different 
-  	actions, and checkboxes which can blend out the boxes that are not needed to be shown. Each of the categories of boxes have 
-  	a different color.
-  	</p>
-  	<p>
-  	The button 'Merge Chopped' draws a yellow bounding box around boxes which are chopped off 
-  	by other elements.
-  	The button 'Merge Overlapped' combines the bounding boxes that overlap each other by 
-  	drawing a red bounding box around them. In the cases of 'Merge Chopped' and 'Merge Overlapped' 
-  	the Deltas that is set by adjusting the sliding bars at the top of the panel are the values 
-  	that are used as parameters for the merging. In the case of overlapping all boxes that are closer to each other than the 
-  	Delta are merged. Hence, if the Delta is very low almost all boxes will be merged, if it is high 
-  	very few boxes will be merged.
-  	</p>
-  	<p>Example chopped:</p>
-  	<img src="help/imagecleanup.jpg"></br></br>
-  	<img src="help/imagecleanup2.jpg"></br></br>
-  	<img src="help/chopped.jpg">
-  	<p>
-  	Example contained:
-  	</p>
-  	<img src="help/contained.jpg"></br></br>
-  	<img src="help/contained2.jpg"></br></br>
-  	<img src="help/contained3.jpg">
+ * <p>
+ * This tool is designed specifically for PDF files that contain advertisement.
+ * The purpose is to clean up the bounding boxes drawn around all the objects
+ * contained in the PDF file, which can be either text or picture elements.
+ * There are three options that the user can utilize. The button 'Contained'
+ * eliminates all bounding boxes that are inside of other, obviously, greater
+ * bounding boxes. This occurs because in PDF files many images are put together
+ * by more than one image. For instance to achieve an effect of having a shadow,
+ * the image will have the item itself and then the shadow image. Other images
+ * can be choped into more than one object, to the visual appearence this makes
+ * no difference but inside the PDF file they are stored as 3 different images.
+ * The 'Merge Choped' option is designed to rid these.
+ * </p>
+ * <p>
+ * The GUI contains two sliding bars at the top which determine the parameters
+ * for the action, buttons for different actions, and checkboxes which can blend
+ * out the boxes that are not needed to be shown. Each of the categories of
+ * boxes have a different color.
+ * </p>
+ * <p>
+ * The button 'Merge Chopped' draws a yellow bounding box around boxes which are
+ * chopped off by other elements. The button 'Merge Overlapped' combines the
+ * bounding boxes that overlap each other by drawing a red bounding box around
+ * them. In the cases of 'Merge Chopped' and 'Merge Overlapped' the Deltas that
+ * is set by adjusting the sliding bars at the top of the panel are the values
+ * that are used as parameters for the merging. In the case of overlapping all
+ * boxes that are closer to each other than the Delta are merged. Hence, if the
+ * Delta is very low almost all boxes will be merged, if it is high very few
+ * boxes will be merged.
+ * </p>
+ * <p>
+ * Example chopped:
+ * </p>
+ * <img src="help/imagecleanup.jpg"></br></br> <img
+ * src="help/imagecleanup2.jpg"></br></br> <img src="help/chopped.jpg">
+ * <p>
+ * Example contained:
+ * </p>
+ * <img src="help/contained.jpg"></br></br> <img
+ * src="help/contained2.jpg"></br></br> <img src="help/contained3.jpg">
+ * 
  * @author Peter Bajcsy
  * @author Rob Kooper
  * @author (documentation) Peter Ferak
- *
+ * 
  */
 public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im2LearnMenu, ImageAnnotation {
-    private ImagePanel imagepanel;
+    private ImagePanel                imagepanel;
     private PDFAnnotationImageCleanup cleaner;
-    //private AdvClassify classify;
-    private Vector annotations;
+    // private AdvClassify classify;
+    private Vector                    annotations;
 
-    private ImagePanel ipPDF;
-    private JSlider sldX;
-    private JSlider sldY;
-    private JCheckBox chkInvalid;
-    private JCheckBox chkContained;
-    private JCheckBox chkUnclassified;
-    private JCheckBox chkOverlapped;
-    private JCheckBox chkChopped;
-    private JButton btnReset;
-    private JButton btnApply;
-    private JButton btnDimInvalid;
-    private JButton btnContained;
-    private JButton btnMergeChopped;
-    private JButton btnMergeOverlapped;
-    //private JButton btnClassify;
+    private ImagePanel                ipPDF;
+    private JSlider                   sldX;
+    private JSlider                   sldY;
+    private JCheckBox                 chkInvalid;
+    private JCheckBox                 chkContained;
+    private JCheckBox                 chkUnclassified;
+    private JCheckBox                 chkOverlapped;
+    private JCheckBox                 chkChopped;
+    private JButton                   btnReset;
+    private JButton                   btnApply;
+    private JButton                   btnDimInvalid;
+    private JButton                   btnContained;
+    private JButton                   btnMergeChopped;
+    private JButton                   btnMergeOverlapped;
+
+    // private JButton btnClassify;
 
     public PDFAnnotationImageCleanupDialog() {
         super("Ad Image Cleanup");
 
         cleaner = new PDFAnnotationImageCleanup();
-        //classify = new AdvClassify();
+        // classify = new AdvClassify();
         annotations = new Vector();
 
         createUI();
@@ -140,14 +164,14 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
         // panel with preview of PDF in center of UI
         // -------------------------------------------------------------------
         ipPDF = new ImagePanel();
-        //ipPDF.setPreferredSize(new Dimension(320, 240));
+        // ipPDF.setPreferredSize(new Dimension(320, 240));
         ipPDF.setAutozoom(true);
         ipPDF.setSelectionAllowed(false);
         ipPDF.addMenu(new ZoomDialog());
         ipPDF.addAnnotationPanel(this);
         JScrollPane sp = new JScrollPane(ipPDF);
         sp.setPreferredSize(new Dimension(320, 240));
-        getContentPane().add(sp, BorderLayout.CENTER);        
+        getContentPane().add(sp, BorderLayout.CENTER);
 
         // -------------------------------------------------------------------
         // on left buttons that symbolize the workflow
@@ -209,19 +233,14 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
         });
         setButtonPrefs(btnMergeOverlapped);
         buttons.add(btnMergeOverlapped);
-/*
-        btnClassify = new JButton(new AbstractAction("Classify") {
-            public void actionPerformed(ActionEvent e) {
-                classify.classifyPrice();
-                classify.classifyUnit();
-
-                ipPDF.repaint();
-                updateUI();
-            }
-        });
-        setButtonPrefs(btnClassify);
-        buttons.add(btnClassify);
-*/
+        /*
+         * btnClassify = new JButton(new AbstractAction("Classify") { public
+         * void actionPerformed(ActionEvent e) { classify.classifyPrice();
+         * classify.classifyUnit();
+         * 
+         * ipPDF.repaint(); updateUI(); } }); setButtonPrefs(btnClassify);
+         * buttons.add(btnClassify);
+         */
         btnApply = new JButton(new AbstractAction("Apply") {
             public void actionPerformed(ActionEvent e) {
                 ImageObject imgobj = imagepanel.getImageObject();
@@ -232,16 +251,14 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
                 imagepanel.setImageObject(imgobj);
             }
 
-/*        	public void actionPerformed(ActionEvent e) {
-                ImageObject imgobj = imagepanel.getImageObject();
-                if (imgobj == null) {
-                    return;
-                }
-                imgobj.setProperty(PDFAnnotation.KEY, annotations);
-                imagepanel.repaint();
-                
-            }
-            */
+            /*
+             * public void actionPerformed(ActionEvent e) { ImageObject imgobj =
+             * imagepanel.getImageObject(); if (imgobj == null) { return; }
+             * imgobj.setProperty(PDFAnnotation.KEY, annotations);
+             * imagepanel.repaint();
+             * 
+             * }
+             */
         });
         setButtonPrefs(btnApply);
         buttons.add(btnApply);
@@ -328,20 +345,20 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
         getContentPane().add(pnl, BorderLayout.SOUTH);
 
         chkOverlapped = new JCheckBox("Overlapped (   0)", true);
-          chkOverlapped.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                  ipPDF.repaint();
-              }
-          });
-          pnl.add(chkOverlapped);
+        chkOverlapped.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ipPDF.repaint();
+            }
+        });
+        pnl.add(chkOverlapped);
 
         chkInvalid = new JCheckBox("Invalid (   0)", true);
         chkInvalid.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                  ipPDF.repaint();
-              }
-          });
-          pnl.add(chkInvalid);
+            public void actionPerformed(ActionEvent e) {
+                ipPDF.repaint();
+            }
+        });
+        pnl.add(chkInvalid);
 
         chkContained = new JCheckBox("Contained (   0)", true);
         chkContained.addActionListener(new ActionListener() {
@@ -360,12 +377,12 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
         pnl.add(chkChopped);
 
         chkUnclassified = new JCheckBox("Unclassified (   0)", true);
-          chkUnclassified.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                  ipPDF.repaint();
-              }
-          });
-          pnl.add(chkUnclassified);
+        chkUnclassified.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ipPDF.repaint();
+            }
+        });
+        pnl.add(chkUnclassified);
 
         // set the default values
         sldX.setValue(10);
@@ -406,7 +423,7 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
         }
 
         cleaner.reset(annotations);
-        //classify.reset(annotations);
+        // classify.reset(annotations);
 
         updateUI();
     }
@@ -420,7 +437,7 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
         annotations.clear();
 
         cleaner.reset(annotations);
-        //classify.reset(annotations);
+        // classify.reset(annotations);
         updateUI();
     }
 
@@ -440,20 +457,20 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
                     duplicate++;
                 }
                 switch (anno.getClassification()) {
-                    case PDFAnnotation.IMG_CONTAINED:
-                        contained++;
-                        break;
-                    case PDFAnnotation.DIM_INVALID:
-                        invalid++;
-                        break;
-                    case PDFAnnotation.IMG_CHOPPED:
-                        Chopped++;
-                        break;
-                    case PDFAnnotation.IMG_OVERLAPPED:
-                          Overlapped++;
-                          break;
-                    default:
-                        unclassified++;
+                case PDFAnnotation.IMG_CONTAINED:
+                    contained++;
+                    break;
+                case PDFAnnotation.DIM_INVALID:
+                    invalid++;
+                    break;
+                case PDFAnnotation.IMG_CHOPPED:
+                    Chopped++;
+                    break;
+                case PDFAnnotation.IMG_OVERLAPPED:
+                    Overlapped++;
+                    break;
+                default:
+                    unclassified++;
 
                 }
             }
@@ -471,8 +488,8 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
         tmp = "" + Chopped;
         tmp = "Chopped (" + spaces.substring(tmp.length()) + tmp + ")";
         chkChopped.setText(tmp);
-        //test
-        //System.out.println("TEST: Chopped = "+Chopped+", tmp="+tmp);
+        // test
+        // System.out.println("TEST: Chopped = "+Chopped+", tmp="+tmp);
 
         tmp = "" + contained;
         tmp = "Contained (" + spaces.substring(tmp.length()) + tmp + ")";
@@ -481,9 +498,9 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
         tmp = "" + invalid;
         tmp = "Invalid (" + spaces.substring(tmp.length()) + tmp + ")";
         chkInvalid.setText(tmp);
-//test
-        System.out.println("TEST: Contained = "+contained+", tmp="+tmp);
-        System.out.println("TEST: duplicate = "+duplicate);
+        // test
+        System.out.println("TEST: Contained = " + contained + ", tmp=" + tmp);
+        System.out.println("TEST: duplicate = " + duplicate);
 
     }
 
@@ -499,30 +516,30 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
             PDFAnnotation anno = (PDFAnnotation) iter.next();
             if (anno.isImage()) {
                 switch (anno.getClassification()) {
-                    case PDFAnnotation.IMG_CHOPPED:
-                        if (chkChopped.isSelected()) {
-                            anno.drawBoundingBox(g);
-                        }
-                        break;
-                    case PDFAnnotation.IMG_CONTAINED:
-                        if (chkContained.isSelected()) {
-                            anno.drawBoundingBox(g);
-                        }
-                        break;
-                    case PDFAnnotation.DIM_INVALID:
-                        if (chkInvalid.isSelected()) {
-                            anno.drawBoundingBox(g);
-                        }
-                        break;
-                    case PDFAnnotation.IMG_OVERLAPPED:
-                          if (chkOverlapped.isSelected()) {
-                              anno.drawBoundingBox(g);
-                          }
-                          break;
-                    default:
-                        if (chkUnclassified.isSelected()) {
-                            anno.drawBoundingBox(g);
-                        }
+                case PDFAnnotation.IMG_CHOPPED:
+                    if (chkChopped.isSelected()) {
+                        anno.drawBoundingBox(g);
+                    }
+                    break;
+                case PDFAnnotation.IMG_CONTAINED:
+                    if (chkContained.isSelected()) {
+                        anno.drawBoundingBox(g);
+                    }
+                    break;
+                case PDFAnnotation.DIM_INVALID:
+                    if (chkInvalid.isSelected()) {
+                        anno.drawBoundingBox(g);
+                    }
+                    break;
+                case PDFAnnotation.IMG_OVERLAPPED:
+                    if (chkOverlapped.isSelected()) {
+                        anno.drawBoundingBox(g);
+                    }
+                    break;
+                default:
+                    if (chkUnclassified.isSelected()) {
+                        anno.drawBoundingBox(g);
+                    }
                 }
             }
         }
@@ -555,7 +572,7 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
         });
         adv.add(menu);
 
-        return new JMenuItem[]{tools};
+        return new JMenuItem[] { tools };
     }
 
     public void imageUpdated(ImageUpdateEvent event) {
@@ -565,7 +582,7 @@ public class PDFAnnotationImageCleanupDialog extends Im2LearnFrame implements Im
             }
         }
     }
-    
+
     public URL getHelp(String menu) {
         return getClass().getResource("help/imagecleanup.html");
     }

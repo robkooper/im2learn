@@ -42,78 +42,113 @@
  *******************************************************************************/
 package edu.illinois.ncsa.isda.imagetools.ext.pdf;
 
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import edu.illinois.ncsa.isda.imagetools.core.Im2LearnUtilities;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.display.*;
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFAnnotation;
-import edu.illinois.ncsa.isda.imagetools.ext.panel.ZoomDialog;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import edu.illinois.ncsa.isda.imagetools.core.Im2LearnUtilities;
+import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.imagetools.core.datatype.PDFAnnotation;
+import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnFrame;
+import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImageAnnotation;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.imagetools.ext.panel.ZoomDialog;
+
 /**
  * 
- *  <p>
-    This tool works much the same way as the image cleanup does, except that it's designed
-    for the text parts of the PDF files. The tool provides the user with 4 options: Duplicate,
-    Merge Lines, Merge Paragrap, and Classify. 
-    When merging the same principle is applied as with images, when the bounding boxes are closer to each other 
-    than what the determined Delta Values, they will merge into one bounding box. In case of the Merge Paragraph whole 
-    paragraphs are merged into one bounding box. 
-    </p>
-    <p>Bounding boxes:</p>
-    <img src="help/textcleanup.jpg"></br></br>
-    <p>Merge Lines performed:</p>
-    <img src="help/textcleanup2.jpg"</br></br>
-    <p>Merge Paragraphs performend:</p>
-    <img src="help/textcleanup3.jpg"</br></br>
-    <p>
-    The tool provides the user with options (Checkboxes at the bottom) to display only the bounding boxes that are interesting. Duplicates, Unclassified, classified as Unit or Price can be blended out. 
-    The sliding bars that determine the Delta are at the top of the main panel.</br>
-    The Reset button rids all the changes that have been made to the document and restores it's original form, drawing all the bounding boxes over again.
-    </br>The Duplicates button cleans up the bounding boxes which occur due to artistic effects in PDF files, for instance the shadow of some piece of text. Often this will be stored in two images which overlap and create the impression of a shadow. Using this button will get rid of these.
-    </br>Merging Lines and Merging paragraphs is tied to the Delta value that is set by the user. If the boxes overlap less than the value that is set than they will be merged into one box surrounding the both.
-    </br>The classify button labels the texts and splits them into Unit or Price.
-    </br>Applying the changes will make them permanent to the document.
-    </p>
-    <img src="help/textmerge.jpg">
-    <p>
-  	The function of the 'Duplicate' button is to get rid of duplicate bounding boxes that occur with texts. For instance there may be 
-  	a second image that is merely a shadow to the text. This will combine such bounding boxes into one.
-  	</p>
-  	<img src="help/duplicate.jpg">
-  	  	<p>
-   
+ * <p>
+ * This tool works much the same way as the image cleanup does, except that it's
+ * designed for the text parts of the PDF files. The tool provides the user with
+ * 4 options: Duplicate, Merge Lines, Merge Paragrap, and Classify. When merging
+ * the same principle is applied as with images, when the bounding boxes are
+ * closer to each other than what the determined Delta Values, they will merge
+ * into one bounding box. In case of the Merge Paragraph whole paragraphs are
+ * merged into one bounding box.
+ * </p>
+ * <p>
+ * Bounding boxes:
+ * </p>
+ * <img src="help/textcleanup.jpg"></br></br>
+ * <p>
+ * Merge Lines performed:
+ * </p>
+ * <img src="help/textcleanup2.jpg"</br></br>
+ * <p>
+ * Merge Paragraphs performend:
+ * </p>
+ * <img src="help/textcleanup3.jpg"</br></br>
+ * <p>
+ * The tool provides the user with options (Checkboxes at the bottom) to display
+ * only the bounding boxes that are interesting. Duplicates, Unclassified,
+ * classified as Unit or Price can be blended out. The sliding bars that
+ * determine the Delta are at the top of the main panel.</br> The Reset button
+ * rids all the changes that have been made to the document and restores it's
+ * original form, drawing all the bounding boxes over again. </br>The Duplicates
+ * button cleans up the bounding boxes which occur due to artistic effects in
+ * PDF files, for instance the shadow of some piece of text. Often this will be
+ * stored in two images which overlap and create the impression of a shadow.
+ * Using this button will get rid of these. </br>Merging Lines and Merging
+ * paragraphs is tied to the Delta value that is set by the user. If the boxes
+ * overlap less than the value that is set than they will be merged into one box
+ * surrounding the both. </br>The classify button labels the texts and splits
+ * them into Unit or Price. </br>Applying the changes will make them permanent
+ * to the document.
+ * </p>
+ * <img src="help/textmerge.jpg">
+ * <p>
+ * The function of the 'Duplicate' button is to get rid of duplicate bounding
+ * boxes that occur with texts. For instance there may be a second image that is
+ * merely a shadow to the text. This will combine such bounding boxes into one.
+ * </p>
+ * <img src="help/duplicate.jpg">
+ * <p>
+ * 
  * @author Rob Kooper
  * @author Peter Bajcsy
  * @author (documentation) Peter Ferak
  * 
  * 
- *
+ * 
  */
 public class PDFAnnotationTextCleanupDialog extends Im2LearnFrame implements Im2LearnMenu, ImageAnnotation {
-    private ImagePanel imagepanel;
+    private ImagePanel               imagepanel;
     private PDFAnnotationTextCleanup cleaner;
-    private Vector<PDFAnnotation> annotations;
+    private Vector<PDFAnnotation>    annotations;
 
-    private ImagePanel ipPDF;
-    private JSlider sldX;
-    private JSlider sldY;
-    private JCheckBox chkDuplicate;
-    private JButton btnReset;
-    private JButton btnApply;
-    private JButton btnDuplicate;
-    private JButton btnMergeLine;
-    private JButton btnMergePara;
+    private ImagePanel               ipPDF;
+    private JSlider                  sldX;
+    private JSlider                  sldY;
+    private JCheckBox                chkDuplicate;
+    private JButton                  btnReset;
+    private JButton                  btnApply;
+    private JButton                  btnDuplicate;
+    private JButton                  btnMergeLine;
+    private JButton                  btnMergePara;
 
     public PDFAnnotationTextCleanupDialog() {
         super("Ad Text Cleanup");
@@ -129,7 +164,7 @@ public class PDFAnnotationTextCleanupDialog extends Im2LearnFrame implements Im2
         // panel with preview of PDF in center of UI
         // -------------------------------------------------------------------
         ipPDF = new ImagePanel();
-        //ipPDF.setPreferredSize(new Dimension(320, 240));
+        // ipPDF.setPreferredSize(new Dimension(320, 240));
         ipPDF.setAutozoom(true);
         ipPDF.setSelectionAllowed(false);
         ipPDF.addMenu(new ZoomDialog());
@@ -289,7 +324,7 @@ public class PDFAnnotationTextCleanupDialog extends Im2LearnFrame implements Im2
             }
         });
         pnl.add(chkDuplicate);
-        
+
         // set the default values
         sldX.setValue(10);
         sldY.setValue(10);
@@ -318,7 +353,7 @@ public class PDFAnnotationTextCleanupDialog extends Im2LearnFrame implements Im2
             if (clone == null) {
                 this.annotations.clear();
             } else {
-                this.annotations = (Vector<PDFAnnotation>)clone;
+                this.annotations = (Vector<PDFAnnotation>) clone;
             }
             if (ipPDF.getImageObject() != imgobj) {
                 ipPDF.setImageObject(imgobj);
@@ -348,7 +383,7 @@ public class PDFAnnotationTextCleanupDialog extends Im2LearnFrame implements Im2
     public void updateUI() {
         int duplicate = 0;
 
-        for (PDFAnnotation anno :annotations) {
+        for (PDFAnnotation anno : annotations) {
             if (anno.isText()) {
                 if (anno.isDuplicate()) {
                     duplicate++;
@@ -409,7 +444,7 @@ public class PDFAnnotationTextCleanupDialog extends Im2LearnFrame implements Im2
         });
         adv.add(menu);
 
-        return new JMenuItem[]{tools};
+        return new JMenuItem[] { tools };
     }
 
     public void imageUpdated(ImageUpdateEvent event) {
@@ -419,7 +454,7 @@ public class PDFAnnotationTextCleanupDialog extends Im2LearnFrame implements Im2
             }
         }
     }
-    
+
     public URL getHelp(String menu) {
         return getClass().getResource("help/textcleanup.html");
     }

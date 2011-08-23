@@ -42,23 +42,42 @@
  *******************************************************************************/
 package edu.illinois.ncsa.isda.imagetools.ext.geo;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.io.*;
-import javax.swing.border.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.swing.AbstractAction;
+import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.*;
-import edu.illinois.ncsa.isda.imagetools.core.display.*;
-import edu.illinois.ncsa.isda.imagetools.core.io.*;
-import edu.illinois.ncsa.isda.imagetools.core.io.dlg.*;
-import edu.illinois.ncsa.isda.imagetools.core.io.shapefile.*;
+import edu.illinois.ncsa.isda.imagetools.core.datatype.ShapeObject;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.imagetools.core.io.FileChooser;
+import edu.illinois.ncsa.isda.imagetools.core.io.shapefile.ShapefileLoader;
+import edu.illinois.ncsa.isda.imagetools.ext.geo.dlg.DLG3Loader;
+import edu.illinois.ncsa.isda.imagetools.ext.geo.dlg.StatsgoLoader;
 
 
 public class VectorUI

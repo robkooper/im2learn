@@ -20,6 +20,56 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>edu.illinois.ncsa.isda</groupId>
+			<artifactId>imagetools-hdf</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>edu.illinois.ncsa.isda</groupId>
+			<artifactId>imagetools-jai</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>edu.illinois.ncsa.isda</groupId>
+			<artifactId>imagetools-itext</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>edu.illinois.ncsa.isda</groupId>
+			<artifactId>imagetools-analyze</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>edu.illinois.ncsa.isda</groupId>
+			<artifactId>imagetools-jpedal</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>edu.illinois.ncsa.isda</groupId>
+			<artifactId>imagetools-pdfbox</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6.12</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
@@ -27,9 +77,75 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>jpeg2000.epfl.ch</groupId>
-			<artifactId>jj2000</artifactId>
-			<version>5.2-SNAPSHOT</version>
+			<groupId>java3d</groupId>
+			<artifactId>j3d-core-utils</artifactId>
+			<version>1.3.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>java3d</groupId>
+			<artifactId>j3d-core</artifactId>
+			<version>1.3.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>java3d</groupId>
+			<artifactId>vecmath</artifactId>
+			<version>1.3.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>trove</groupId>
+			<artifactId>trove</artifactId>
+			<version>1.1-beta-5</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jama</groupId>
+			<artifactId>jama</artifactId>
+			<version>1.0.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/Jama-1.0.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>edu.illinois.ncsa.isda</groupId>
+			<artifactId>comm</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/comm.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>comm</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/comm.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>jmf</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/jmf-1.0.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>edu.illinois.ncsa.isda</groupId>
+			<artifactId>imagetools-core</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -73,49 +73,54 @@ import org.apache.commons.logging.LogFactory;
 import edu.illinois.ncsa.isda.imagetools.core.Im2LearnUtilities;
 import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
 import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.imagetools.core.datatype.PDFAnnotation;
 import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
 import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnFrame;
 import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
 import edu.illinois.ncsa.isda.imagetools.core.display.ImageAnnotation;
 import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
 import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFAnnotation;
 import edu.illinois.ncsa.isda.imagetools.ext.panel.ZoomDialog;
-
 
 /**
  * 
- *  <p>
-    This tool is designed for the user to determine which text and image parts of the PDF file
-    belong together. This is done by drawing a rectangle around the elements that belong together.
-    The boxes can be then applied to the document and the PDF Ad Size tool will determine what
-    class ads they are (A, B, C).
-    </p>
-    <p>
-    Groups: The tool has three checkboxes at the bottom which allow the user to let the undesired bounding boxes disappear.
-    There are three different types of boxes: Groups, Group Annotations, and Unused Annotations. 
-    </br>The groups are the bounding boxes that have been drawn by the user to specify a certain group and are already classified
-    as a group (clicking the 'New Group' button). These boxes can be applied to the document and then used to calculate the size of the ad.
-    </br>The Group Annotations are all bounding boxes that are contained in the currently selected group. They are drawn in the color green.
-    </br>The Unused Annotations are all bounding boxes that have not been selected, these appear in blue. When the tool is first opened all boxes will be blue,
-    also if the user decides to reset the document they will all appear.
-    </p>
-    The tool has three buttons: Reset, New Group, and Apply.</br>
-    Reset changes deletes any boxes that have been applied and restores the original contents of the document.
-    </br>New Group classifies the group that is selected and which appears in the little preview panel below the buttons as one ad.
-    </br>Apply transfers the bounding boxes that have been determined to be ads into the main document and they can be used by the Ad Size tool to calculate the size of the ad.
-    </p>
-    <img src="help/group.jpg">
-    <p>
-    Example:
-    </p>
-    <img src="help/pdfgroup1.jpg"></br></br>
-    <img src="help/pdfgroup2.jpg">
-    
-    <p> 
-    The elements inside the drawn rectangle are combined to one group which can then be classified with the PDF Ad Size tool.
-    </p>
-    
+ * <p>
+ * This tool is designed for the user to determine which text and image parts of
+ * the PDF file belong together. This is done by drawing a rectangle around the
+ * elements that belong together. The boxes can be then applied to the document
+ * and the PDF Ad Size tool will determine what class ads they are (A, B, C).
+ * </p>
+ * <p>
+ * Groups: The tool has three checkboxes at the bottom which allow the user to
+ * let the undesired bounding boxes disappear. There are three different types
+ * of boxes: Groups, Group Annotations, and Unused Annotations. </br>The groups
+ * are the bounding boxes that have been drawn by the user to specify a certain
+ * group and are already classified as a group (clicking the 'New Group'
+ * button). These boxes can be applied to the document and then used to
+ * calculate the size of the ad. </br>The Group Annotations are all bounding
+ * boxes that are contained in the currently selected group. They are drawn in
+ * the color green. </br>The Unused Annotations are all bounding boxes that have
+ * not been selected, these appear in blue. When the tool is first opened all
+ * boxes will be blue, also if the user decides to reset the document they will
+ * all appear.
+ * </p>
+ * The tool has three buttons: Reset, New Group, and Apply.</br> Reset changes
+ * deletes any boxes that have been applied and restores the original contents
+ * of the document. </br>New Group classifies the group that is selected and
+ * which appears in the little preview panel below the buttons as one ad.
+ * </br>Apply transfers the bounding boxes that have been determined to be ads
+ * into the main document and they can be used by the Ad Size tool to calculate
+ * the size of the ad. </p> <img src="help/group.jpg">
+ * <p>
+ * Example:
+ * </p>
+ * <img src="help/pdfgroup1.jpg"></br></br> <img src="help/pdfgroup2.jpg">
+ * 
+ * <p>
+ * The elements inside the drawn rectangle are combined to one group which can
+ * then be classified with the PDF Ad Size tool.
+ * </p>
+ * 
  * 
  * @author Rob Kooper
  * @author Peter Bajcsy
@@ -123,28 +128,27 @@ import edu.illinois.ncsa.isda.imagetools.ext.panel.ZoomDialog;
  * 
  */
 public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnMenu, ImageAnnotation {
-    private ImagePanel imagepanel;
-    
+    private ImagePanel                 imagepanel;
+
     private Vector<PDFAnnotationGroup> groups;
-    private Vector<PDFAnnotation> annotations; 
-    private boolean hasannotations;
-    private PDFAnnotationGroup current = null;
+    private Vector<PDFAnnotation>      annotations;
+    private boolean                    hasannotations;
+    private PDFAnnotationGroup         current = null;
 
-    private ImagePanel ip;
-    private JButton btnReset;
-    private JButton btnApply;
-    private JButton btnNewGroup;
-	private JButton btnRemoveGroup;
+    private ImagePanel                 ip;
+    private JButton                    btnReset;
+    private JButton                    btnApply;
+    private JButton                    btnNewGroup;
+    private JButton                    btnRemoveGroup;
 
-    private JCheckBox chkShowGroups;
-    private JCheckBox chkShowGroupAnnotations;
-    private JCheckBox chkShowUnusedAnnotations;
+    private JCheckBox                  chkShowGroups;
+    private JCheckBox                  chkShowGroupAnnotations;
+    private JCheckBox                  chkShowUnusedAnnotations;
 
-    private ImagePanel ipGroup;
+    private ImagePanel                 ipGroup;
 
+    static private Log                 logger  = LogFactory.getLog(PDFAnnotationGroupDialog.class);
 
-    static private Log logger = LogFactory.getLog(PDFAnnotationGroupDialog.class);
-    
     public PDFAnnotationGroupDialog() {
         super("PDF Annotation Groups");
 
@@ -165,13 +169,13 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
         updateUI();
         ip.repaint();
     }
-    
+
     private void createUI() {
         // -------------------------------------------------------------------
         // panel with preview of PDF in center of UI
         // -------------------------------------------------------------------
         ip = new ImagePanel();
-        //ipPDF.setPreferredSize(new Dimension(320, 240));
+        // ipPDF.setPreferredSize(new Dimension(320, 240));
         ip.setAutozoom(true);
         ip.addMenu(new ZoomDialog());
         ip.addAnnotationPanel(this);
@@ -184,10 +188,10 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
                 clickedSelect(ip.getImageLocationClicked());
                 updateUI();
                 ip.repaint();
-           }           
+            }
         });
         ip.addMenu(select);
-        
+
         ip.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
@@ -202,7 +206,7 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
             }
         });
         ip.addImageUpdateListener(this);
-        
+
         // -------------------------------------------------------------------
         // on left buttons that symbolize the workflow
         // -------------------------------------------------------------------
@@ -236,7 +240,7 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
                 removeGroup();
                 updateUI();
                 ip.repaint();
-           }           
+            }
         });
         setButtonPrefs(btnRemoveGroup);
         buttons.add(btnRemoveGroup);
@@ -255,7 +259,7 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
         });
         setButtonPrefs(btnApply);
         buttons.add(btnApply);
-        
+
         // for debug/fun
         ipGroup = new ImagePanel();
         ipGroup.setAutozoom(true);
@@ -296,7 +300,7 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
 
         pack();
     }
-    
+
     private void setButtonPrefs(AbstractButton button) {
         Dimension btnsize = new Dimension(150, 30);
 
@@ -329,7 +333,7 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
                 this.groups = (Vector<PDFAnnotationGroup>) clone;
             }
 
-            Boolean tmpbool = (Boolean)imgobj.getProperty("HasAnnotations");
+            Boolean tmpbool = (Boolean) imgobj.getProperty("HasAnnotations");
             if (tmpbool != null) {
                 hasannotations = tmpbool.booleanValue();
             }
@@ -348,29 +352,29 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
 
         current = null;
     }
-    
-    private void updateUI() {        
+
+    private void updateUI() {
         String spaces = "0000";
         String tmp = "" + groups.size();
         tmp = "Groups (" + spaces.substring(tmp.length()) + tmp + ")";
         chkShowGroups.setText(tmp);
-        
+
         if (current == null) {
             tmp = "0";
         } else {
             tmp = "" + current.get().size();
         }
-        tmp = "Group Annotations (" + spaces.substring(tmp.length()) + tmp + ")";               
+        tmp = "Group Annotations (" + spaces.substring(tmp.length()) + tmp + ")";
         chkShowGroupAnnotations.setText(tmp);
 
         int count = 0;
-        for(PDFAnnotation anno : annotations) {
+        for (PDFAnnotation anno : annotations) {
             if (!anno.isPartOfGroup() && !anno.isDuplicate()) {
                 count++;
             }
         }
         tmp = "" + count;
-        tmp = "Unused Annotations (" + spaces.substring(tmp.length()) + tmp + ")";               
+        tmp = "Unused Annotations (" + spaces.substring(tmp.length()) + tmp + ")";
         chkShowUnusedAnnotations.setText(tmp);
 
         if ((current == null) || (current.getBoundingBox() == null)) {
@@ -383,7 +387,7 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
     }
 
     private void clickedAdd(Point pt) {
-        for(PDFAnnotation anno : annotations) {
+        for (PDFAnnotation anno : annotations) {
             if (anno.getBoundingBox().contains(pt)) {
                 addAnnotation(anno);
             }
@@ -391,8 +395,8 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
     }
 
     private void clickedRemove(Point pt) {
-        for(Iterator iter=annotations.iterator(); iter.hasNext(); ) {
-            PDFAnnotation anno = (PDFAnnotation)iter.next();
+        for (Iterator iter = annotations.iterator(); iter.hasNext();) {
+            PDFAnnotation anno = (PDFAnnotation) iter.next();
             if (anno.getBoundingBox().contains(pt)) {
                 removeAnnotation(anno);
                 if (!hasannotations) {
@@ -412,16 +416,16 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
     }
 
     private void removeGroup() {
-    	if (current == null) {
-    		return;
-    	}
-        for(Iterator iter=annotations.iterator(); iter.hasNext() && current != null; ) {
-            PDFAnnotation anno = (PDFAnnotation)iter.next();
+        if (current == null) {
+            return;
+        }
+        for (Iterator iter = annotations.iterator(); iter.hasNext() && current != null;) {
+            PDFAnnotation anno = (PDFAnnotation) iter.next();
             if (current.contains(anno)) {
-	            removeAnnotation(anno);
-	            if (!hasannotations) {
-	            	iter.remove();            	
-	            }
+                removeAnnotation(anno);
+                if (!hasannotations) {
+                    iter.remove();
+                }
             }
         }
     }
@@ -432,7 +436,7 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
         }
 
         if (hasannotations) {
-            for(PDFAnnotation anno : annotations) {
+            for (PDFAnnotation anno : annotations) {
                 if (selection.contains(anno.getBoundingBox())) {
                     addAnnotation(anno);
                 }
@@ -448,35 +452,34 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
                 } catch (ImageException exc) {
                     logger.warn("Could not crop image.", exc);
                 }
-            }                
+            }
         }
-        
+
         ip.setSelection(null);
     }
-    
+
     private void addAnnotation(PDFAnnotation anno) {
         if ((anno == null) || anno.isDuplicate() || anno.isPartOfGroup()) {
             return;
         }
-        
+
         if (current == null) {
             current = new PDFAnnotationGroup();
             groups.add(current);
-        } 
-        
+        }
+
         current.add(anno);
         anno.setPartOfGroup(true);
     }
 
     private void removeAnnotation(PDFAnnotation anno) {
-        if ((anno == null) || anno.isDuplicate() || 
-                (current == null) || !current.contains(anno)) {
+        if ((anno == null) || anno.isDuplicate() || (current == null) || !current.contains(anno)) {
             return;
         }
-        
+
         current.remove(anno);
         anno.setPartOfGroup(false);
-        
+
         if (current.get().isEmpty()) {
             groups.remove(current);
             current = null;
@@ -498,27 +501,27 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
                 }
             }
         }
-        
+
         // draw green boxes around those annotations that are part of a group
         if (chkShowGroupAnnotations.isSelected() && current != null) {
             for (PDFAnnotation anno : current.get()) {
                 anno.drawBoundingBox(g, Color.green);
             }
-           
+
         }
 
         // draw black boxes around all groups
         if (chkShowGroups.isSelected()) {
             for (PDFAnnotationGroup group : groups) {
-                group.drawBoundingBox(g, Color.black);                
+                group.drawBoundingBox(g, Color.black);
             }
         }
-        
+
         // draw a red box around the current group
         if (current != null) {
             current.drawBoundingBox(g, Color.red);
         }
-        
+
         // set graphics color back to original
         g.setColor(old);
     }
@@ -538,7 +541,7 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
         JMenu tools = new JMenu("Tools");
         JMenu adv = new JMenu("PDF");
         tools.add(adv);
-        
+
         JMenuItem menu = new JMenuItem(new AbstractAction("Annotation Groups") {
             public void actionPerformed(ActionEvent e) {
                 setVisible(true);
@@ -554,15 +557,14 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
         if (!isVisible()) {
             return;
         }
-        
-            
-        switch(event.getId()) {
+
+        switch (event.getId()) {
         case ImageUpdateEvent.NEW_IMAGE:
             if (event.getSource() == imagepanel) {
                 showing();
             }
             break;
-            
+
         case ImageUpdateEvent.CHANGE_SELECTION:
             if ((event.getSource() == ip) && (ip.getSelection() != null)) {
                 if (current != null) {
@@ -575,7 +577,7 @@ public class PDFAnnotationGroupDialog extends Im2LearnFrame implements Im2LearnM
             break;
         }
     }
-    
+
     public URL getHelp(String menu) {
         return getClass().getResource("help/pdfgroup.html");
     }

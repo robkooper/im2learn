@@ -50,18 +50,17 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.Vector;
 
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFAnnotation;
-
+import edu.illinois.ncsa.isda.imagetools.core.datatype.PDFAnnotation;
 
 public class PDFAnnotationGroup implements Serializable {
-    private static final long serialVersionUID = 1L;
-    public static final String KEY = "PDFAnnotationGroup";
+    private static final long       serialVersionUID = 1L;
+    public static final String      KEY              = "PDFAnnotationGroup";
 
-    private Vector<PDFAnnotation> annotations;
+    private Vector<PDFAnnotation>   annotations;
 
-    private double x, y, w, h;
-    private String uuid;
-    
+    private double                  x, y, w, h;
+    private String                  uuid;
+
     private HashMap<String, Object> properties;
 
     public PDFAnnotationGroup() {
@@ -77,11 +76,11 @@ public class PDFAnnotationGroup implements Serializable {
     public void setUUID(String uuid) {
         this.uuid = uuid;
     }
-    
+
     public Object getProperty(String key) {
         return properties.get(key);
     }
-    
+
     public boolean hasProperty(String key) {
         return properties.containsKey(key);
     }

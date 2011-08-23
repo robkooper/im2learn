@@ -1,5 +1,5 @@
 //package ncsa.i2k.io.dlg;
-package edu.illinois.ncsa.isda.imagetools.core.io.dlg;
+package edu.illinois.ncsa.isda.imagetools.ext.geo.dlg;
 
 import edu.illinois.ncsa.isda.imagetools.core.datatype.ShapeObject;
 import edu.illinois.ncsa.isda.imagetools.core.geo.GeoException;

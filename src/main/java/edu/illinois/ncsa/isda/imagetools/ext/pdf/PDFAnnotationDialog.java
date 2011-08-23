@@ -42,68 +42,88 @@
  *******************************************************************************/
 package edu.illinois.ncsa.isda.imagetools.ext.pdf;
 
-
-import javax.swing.*;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.display.*;
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFAnnotation;
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFLoaderJPedal;
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFLoaderPDFBox;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Vector;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.imagetools.core.datatype.PDFAnnotation;
+import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnFrame;
+import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImageAnnotation;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFLoaderJPedal;
+import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFLoaderPDFBox;
 
 /**
  * 
-    <p>
-    This tool displays the objects of a PDF file depending on where the user clicks 
-    on the main panel, the coordinates are stored and the picture is 'pinned' through all the objects that are at that location. If more elements overlap each other at the point that is clicked 
-    all will be displayed. If there is more than one image all will be displayed in new tabs. If there is text and picture this will also be displayed.
-    </p>
-    <img src="help/clicked.jpg">
-    <p>
-    Example multiple images: 
-    </p>
-    <img src="help/pdfannotation.jpg"></br><br>
-    <img src="help/pdfannotation2.jpg">
-    <p>
-    Example text:
-    </p>
-    <img src="help/pdfannotation3.jpg">
-    <p>
-    Example text and image:
-    </p>
-    <img src="help/pdfannotation4.jpg">
- 
-  * @author Rob Kooper
+ <p>
+ * This tool displays the objects of a PDF file depending on where the user
+ * clicks on the main panel, the coordinates are stored and the picture is
+ * 'pinned' through all the objects that are at that location. If more elements
+ * overlap each other at the point that is clicked all will be displayed. If
+ * there is more than one image all will be displayed in new tabs. If there is
+ * text and picture this will also be displayed.
+ * </p>
+ * <img src="help/clicked.jpg">
+ * <p>
+ * Example multiple images:
+ * </p>
+ * <img src="help/pdfannotation.jpg"></br><br>
+ * <img src="help/pdfannotation2.jpg">
+ * <p>
+ * Example text:
+ * </p>
+ * <img src="help/pdfannotation3.jpg">
+ * <p>
+ * Example text and image:
+ * </p>
+ * <img src="help/pdfannotation4.jpg">
+ * 
+ * @author Rob Kooper
  * @author Peter Bajcsy
  * @author (documentation) Peter Ferak
  * 
  */
-public class PDFAnnotationDialog extends Im2LearnFrame implements Im2LearnMenu,  ImageAnnotation, MouseListener {
-    private ImagePanel imagepanel;
- 
-    private JTextArea txtPDF;
+public class PDFAnnotationDialog extends Im2LearnFrame implements Im2LearnMenu, ImageAnnotation, MouseListener {
+    private ImagePanel  imagepanel;
+
+    private JTextArea   txtPDF;
     private JTabbedPane tabPDF;
-    
-    static private Log logger = LogFactory.getLog(PDFAnnotationDialog.class);
+
+    static private Log  logger = LogFactory.getLog(PDFAnnotationDialog.class);
 
     public PDFAnnotationDialog() {
         super("Show PDFAnnotation");
 
         createUI();
     }
-    
+
     public void showing() {
         imagepanel.addMouseListener(this);
         imagepanel.addAnnotationImage(this);
@@ -111,13 +131,13 @@ public class PDFAnnotationDialog extends Im2LearnFrame implements Im2LearnMenu, 
 
         tabPDF.removeAll();
         txtPDF.setText("");
-}
-    
+    }
+
     public void closing() {
         imagepanel.removeMouseListener(this);
         imagepanel.removeAnnotationImage(this);
         imagepanel.repaint();
-        
+
         tabPDF.removeAll();
         txtPDF.setText("");
     }
@@ -127,8 +147,8 @@ public class PDFAnnotationDialog extends Im2LearnFrame implements Im2LearnMenu, 
         tabPDF = new JTabbedPane();
         tabPDF.setPreferredSize(new Dimension(320, 240));
 
-		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(txtPDF), tabPDF);
-		getContentPane().add(split, BorderLayout.CENTER);
+        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(txtPDF), tabPDF);
+        getContentPane().add(split, BorderLayout.CENTER);
 
         JPanel panel = new JPanel(new FlowLayout());
         panel.add(new JButton(new AbstractAction("Close") {
@@ -137,7 +157,7 @@ public class PDFAnnotationDialog extends Im2LearnFrame implements Im2LearnMenu, 
             }
         }));
         getContentPane().add(panel, BorderLayout.SOUTH);
-		
+
         pack();
     }
 
@@ -254,7 +274,7 @@ public class PDFAnnotationDialog extends Im2LearnFrame implements Im2LearnMenu, 
 
     public void mouseReleased(MouseEvent e) {
     }
-    
+
     // ------------------------------------------------------------------------
     // Im2LearnMenu implementation
     // ------------------------------------------------------------------------
@@ -281,7 +301,7 @@ public class PDFAnnotationDialog extends Im2LearnFrame implements Im2LearnMenu, 
         JMenu tools = new JMenu("Tools");
         JMenu pdf = new JMenu("PDF");
         tools.add(pdf);
-        
+
         JMenuItem menu = new JMenuItem("Show PDFAnnotation");
         menu.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -294,15 +314,15 @@ public class PDFAnnotationDialog extends Im2LearnFrame implements Im2LearnMenu, 
             }
         });
         pdf.add(menu);
-        
-        return new JMenuItem[]{tools};
+
+        return new JMenuItem[] { tools };
     }
 
     public void imageUpdated(ImageUpdateEvent event) {
         if (!isVisible()) {
             return;
         }
-        
+
         if (event.getId() == ImageUpdateEvent.NEW_IMAGE) {
             showing();
         }
@@ -310,12 +330,12 @@ public class PDFAnnotationDialog extends Im2LearnFrame implements Im2LearnMenu, 
 
     public URL getHelp(String menu) {
         URL url = null;
-        
+
         if (url == null) {
-            String file = menu.toLowerCase().replaceAll("[\\s\\?\\*]", "") + ".html"; 
+            String file = menu.toLowerCase().replaceAll("[\\s\\?\\*]", "") + ".html";
             url = this.getClass().getResource("help/" + file);
         }
-        
+
         return url;
-    } 
+    }
 }

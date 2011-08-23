@@ -45,8 +45,7 @@ package edu.illinois.ncsa.isda.imagetools.ext.pdf;
 import java.util.Iterator;
 import java.util.Vector;
 
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFAnnotation;
-
+import edu.illinois.ncsa.isda.imagetools.core.datatype.PDFAnnotation;
 
 /**
  * Created by IntelliJ IDEA. User: kooper Date: May 2, 2005 Time: 9:57:38 AM To
@@ -70,6 +69,7 @@ public class PDFAnnotationTextCleanup {
         dx = 0;
         dy = 0;
     }
+
     public void setTolerance(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;
@@ -85,9 +85,9 @@ public class PDFAnnotationTextCleanup {
     public void removeDuplicates() {
         // find all double text
         Vector<PDFAnnotation> newtxt = new Vector<PDFAnnotation>();
-        for(PDFAnnotation objold : annotations) {
+        for (PDFAnnotation objold : annotations) {
             if (objold.isText() && !objold.isDuplicate()) {
-            	for (PDFAnnotation objnew : newtxt) {
+                for (PDFAnnotation objnew : newtxt) {
                     if (objnew.isText() && objnew.getObject().equals(objold.getObject())) {
                         if (checkSameLocation(objold, objnew)) {
                             objold.setDuplicate(true);
@@ -129,12 +129,12 @@ public class PDFAnnotationTextCleanup {
         // find all text that is potentially a continuation
         Vector<PDFAnnotation> newtxt = new Vector<PDFAnnotation>();
         for (Iterator iterold = annotations.iterator(); iterold.hasNext();) {
-			PDFAnnotation objold = (PDFAnnotation) iterold.next();
-            if (objold.isText() && !objold.isDuplicate() && !((String)objold.getObject()).trim().equals("")) {
+            PDFAnnotation objold = (PDFAnnotation) iterold.next();
+            if (objold.isText() && !objold.isDuplicate() && !((String) objold.getObject()).trim().equals("")) {
                 boolean ignore = false;
                 for (Iterator iternew = newtxt.iterator(); iternew.hasNext() && !ignore;) {
                     PDFAnnotation objnew = (PDFAnnotation) iternew.next();
-                    if (objnew.isText() && checkSamePara(objold, objnew)&& !((String)objnew.getObject()).trim().equals("")) {
+                    if (objnew.isText() && checkSamePara(objold, objnew) && !((String) objnew.getObject()).trim().equals("")) {
                         objnew.add(objold, "\n");
                         ignore = true;
                     }
@@ -152,43 +152,43 @@ public class PDFAnnotationTextCleanup {
     }
 
     /**
-     * remove all invalid  annotations based on minimum dimension criteria
+     * remove all invalid annotations based on minimum dimension criteria
      */
-    public void removeInvalidTextMinDimension(double minWidth, double minHeight ) {
+    public void removeInvalidTextMinDimension(double minWidth, double minHeight) {
         // find all invalid images
         for (Iterator iterold = annotations.iterator(); iterold.hasNext();) {
             PDFAnnotation objold = (PDFAnnotation) iterold.next();
-            if( objold.isText()){
-          	  if ( objold.getWidth() < minWidth || objold.getHeight() < minHeight ){
-          		  ///test
-          		  //System.out.println("TEST: invalid obj "+objold);
-          		  objold.setInvalid(true);
-          		  objold.setClassification(PDFAnnotation.DIM_INVALID);
-          	  }
+            if (objold.isText()) {
+                if (objold.getWidth() < minWidth || objold.getHeight() < minHeight) {
+                    // /test
+                    // System.out.println("TEST: invalid obj "+objold);
+                    objold.setInvalid(true);
+                    objold.setClassification(PDFAnnotation.DIM_INVALID);
+                }
             }
         }
     }
+
     /**
-     * remove all invalid  annotations based on minimum area criterion
+     * remove all invalid annotations based on minimum area criterion
      */
-    public void removeInvalidTextMinArea(double minArea ) {
+    public void removeInvalidTextMinArea(double minArea) {
         // find all invalid images
         for (Iterator iterold = annotations.iterator(); iterold.hasNext();) {
             PDFAnnotation objold = (PDFAnnotation) iterold.next();
-            if( objold.isText()){
-          	  if ( objold.getWidth() * objold.getHeight() < minArea ){
-          		  ///test
-          		  //System.out.println("TEST: invalid obj "+objold);
-          		  objold.setInvalid(true);
-          		  objold.setClassification(PDFAnnotation.AREA_INVALID);
-          	  }
+            if (objold.isText()) {
+                if (objold.getWidth() * objold.getHeight() < minArea) {
+                    // /test
+                    // System.out.println("TEST: invalid obj "+objold);
+                    objold.setInvalid(true);
+                    objold.setClassification(PDFAnnotation.AREA_INVALID);
+                }
             }
         }
     }
 
     private boolean checkSameLocation(PDFAnnotation anno1, PDFAnnotation anno2) {
-        return ((Math.abs(anno1.getX() - anno2.getX()) < dx) &&
-                (Math.abs(anno1.getY() - anno2.getY()) < dy));
+        return ((Math.abs(anno1.getX() - anno2.getX()) < dx) && (Math.abs(anno1.getY() - anno2.getY()) < dy));
     }
 
     private boolean checkSameLine(PDFAnnotation anno1, PDFAnnotation anno2) {
@@ -231,23 +231,23 @@ public class PDFAnnotationTextCleanup {
             }
         }
 
-	    // should start at the same x loc (only if left justified)
-        //if (Math.abs(anno1.getX() - anno2.getX()) > dx) {
-        //    return false;
-        //}
-		// make sure X is inside bounding box
-		boolean xok = false;
+        // should start at the same x loc (only if left justified)
+        // if (Math.abs(anno1.getX() - anno2.getX()) > dx) {
+        // return false;
+        // }
+        // make sure X is inside bounding box
+        boolean xok = false;
         if ((anno2.getX() > anno1.getX() - dx) && (anno2.getX() < anno1.getMaxX() + dx)) {
-			xok = true;
+            xok = true;
         }
         if ((anno1.getX() > anno2.getX() - dx) && (anno1.getX() < anno2.getMaxX() + dx)) {
-			xok = true;
+            xok = true;
         }
-		if (!xok) {
-			return false;
-		}
+        if (!xok) {
+            return false;
+        }
 
-		// y location should be inside of bounding box of other text
+        // y location should be inside of bounding box of other text
         if ((anno2.getY() > anno1.getY() - dy) && (anno2.getY() < anno1.getMaxY() + dy)) {
             return true;
         }
