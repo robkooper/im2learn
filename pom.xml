@@ -47,6 +47,14 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>edu.illinois.ncsa.isda</groupId>
+			<artifactId>apple</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/apple-1.0.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 </project>
