@@ -48,6 +48,7 @@ import org.apache.commons.logging.LogFactory;
 
 import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
 import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectByte;
+import edu.illinois.ncsa.isda.imagetools.core.display.ColorBar;
 import edu.illinois.ncsa.isda.imagetools.core.display.ImageComponent;
 import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
 

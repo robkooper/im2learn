@@ -50,6 +50,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.imagetools.core.display.ColorBar;
 import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnFrame;
 import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
 import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
@@ -60,7 +61,6 @@ import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
 import edu.illinois.ncsa.isda.imagetools.ext.info.InfoDialog;
 import edu.illinois.ncsa.isda.imagetools.ext.misc.ImEnhance;
 import edu.illinois.ncsa.isda.imagetools.ext.misc.ImageFrame;
-import edu.illinois.ncsa.isda.imagetools.ext.vis.ColorBar;
 
 
 public class ClusteringDialog extends Im2LearnFrame implements ActionListener, Im2LearnMenu {

@@ -51,6 +51,7 @@ import javax.vecmath.Color4f;
 import com.sun.media.controls.VFlowLayout;
 
 import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.imagetools.core.display.ColorBar;
 
 
 
