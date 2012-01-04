@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>imagetools-jpedal</artifactId>
+        <name>ISDA ImageTools - jpedal PDF Loader</name>
 	<packaging>jar</packaging>
 
 	<parent>
