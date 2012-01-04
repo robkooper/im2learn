@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>imagetools-hdf</artifactId>
+        <name>ISDA ImageTools - HDF Loader</name>
 	<packaging>jar</packaging>
 
 	<parent>
