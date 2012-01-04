@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>imagetools-jai</artifactId>
+        <name>ISDA ImageTools - JAI Loaders</name>
 	<packaging>jar</packaging>
 
 	<parent>
