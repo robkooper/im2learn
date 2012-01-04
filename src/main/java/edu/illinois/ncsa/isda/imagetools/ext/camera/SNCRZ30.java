@@ -42,23 +42,27 @@
  *******************************************************************************/
 package edu.illinois.ncsa.isda.imagetools.ext.camera;
 
+import java.awt.image.ColorModel;
+import java.awt.image.ImageConsumer;
+import java.awt.image.ImageProducer;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
 import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectByte;
-import sun.awt.image.URLImageSource;
-
-import java.awt.image.ColorModel;
-import java.awt.image.ImageConsumer;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.*;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * Code specific for the Sony NC-RZ30 camera. This class implements the
@@ -67,28 +71,23 @@ import java.util.Properties;
  * care of flipping the image around.
  */
 public class SNCRZ30 extends Camera {
-    private String hostname = null;
-    private int port = 80;
+    private String     hostname = null;
+    private int        port     = 80;
 
-    private boolean deskmounted;
-    private int serialnumber;
-    private boolean ntsc;
-    private String model;
-    private float version;
-    private boolean oldversion;
-    private int imageSize;
-    private String username;
-    private String password;
+    private boolean    deskmounted;
+    private int        serialnumber;
+    private boolean    ntsc;
+    private String     model;
+    private float      version;
+    private boolean    oldversion;
+    private int        imageSize;
+    private String     username;
+    private String     password;
 
-    private String[] sizeN = new String[]{"763x480 (auto)", "763x480 (frame)", "763x480 (field)",
-                                          "640x480 (auto)", "640x480 (frame)", "640x480 (field)",
-                                          "320x240", "160x120", "Special"};
-    private String[] sizeP = new String[]{"736x544 (auto)", "736x544 (frame)", "736x544 (field)",
-                                          "640x480 (auto)", "640x480 (frame)", "640x480 (field)",
-                                          "320x240", "160x120", "Special"};
+    private String[]   sizeN    = new String[] { "763x480 (auto)", "763x480 (frame)", "763x480 (field)", "640x480 (auto)", "640x480 (frame)", "640x480 (field)", "320x240", "160x120", "Special" };
+    private String[]   sizeP    = new String[] { "736x544 (auto)", "736x544 (frame)", "736x544 (field)", "640x480 (auto)", "640x480 (frame)", "640x480 (field)", "320x240", "160x120", "Special" };
 
-
-    private static Log logger = LogFactory.getLog(SNCRZ30.class);
+    private static Log logger   = LogFactory.getLog(SNCRZ30.class);
 
     public SNCRZ30() {
         this(null, 80);
@@ -123,7 +122,7 @@ public class SNCRZ30 extends Camera {
     /**
      * Set the hostname of the camera. This determines which network camera the
      * class is connected to.
-     *
+     * 
      * @return hostname of the camera.
      */
     public String getHostname() {
@@ -132,8 +131,9 @@ public class SNCRZ30 extends Camera {
 
     /**
      * Sets the hostname of the camera the class is connected to.
-     *
-     * @param hostname the hostname of the camera.
+     * 
+     * @param hostname
+     *            the hostname of the camera.
      */
     public void setHostname(String hostname) {
         if ((this.hostname != null) && this.hostname.equals(hostname)) {
@@ -146,7 +146,7 @@ public class SNCRZ30 extends Camera {
     /**
      * The port the camera is sending the images on. This is the port on which
      * the camera runs the web-server.
-     *
+     * 
      * @return port number of the camerea.
      */
     public int getPort() {
@@ -156,8 +156,9 @@ public class SNCRZ30 extends Camera {
     /**
      * Sets the port to which the class will connect. This is the port on which
      * the camera runs the web-server.
-     *
-     * @param port the port to which to connect.
+     * 
+     * @param port
+     *            the port to which to connect.
      */
     public void setPort(int port) {
         if (this.port == port) {
@@ -229,7 +230,7 @@ public class SNCRZ30 extends Camera {
                 Object key = iter.next();
                 Object val = map.get(key);
 
-                //logger.debug(key + " = " + val);
+                // logger.debug(key + " = " + val);
             }
             while ((line = in.readLine()) != null) {
                 System.out.println(line);
@@ -262,7 +263,7 @@ public class SNCRZ30 extends Camera {
         try {
             URL url = new URL("http://" + hostname + ":" + port + "/command/inquiry.cgi?inq=sysinfo");
             URLConnection connection = url.openConnection();
-            //connection.setDoOutput(true);
+            // connection.setDoOutput(true);
 
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String[] params = in.readLine().split("&");
@@ -281,7 +282,7 @@ public class SNCRZ30 extends Camera {
         try {
             URL url = new URL("http://" + hostname + ":" + port + "/command/inquiry.cgi?inq=camera");
             URLConnection connection = url.openConnection();
-            //connection.setDoOutput(true);
+            // connection.setDoOutput(true);
 
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String[] params = in.readLine().split("&");
@@ -323,31 +324,32 @@ public class SNCRZ30 extends Camera {
 
     /**
      * The name of the camera, this will return the camera model.
-     *
+     * 
      * @return the model number of the camera.
      */
-    public String getName
-            () {
+    public String getName() {
         return model;
     }
 
     /**
      * Closes any connections opened with the camera.
-     *
-     * @throws IOException if anything goes wrong.
+     * 
+     * @throws IOException
+     *             if anything goes wrong.
      */
     public void close() throws IOException {
     }
 
     /**
      * Return a single frame from the camera.
-     *
+     * 
      * @return an image captured by the camera.
-     * @throws IOException if anything goes wrong capturing the image.
+     * @throws IOException
+     *             if anything goes wrong capturing the image.
      */
     public ImageObject getFrame() throws IOException {
         if (hostname == null) {
-            throw(new IOException("No hostname specified."));
+            throw (new IOException("No hostname specified."));
         }
         URL url = new URL("http://" + hostname + ":" + port + "/oneshotimage.jpg");
         SonyImageGrabber grabber = new SonyImageGrabber(url);
@@ -364,7 +366,7 @@ public class SNCRZ30 extends Camera {
 
     /**
      * Return the model of the camera and the hostname of the camera.
-     *
+     * 
      * @return model and hostname of the camera.
      */
     public String toString() {
@@ -380,22 +382,21 @@ public class SNCRZ30 extends Camera {
      */
     class SonyImageGrabber implements ImageConsumer {
         private ImageObject imgobj = null;
-        private int id = 0;
+        private int         id     = 0;
 
         public SonyImageGrabber(URL url) throws IOException {
             URLConnection conn = url.openConnection();
             conn.connect();
             Object obj = conn.getContent();
-            if (obj instanceof URLImageSource) {
+            if (obj instanceof ImageProducer) {
                 synchronized (this) {
-                    URLImageSource is = (URLImageSource) obj;
-                    is.startProduction(this);
+                    ((ImageProducer) obj).startProduction(this);
 
                     // wait for image
                     try {
                         this.wait();
                     } catch (InterruptedException exc) {
-                        throw(new IOException("Interrupted"));
+                        throw (new IOException("Interrupted"));
                     }
 
                     // map variables to properties
@@ -404,7 +405,7 @@ public class SNCRZ30 extends Camera {
                         Object key = iter.next();
                         Object val = map.get(key);
 
-                        //logger.debug(key + " = " + val);
+                        // logger.debug(key + " = " + val);
                         if (key != null) {
                             imgobj.setProperty(key.toString(), val);
                         } else {
@@ -418,7 +419,7 @@ public class SNCRZ30 extends Camera {
                     imgobj.setProperty("port", "" + url.getPort());
                 }
             } else {
-                throw(new IOException("Expected image returned."));
+                throw (new IOException("Expected image returned."));
             }
         }
 
@@ -427,23 +428,23 @@ public class SNCRZ30 extends Camera {
         }
 
         public void imageComplete(int status) {
-            //logger.debug("imageComplete : " + status);
+            // logger.debug("imageComplete : " + status);
             synchronized (this) {
                 this.notify();
             }
         }
 
         public void setHints(int hintflags) {
-            //logger.debug("setHints : " + hintflags);
+            // logger.debug("setHints : " + hintflags);
         }
 
         public void setDimensions(int width, int height) {
-            //logger.debug("setDimensions : " + width + ", " + height);
+            // logger.debug("setDimensions : " + width + ", " + height);
             imgobj = new ImageObjectByte(height, width, 3);
         }
 
         public void setPixels(int x, int y, int w, int h, ColorModel model, byte pixels[], int off, int scansize) {
-            //logger.debug("setPixels byte");
+            // logger.debug("setPixels byte");
             int imgw = imgobj.getNumCols();
             int imgb = imgobj.getNumBands();
 
@@ -471,7 +472,7 @@ public class SNCRZ30 extends Camera {
         }
 
         public void setPixels(int x, int y, int w, int h, ColorModel model, int pixels[], int off, int scansize) {
-            //logger.debug("setPixels int");
+            // logger.debug("setPixels int");
             int imgw = imgobj.getNumCols();
             int imgb = imgobj.getNumBands();
 
@@ -499,16 +500,16 @@ public class SNCRZ30 extends Camera {
         }
 
         public void setColorModel(ColorModel model) {
-            //logger.debug("setColorModel : " + model);
+            // logger.debug("setColorModel : " + model);
         }
 
         public void setProperties(Hashtable props) {
-            //logger.debug("Hashtable : ");
+            // logger.debug("Hashtable : ");
             for (Iterator iter = props.keySet().iterator(); iter.hasNext();) {
                 Object key = iter.next();
                 Object val = props.get(key);
 
-                //logger.debug(key + " = " + val);
+                // logger.debug(key + " = " + val);
                 if (key != null) {
                     imgobj.setProperty(key.toString(), val);
                 } else {
