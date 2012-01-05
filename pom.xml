@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>imagetools-plugins</artifactId>
+        <name>ISDA ImageTools - Plugins</name>
 	<packaging>jar</packaging>
 
 	<parent>
