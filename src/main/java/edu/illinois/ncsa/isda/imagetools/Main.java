@@ -42,6 +42,12 @@
  *******************************************************************************/
 package edu.illinois.ncsa.isda.imagetools;
 
+import java.awt.Frame;
+import java.lang.reflect.Constructor;
+import java.util.Enumeration;
+import java.util.ServiceLoader;
+
+import javax.swing.UIManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,35 +57,28 @@ import edu.illinois.ncsa.isda.imagetools.core.ResourceLocator;
 import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMainFrame;
 import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
 
-import sun.misc.Service;
-
-import javax.swing.*;
-import java.awt.*;
-import java.lang.reflect.Constructor;
-import java.util.Enumeration;
-import java.util.Iterator;
-
 /**
- * Start the stand alone Im2Learn application. This class will be able to load the
- * Im2Learn application and search the class path for any extentions. Extentions are
- * classes that implement the Im2LearnMenu interface.
- *
+ * Start the stand alone Im2Learn application. This class will be able to load
+ * the Im2Learn application and search the class path for any extentions.
+ * Extentions are classes that implement the Im2LearnMenu interface.
+ * 
  * @author Rob Kooper
  * @version 1.0
  */
 public class Main extends Im2LearnMainFrame {
     /**
-	 * Serial version ID
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	static protected Log logger = LogFactory.getLog(Main.class);
+     * Serial version ID
+     */
+    private static final long serialVersionUID = 1L;
+
+    static protected Log      logger           = LogFactory.getLog(Main.class);
 
     /**
      * Start the application. The argument is assumed to be an image that needs
      * to be loaded.
-     *
-     * @param args name of a image file to load.
+     * 
+     * @param args
+     *            name of a image file to load.
      */
     static public void main(String[] args) {
 
@@ -96,9 +95,8 @@ public class Main extends Im2LearnMainFrame {
 
             // add standard lib directory to search path
             rl.addPath("lib", false);
-            
-            if ((System.getProperty("im2learn.scan") != null) || 
-                (System.getProperty("im2learn.ext") != null)) {
+
+            if ((System.getProperty("im2learn.scan") != null) || (System.getProperty("im2learn.ext") != null)) {
                 // add location where resources can be found
                 rl.addPath("ext", true);
                 rl.addPath(System.getProperty("im2learn.ext"), true);
@@ -113,11 +111,11 @@ public class Main extends Im2LearnMainFrame {
         if (args.length > 0) {
             filename = args[0];
         }
-        
+
         // start Im2Learn
         if (Im2LearnUtilities.isMACOS()) {
             new MainMac(filename);
-        }  else {      
+        } else {
             new Main(filename);
         }
     }
@@ -128,17 +126,17 @@ public class Main extends Im2LearnMainFrame {
 
     /**
      * Start Im2Learn with the image pointed to by the filename.
-     *
-     * @param filename filename of an image to be loaded at startup.
+     * 
+     * @param filename
+     *            filename of an image to be loaded at startup.
      */
     public Main(String filename) {
         super(filename);
     }
 
     /**
-     * Add extentions to Im2Learn. This will either scan all class files
-     * or use the SPI method by looking in the services directory of
-     * the jar files.
+     * Add extentions to Im2Learn. This will either scan all class files or use
+     * the SPI method by looking in the services directory of the jar files.
      */
     public void addMenus() {
         if (Im2LearnUtilities.isWebService()) {
@@ -150,30 +148,24 @@ public class Main extends Im2LearnMainFrame {
             addMenusScan(rl);
         }
     }
-    
+
     /**
      * Use the java SPI to add extra functionality to Im2Learn. Unlike the scan
-     * method this will look at the services directory. This can be used
-     * both with web services and jar files and is faster. However all
-     * extentions need to be listed in the services file.
+     * method this will look at the services directory. This can be used both
+     * with web services and jar files and is faster. However all extentions
+     * need to be listed in the services file.
      */
     private void addMenusServices(ClassLoader cl) {
-        Iterator iter;
-        if (cl == null) {
-            iter = Service.providers(Im2LearnMenu.class);
-        } else {
-            iter = Service.providers(Im2LearnMenu.class, cl);
-        }
-        while(iter.hasNext()) {
+        ServiceLoader<Im2LearnMenu> loader = ServiceLoader.load(Im2LearnMenu.class);
+        for (Im2LearnMenu menu : loader) {
             try {
-                Class clazz = iter.next().getClass();
-                addMenu(clazz);
+                addMenu(menu.getClass());
             } catch (Throwable thr) {
-                logger.warn("Error registering loader.", thr);               
+                logger.warn("Error registering loader.", thr);
             }
         }
     }
-    
+
     /**
      * Scan through all the jar files and classes and find all those that
      * implement the Im2Learn interface.
@@ -190,14 +182,15 @@ public class Main extends Im2LearnMainFrame {
 
     /**
      * Helper function to instantiate the class and add it to the menu.
-     *
-     * @param clazz the class to be instantiated.
+     * 
+     * @param clazz
+     *            the class to be instantiated.
      */
     private void addMenu(Class clazz) {
         try {
-            Class[] param = new Class[]{Im2LearnMainFrame.class};
+            Class[] param = new Class[] { Im2LearnMainFrame.class };
             Constructor cons = clazz.getConstructor(param);
-            addMenu((Im2LearnMenu) cons.newInstance(new Object[]{this}));
+            addMenu((Im2LearnMenu) cons.newInstance(new Object[] { this }));
             return;
         } catch (NoSuchMethodException exc) {
         } catch (Throwable thr) {
@@ -205,9 +198,9 @@ public class Main extends Im2LearnMainFrame {
         }
 
         try {
-            Class[] param = new Class[]{Frame.class};
+            Class[] param = new Class[] { Frame.class };
             Constructor cons = clazz.getConstructor(param);
-            addMenu((Im2LearnMenu) cons.newInstance(new Object[]{this}));
+            addMenu((Im2LearnMenu) cons.newInstance(new Object[] { this }));
             return;
         } catch (NoSuchMethodException exc) {
         } catch (Throwable thr) {
@@ -215,7 +208,7 @@ public class Main extends Im2LearnMainFrame {
         }
 
         try {
-            addMenu((Im2LearnMenu)clazz.newInstance());
+            addMenu((Im2LearnMenu) clazz.newInstance());
             return;
         } catch (Throwable thr) {
             logger.debug("Error instantiating " + clazz.getName(), thr);
