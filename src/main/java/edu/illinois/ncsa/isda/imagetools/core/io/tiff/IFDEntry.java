@@ -99,8 +99,16 @@ class IFDEntry {
     static final int     TAG_SubIFD                    = 330;
     static final int     TAG_SampleFormat              = 339;
 
+    // following the TIFF 6.0 specification, these tags are allocated for
+    // specific purposes
+    // An organization might wish to store information meaningful to only that
+    // organization in a TIFF file. Tags numbered 32768 or higher, sometimes
+    // called private
+    // tags, are reserved for that purpose.
     // private tag GDAL_NODATA
     static final int     TAG_GDALNoData                = 42113;
+    // private tag IM2LEARN for storing image properties
+    static final int     TAG_ImageMetadata             = 42114;
 
     // Special GeoTiff tags
     static final int     TAG_ModelPixelScale           = 33550;
@@ -281,6 +289,42 @@ class IFDEntry {
 
         // return a string
         return new String(b, 0, (int) entries - 1);
+    }
+
+    /**
+     * Will return the byte array that was read from the file. This method was
+     * added to support image properties
+     * 
+     * @return the byte array that was read.
+     * @throws IOException
+     *             if not byte array type or error reading data.
+     */
+    public byte[] getArrayByte() throws IOException {
+        if (this.type != TYPE_BYTE) {
+            throw (new IOException("Can't handle type " + type + " for tag " + tag + "."));
+        }
+        if (entries == 0) {
+            return null;
+        }
+
+        // TODO 3 ascii char stored in entries, or still offset?
+        // jump to offset in file
+        tiffimage.getFile().seek(offset);
+
+        // read the data from the file
+        byte[] b = new byte[(int) entries];
+        if (tiffimage.getFile().read(b) != entries) {
+            throw (new IOException("Could not read enough bytes."));
+        }
+
+        // last byte has to be a zero
+        if (b[(int) entries - 1] != 0) {
+            logger.debug("Last byte in string should be 0 but it is =" + b[(int) entries - 1]);
+            return b;
+        }
+
+        // return a byte array
+        return b;// new String(b, 0, (int) entries - 1);
     }
 
     /**

@@ -42,11 +42,13 @@
  *******************************************************************************/
 package edu.illinois.ncsa.isda.imagetools.core.io.tiff;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Vector;
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,49 +67,50 @@ import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
  * image.
  */
 class TIFFimage {
-    private String                 filename                  = null;
-    private RandomAccessFile       file                      = null;
-    private boolean                bigtiff                   = false;
-    private boolean                littleendian              = false;
-    private int                    sampling                  = 1;
-    private SubArea                subarea                   = null;
-    private final Vector<IFDEntry> ifd                       = new Vector<IFDEntry>();
-    private ImageObject            image                     = null;
-    private final GeoEntry         geo                       = new GeoEntry();
-    private int                    size                      = 0;
+    private String                  filename                  = null;
+    private RandomAccessFile        file                      = null;
+    private boolean                 bigtiff                   = false;
+    private boolean                 littleendian              = false;
+    private int                     sampling                  = 1;
+    private SubArea                 subarea                   = null;
+    private final Vector<IFDEntry>  ifd                       = new Vector<IFDEntry>();
+    private ImageObject             image                     = null;
+    private final GeoEntry          geo                       = new GeoEntry();
+    private int                     size                      = 0;
 
     // no default values, need to be in directory.
-    private long                   ImageLength               = -1;
-    private long                   ImageWidth                = -1;
-    private long[]                 StripByteCounts           = null;
-    private long[]                 StripOffsets              = null;
-    private Rational               XResolution               = null;
-    private Rational               YResolution               = null;
-    private int                    PhotometricInterpretation = -1;
+    private long                    ImageLength               = -1;
+    private long                    ImageWidth                = -1;
+    private long[]                  StripByteCounts           = null;
+    private long[]                  StripOffsets              = null;
+    private Rational                XResolution               = null;
+    private Rational                YResolution               = null;
+    private int                     PhotometricInterpretation = -1;
 
     // tiled images
-    private long                   TileWidth                 = -1;
-    private long                   TileLength                = -1;
-    private long[]                 TileOffsets               = null;
-    private long[]                 TileByteCounts            = null;
-    private boolean                tiledImage                = false;
+    private long                    TileWidth                 = -1;
+    private long                    TileLength                = -1;
+    private long[]                  TileOffsets               = null;
+    private long[]                  TileByteCounts            = null;
+    private boolean                 tiledImage                = false;
 
     // have defaults, need not be in directory.
-    private long                   RowsPerStrip              = Long.MAX_VALUE;
-    private int[]                  BitsPerSample             = new int[] { 1 };
-    private String                 ImageDescription          = null;
-    private String                 Software                  = null;
-    private String                 DocumentName              = null;
-    private int                    SamplesPerPixel           = 1;
-    private int                    Compression               = 1;
-    private int                    ResolutionUnit            = 2;
-    private int                    PlanarConfiguration       = 1;
-    private int[]                  ColorMap                  = null;
-    private int                    SampleFormat              = 1;
-    private double                 invaliddata               = 9999;
-    private int                    Predictor                 = 1;
+    private long                    RowsPerStrip              = Long.MAX_VALUE;
+    private int[]                   BitsPerSample             = new int[] { 1 };
+    private String                  ImageDescription          = null;
+    private String                  Software                  = null;
+    private String                  DocumentName              = null;
+    private int                     SamplesPerPixel           = 1;
+    private int                     Compression               = 1;
+    private int                     ResolutionUnit            = 2;
+    private int                     PlanarConfiguration       = 1;
+    private int[]                   ColorMap                  = null;
+    private int                     SampleFormat              = 1;
+    private double                  invaliddata               = 9999;
+    private int                     Predictor                 = 1;
+    private HashMap<String, Object> Properties                = null;
 
-    private static Log             logger                    = LogFactory.getLog(TIFFimage.class);
+    private static Log              logger                    = LogFactory.getLog(TIFFimage.class);
 
     /**
      * Create a new TIFF image holder.
@@ -216,7 +219,7 @@ class TIFFimage {
             }
 
             int i, j = 0;
-            for (i = 0; i < numentries; i++, j += 20 ) {
+            for (i = 0; i < numentries; i++, j += 20) {
                 this.ifd.add(new IFDEntry(ifd, j, this));
             }
 
@@ -241,7 +244,7 @@ class TIFFimage {
             }
 
             int i, j = 0;
-            for (i = 0; i < numentries; i++, j += 12 ) {
+            for (i = 0; i < numentries; i++, j += 12) {
                 this.ifd.add(new IFDEntry(ifd, j, this));
             }
 
@@ -261,171 +264,201 @@ class TIFFimage {
             throw (new IOException("Did not read directory first."));
         }
 
-        for (int i = 0; i < this.ifd.size(); i++ ) {
+        for (int i = 0; i < this.ifd.size(); i++) {
             IFDEntry ifd = this.ifd.get(i);
 
             switch (ifd.getTag()) {
-                case IFDEntry.TAG_BitsPerSample:
-                    BitsPerSample = ifd.getUnsignedShortValues();
-                    break;
+            case IFDEntry.TAG_BitsPerSample:
+                BitsPerSample = ifd.getUnsignedShortValues();
+                break;
 
-                case IFDEntry.TAG_Compression:
-                    Compression = ifd.getUnsignedShortValue();
-                    break;
-                    
-                case IFDEntry.TAG_Predictor:
-                    Predictor = ifd.getUnsignedShortValue();
-                    break;
+            case IFDEntry.TAG_Compression:
+                Compression = ifd.getUnsignedShortValue();
+                break;
 
-                case IFDEntry.TAG_ColorMap:
-                    ColorMap = ifd.getUnsignedShortValues();
-                    break;
+            case IFDEntry.TAG_Predictor:
+                Predictor = ifd.getUnsignedShortValue();
+                break;
 
-                case IFDEntry.TAG_DocumentName:
-                    DocumentName = ifd.getString();
-                    break;
+            case IFDEntry.TAG_ColorMap:
+                ColorMap = ifd.getUnsignedShortValues();
+                break;
 
-                case IFDEntry.TAG_GeoAsciiParams:
-                    geo.setGeoAsciiParams(ifd.getString());
-                    break;
+            case IFDEntry.TAG_DocumentName:
+                DocumentName = ifd.getString();
+                break;
 
-                case IFDEntry.TAG_GeoDoubleParams:
-                    geo.setGeoDoubleParams(ifd.getDoubleValues());
-                    break;
+            case IFDEntry.TAG_GeoAsciiParams:
+                geo.setGeoAsciiParams(ifd.getString());
+                break;
 
-                case IFDEntry.TAG_GeoKeyDirectory:
-                    geo.setGeoKeyDirectory(ifd.getUnsignedShortValues());
-                    break;
+            case IFDEntry.TAG_GeoDoubleParams:
+                geo.setGeoDoubleParams(ifd.getDoubleValues());
+                break;
 
-                case IFDEntry.TAG_ImageDescription:
-                    ImageDescription = ifd.getString();
-                    break;
+            case IFDEntry.TAG_GeoKeyDirectory:
+                geo.setGeoKeyDirectory(ifd.getUnsignedShortValues());
+                break;
 
-                case IFDEntry.TAG_ImageLength:
-                    ImageLength = ifd.getLongShortValue();
-                    break;
+            case IFDEntry.TAG_ImageDescription:
+                ImageDescription = ifd.getString();
+                break;
 
-                case IFDEntry.TAG_ImageWidth:
-                    ImageWidth = ifd.getLongShortValue();
-                    break;
+            case IFDEntry.TAG_ImageLength:
+                ImageLength = ifd.getLongShortValue();
+                break;
 
-                case IFDEntry.TAG_MaxSampleValue:
-                    logger.debug("TAG_MaxSampleValue: " + ifd.getUnsignedShortValue());
-                    break;
+            case IFDEntry.TAG_ImageWidth:
+                ImageWidth = ifd.getLongShortValue();
+                break;
 
-                case IFDEntry.TAG_MinSampleValue:
-                    logger.debug("TAG_MinSampleValue: " + ifd.getUnsignedShortValue());
-                    break;
+            case IFDEntry.TAG_MaxSampleValue:
+                logger.debug("TAG_MaxSampleValue: " + ifd.getUnsignedShortValue());
+                break;
 
-                case IFDEntry.TAG_GDALNoData:
-                    String invalid = ifd.getString();
-                    try {
-                        invaliddata = Double.parseDouble(invalid);
-                    } catch (NumberFormatException exc) {
-                        logger.debug("Could not parse number, returning first byte as invalid data.", exc);
-                        invaliddata = invalid.charAt(0);
+            case IFDEntry.TAG_MinSampleValue:
+                logger.debug("TAG_MinSampleValue: " + ifd.getUnsignedShortValue());
+                break;
+
+            case IFDEntry.TAG_GDALNoData:
+                String invalid = ifd.getString();
+                try {
+                    invaliddata = Double.parseDouble(invalid);
+                } catch (NumberFormatException exc) {
+                    logger.debug("Could not parse number, returning first byte as invalid data.", exc);
+                    invaliddata = invalid.charAt(0);
+                }
+                break;
+
+            case IFDEntry.TAG_ImageMetadata:
+                Properties = new HashMap<String, Object>();
+                byte[] props = ifd.getArrayByte();
+                try {
+                    ByteArrayInputStream baos = new ByteArrayInputStream(props);
+                    ObjectInputStream ios = new ObjectInputStream(baos);
+                    HashMap<String, Object> data = (HashMap<String, Object>) ios.readObject();
+                    ios.close();
+
+                    // sort the entries by the key
+                    // Collections.sort(Properties);
+                    for (int m = 0; m < data.size(); m++) {
+                        // System.out.println("m=" + m + ",val=" +
+                        // data.get(String.valueOf(m)));
+                        Properties.put(String.valueOf(m), data.get(String.valueOf(m)));
                     }
-                    break;
 
-                case IFDEntry.TAG_ModelPixelScale:
-                    geo.setModelPixelScale(ifd.getDoubleValues());
-                    break;
+                    // test to see the properties
+                    /*
+                     * Set set = Properties.entrySet(); Iterator k =
+                     * set.iterator(); while (k.hasNext()) { Map.Entry test =
+                     * (Map.Entry) k.next(); System.out.println("test:" +
+                     * test.getKey() + " : " + test.getValue()); }
+                     */
+                } catch (ClassNotFoundException exc) {
+                    logger.debug("Could not cast the byte array to the HasMap, returning null.", exc);
+                    Properties = null;
+                }
+                break;
 
-                case IFDEntry.TAG_ModelTiepoint:
-                    // double [] pts = ifd.getDoubleValues();
-                    // long numEntries = ifd.getEntries();
-                    // System.out.println("Num of Entries in Model Tie Point : " +
-                    // numEntries);
-                    // System.out.println("Model Tie Point : " + pts[0] + ", " +
-                    // pts[1] + ", " + pts[2]);
+            case IFDEntry.TAG_ModelPixelScale:
+                geo.setModelPixelScale(ifd.getDoubleValues());
+                break;
 
-                    // System.out.println("Setting Model Tiepoint = " +
-                    // ifd.getDoubleValues());
-                    geo.setModelTiepoint(ifd.getDoubleValues());
-                    break;
+            case IFDEntry.TAG_ModelTiepoint:
+                // double [] pts = ifd.getDoubleValues();
+                // long numEntries = ifd.getEntries();
+                // System.out.println("Num of Entries in Model Tie Point : " +
+                // numEntries);
+                // System.out.println("Model Tie Point : " + pts[0] + ", " +
+                // pts[1] + ", " + pts[2]);
 
-                case IFDEntry.TAG_NewSubfileType:
-                    logger.debug("TAG_NewSubfileType: " + ifd.getUnsignedLongValue());
-                    break;
+                // System.out.println("Setting Model Tiepoint = " +
+                // ifd.getDoubleValues());
+                geo.setModelTiepoint(ifd.getDoubleValues());
+                break;
 
-                case IFDEntry.TAG_PhotometricInterpretation:
-                    PhotometricInterpretation = ifd.getUnsignedShortValue();
-                    break;
+            case IFDEntry.TAG_NewSubfileType:
+                logger.debug("TAG_NewSubfileType: " + ifd.getUnsignedLongValue());
+                break;
 
-                case IFDEntry.TAG_PlanarConfiguration:
-                    PlanarConfiguration = ifd.getUnsignedShortValue();
-                    break;
+            case IFDEntry.TAG_PhotometricInterpretation:
+                PhotometricInterpretation = ifd.getUnsignedShortValue();
+                break;
 
-                case IFDEntry.TAG_ResolutionUnit:
-                    ResolutionUnit = ifd.getUnsignedShortValue();
-                    break;
+            case IFDEntry.TAG_PlanarConfiguration:
+                PlanarConfiguration = ifd.getUnsignedShortValue();
+                break;
 
-                case IFDEntry.TAG_RowsPerStrip:
-                    RowsPerStrip = ifd.getLongShortValue();
-                    break;
+            case IFDEntry.TAG_ResolutionUnit:
+                ResolutionUnit = ifd.getUnsignedShortValue();
+                break;
 
-                case IFDEntry.TAG_SampleFormat:
-                    SampleFormat = ifd.getUnsignedShortValue();
-                    break;
+            case IFDEntry.TAG_RowsPerStrip:
+                RowsPerStrip = ifd.getLongShortValue();
+                break;
 
-                case IFDEntry.TAG_SamplesPerPixel:
-                    SamplesPerPixel = (int) ifd.getLongShortValue();
-                    break;
+            case IFDEntry.TAG_SampleFormat:
+                SampleFormat = ifd.getUnsignedShortValue();
+                break;
 
-                case IFDEntry.TAG_Software:
-                    Software = ifd.getString();
-                    break;
+            case IFDEntry.TAG_SamplesPerPixel:
+                SamplesPerPixel = (int) ifd.getLongShortValue();
+                break;
 
-                case IFDEntry.TAG_StripByteCounts:
-                    StripByteCounts = ifd.getLongShortValues();
-                    break;
+            case IFDEntry.TAG_Software:
+                Software = ifd.getString();
+                break;
 
-                case IFDEntry.TAG_StripOffsets:
-                    StripOffsets = ifd.getLongShortValues();
-                    break;
+            case IFDEntry.TAG_StripByteCounts:
+                StripByteCounts = ifd.getLongShortValues();
+                break;
 
-                case IFDEntry.TAG_SubfileType:
-                    logger.debug("TAG_SubfileType: " + ifd.getUnsignedShortValue());
-                    break;
+            case IFDEntry.TAG_StripOffsets:
+                StripOffsets = ifd.getLongShortValues();
+                break;
 
-                case IFDEntry.TAG_TileByteCounts:
-                    tiledImage = true;
-                    TileByteCounts = ifd.getLongShortValues();
-                    break;
+            case IFDEntry.TAG_SubfileType:
+                logger.debug("TAG_SubfileType: " + ifd.getUnsignedShortValue());
+                break;
 
-                case IFDEntry.TAG_TileLength:
-                    tiledImage = true;
-                    TileLength = ifd.getLongShortValue();
-                    break;
+            case IFDEntry.TAG_TileByteCounts:
+                tiledImage = true;
+                TileByteCounts = ifd.getLongShortValues();
+                break;
 
-                case IFDEntry.TAG_TileOffsets:
-                    tiledImage = true;
-                    TileOffsets = ifd.getLongShortValues();
-                    break;
+            case IFDEntry.TAG_TileLength:
+                tiledImage = true;
+                TileLength = ifd.getLongShortValue();
+                break;
 
-                case IFDEntry.TAG_TileWidth:
-                    tiledImage = true;
-                    TileWidth = ifd.getLongShortValue();
-                    break;
+            case IFDEntry.TAG_TileOffsets:
+                tiledImage = true;
+                TileOffsets = ifd.getLongShortValues();
+                break;
 
-                case IFDEntry.TAG_XResolution:
-                    XResolution = ifd.getRationalValue();
-                    break;
+            case IFDEntry.TAG_TileWidth:
+                tiledImage = true;
+                TileWidth = ifd.getLongShortValue();
+                break;
 
-                case IFDEntry.TAG_YResolution:
-                    YResolution = ifd.getRationalValue();
-                    break;
+            case IFDEntry.TAG_XResolution:
+                XResolution = ifd.getRationalValue();
+                break;
 
-                case IFDEntry.TAG_SubIFD:
-                    logger.debug("TAG_SubIFD: " + ifd.getLong8Value());
-                    break;
+            case IFDEntry.TAG_YResolution:
+                YResolution = ifd.getRationalValue();
+                break;
 
-                default:
-                    if (ifd.isType(IFDEntry.TYPE_ASCII)) {
-                        logger.debug("TAG_Unknown: " + ifd + " " + ifd.getString());
-                    } else {
-                        logger.debug("TAG_Unknown: " + ifd);
-                    }
+            case IFDEntry.TAG_SubIFD:
+                logger.debug("TAG_SubIFD: " + ifd.getLong8Value());
+                break;
+
+            default:
+                if (ifd.isType(IFDEntry.TYPE_ASCII)) {
+                    logger.debug("TAG_Unknown: " + ifd + " " + ifd.getString());
+                } else {
+                    logger.debug("TAG_Unknown: " + ifd);
+                }
             }
         }
     }
@@ -445,7 +478,7 @@ class TIFFimage {
         }
 
         // can only handle images with same number of bits per sample
-        for (int i = 1; i < SamplesPerPixel; i++ ) {
+        for (int i = 1; i < SamplesPerPixel; i++) {
             if (BitsPerSample[0] != BitsPerSample[i]) {
                 throw (new IOException("Can only read files with bitspersample same."));
             }
@@ -487,26 +520,26 @@ class TIFFimage {
         } else {
             // create image based on bits per sample
             switch (BitsPerSample[0]) {
-                case 1:
-                case 4:
-                case 8:
-                    image = ImageObject.createImage(h, w, b, ImageObject.TYPE_BYTE, true);
-                    break;
+            case 1:
+            case 4:
+            case 8:
+                image = ImageObject.createImage(h, w, b, ImageObject.TYPE_BYTE, true);
+                break;
 
-                case 16:
-                    image = ImageObject.createImage(h, w, b, ImageObject.TYPE_USHORT, true);
-                    break;
+            case 16:
+                image = ImageObject.createImage(h, w, b, ImageObject.TYPE_USHORT, true);
+                break;
 
-                case 32:
-                    if (SampleFormat == 3) {
-                        image = ImageObject.createImage(h, w, b, ImageObject.TYPE_FLOAT, true);
-                    } else {
-                        image = ImageObject.createImage(h, w, b, ImageObject.TYPE_INT, true);
-                    }
-                    break;
+            case 32:
+                if (SampleFormat == 3) {
+                    image = ImageObject.createImage(h, w, b, ImageObject.TYPE_FLOAT, true);
+                } else {
+                    image = ImageObject.createImage(h, w, b, ImageObject.TYPE_INT, true);
+                }
+                break;
 
-                default:
-                    throw (new IOException("Can't read this many bits per sample."));
+            default:
+                throw (new IOException("Can't read this many bits per sample."));
             }
         }
 
@@ -524,15 +557,15 @@ class TIFFimage {
         image.setProperty("YResolution", YResolution);
 
         switch (ResolutionUnit) {
-            case 1:
-                image.setProperty("Resolution", "Unknown");
-                break;
-            case 2:
-                image.setProperty("Resolution", "Inch");
-                break;
-            case 3:
-                image.setProperty("Resolution", "Centimeter");
-                break;
+        case 1:
+            image.setProperty("Resolution", "Unknown");
+            break;
+        case 2:
+            image.setProperty("Resolution", "Inch");
+            break;
+        case 3:
+            image.setProperty("Resolution", "Centimeter");
+            break;
         }
 
         // TODO can we recognize which images have this using comment?
@@ -555,6 +588,14 @@ class TIFFimage {
             // System.out.println(geoinfo.toString());
 
             image.setProperty(ImageObject.GEOINFO, geoinfo);
+        }
+
+        // add the image properties
+        if (Properties != null) {
+            image.setProperties(Properties);
+            // test
+            // System.out.println("Properties attached: size=" +
+            // Properties.size() + ", content=" + Properties.toString());
         }
     }
 
@@ -605,48 +646,48 @@ class TIFFimage {
                 // TODO add tiled image support
                 // throw(new IOException("No tiled image support."));
                 switch (PhotometricInterpretation) {
-                    case 0:
-                    case 1:
-                        // TODO readImageTileGrayscale
-                        throw new IOException("No Grayscale tiled image support.");
-                    case 2:
-                        // TODO readImageTileRGB
-                        throw (new IOException("No RGB tiled image support."));
-                    case 3:
-                        readImageTilePalette();
-                        break;
-                    default:
-                        logger.debug("PhotometricInterpretation = " + PhotometricInterpretation);
-                        throw (new IOException("Can not read this type of tiled TIFF image."));
+                case 0:
+                case 1:
+                    // TODO readImageTileGrayscale
+                    throw new IOException("No Grayscale tiled image support.");
+                case 2:
+                    // TODO readImageTileRGB
+                    throw (new IOException("No RGB tiled image support."));
+                case 3:
+                    readImageTilePalette();
+                    break;
+                default:
+                    logger.debug("PhotometricInterpretation = " + PhotometricInterpretation);
+                    throw (new IOException("Can not read this type of tiled TIFF image."));
                 }
             } else {
                 switch (PhotometricInterpretation) {
-                    case 0:
-                    case 1:
-                        readImageStripGrayscale();
-                        break;
+                case 0:
+                case 1:
+                    readImageStripGrayscale();
+                    break;
 
-                    case 2:
-                        readImageStripRGB();
-                        break;
+                case 2:
+                    readImageStripRGB();
+                    break;
 
-                    case 3:
-                        readImageStripPalette();
-                        break;
+                case 3:
+                    readImageStripPalette();
+                    break;
 
-                    default:
-                        logger.debug("PhotometricInterpretation = " + PhotometricInterpretation);
-                        throw (new IOException("Can not read this type of TIFF image."));
+                default:
+                    logger.debug("PhotometricInterpretation = " + PhotometricInterpretation);
+                    throw (new IOException("Can not read this type of TIFF image."));
                 }
             }
         } else {
             ImageObjectOutOfCore iooc = (ImageObjectOutOfCore) image;
             TIFFLoader tl = new TIFFLoader();
-            for (SubArea sa : iooc.getTileBoxes() ) {
+            for (SubArea sa : iooc.getTileBoxes()) {
                 ImageObject imgobj = tl.readImage(this.filename, sa, this.sampling);
-                for (int r = 0; r < imgobj.getNumRows(); r++ ) {
-                    for (int c = 0; c < imgobj.getNumCols(); c++ ) {
-                        for (int b = 0; b < imgobj.getNumBands(); b++ ) {
+                for (int r = 0; r < imgobj.getNumRows(); r++) {
+                    for (int c = 0; c < imgobj.getNumCols(); c++) {
+                        for (int b = 0; b < imgobj.getNumBands(); b++) {
                             iooc.setDouble(sa.y + r, sa.x + c, b, imgobj.getDouble(r, c, b));
                         }
                     }
@@ -684,18 +725,18 @@ class TIFFimage {
         int bytesPerPixel = SamplesPerPixel;
         int bytesPerSample = 1;
         switch (image.getType()) {
-            case ImageObject.TYPE_BYTE:
-                bytesPerSample = 1;
-                break;
-            case ImageObject.TYPE_USHORT:
-                bytesPerSample = 2;
-                break;
-            case ImageObject.TYPE_INT:
-            case ImageObject.TYPE_FLOAT:
-                bytesPerSample = 4;
-                break;
-            default:
-                logger.debug("Missing switch statement for type " + image.getType());
+        case ImageObject.TYPE_BYTE:
+            bytesPerSample = 1;
+            break;
+        case ImageObject.TYPE_USHORT:
+            bytesPerSample = 2;
+            break;
+        case ImageObject.TYPE_INT:
+        case ImageObject.TYPE_FLOAT:
+            bytesPerSample = 4;
+            break;
+        default:
+            logger.debug("Missing switch statement for type " + image.getType());
         }
         bytesPerPixel *= bytesPerSample;
         int sampskip = bytesPerPixel * (sampling - 1) + (SamplesPerPixel - area.getNumBands()) * bytesPerSample;
@@ -703,32 +744,32 @@ class TIFFimage {
         int colskip = (area.getCol() * bytesPerPixel) + area.getFirstBand() * bytesPerSample;
         int start = row * rowskip + colskip;
         final int imgType = image.getType();
-        for (i = 0; i < size; ) {
+        for (i = 0; i < size;) {
             switch (imgType) {
-                case ImageObject.TYPE_BYTE:
-                    for (b = 0; b < area.getNumBands(); b++, start++, i++ ) {
-                        image.set(i, reader.getByte(start));
-                    }
-                    start += sampskip;
-                    break;
-                case ImageObject.TYPE_USHORT:
-                    for (b = 0; b < area.getNumBands(); b++, start += 2, i++ ) {
-                        image.set(i, reader.getShort(start));
-                    }
-                    start += sampskip;
-                    break;
-                case ImageObject.TYPE_INT:
-                    for (b = 0; b < area.getNumBands(); b++, start += 4, i++ ) {
-                        image.set(i, reader.getLong(start));
-                    }
-                    start += sampskip;
-                    break;
-                case ImageObject.TYPE_FLOAT:
-                    for (b = 0; b < area.getNumBands(); b++, start += 4, i++ ) {
-                        image.set(i, reader.getFloat(start));
-                    }
-                    start += sampskip;
-                    break;
+            case ImageObject.TYPE_BYTE:
+                for (b = 0; b < area.getNumBands(); b++, start++, i++) {
+                    image.set(i, reader.getByte(start));
+                }
+                start += sampskip;
+                break;
+            case ImageObject.TYPE_USHORT:
+                for (b = 0; b < area.getNumBands(); b++, start += 2, i++) {
+                    image.set(i, reader.getShort(start));
+                }
+                start += sampskip;
+                break;
+            case ImageObject.TYPE_INT:
+                for (b = 0; b < area.getNumBands(); b++, start += 4, i++) {
+                    image.set(i, reader.getLong(start));
+                }
+                start += sampskip;
+                break;
+            case ImageObject.TYPE_FLOAT:
+                for (b = 0; b < area.getNumBands(); b++, start += 4, i++) {
+                    image.set(i, reader.getFloat(start));
+                }
+                start += sampskip;
+                break;
             }
 
             col += sampling;
@@ -781,12 +822,12 @@ class TIFFimage {
             i = 0;
             long stride = (BitsPerSample[0] * ImageWidth + 7) / 8;
 
-            for (int r = 0; r < area.getHeight(); r += sampling ) {
+            for (int r = 0; r < area.getHeight(); r += sampling) {
                 offset = (r + area.getRow()) * stride;
                 off = area.getCol() * BitsPerSample[0];
                 offset += (off / 8);
                 off = off % 8;
-                for (int c = 0; c < area.getWidth(); c += sampling ) {
+                for (int c = 0; c < area.getWidth(); c += sampling) {
                     x = (reader.getByte(offset) >> (8 - off)) & 0x01;
                     image.set(i++, (x == PhotometricInterpretation) ? 255 : 0);
                     off += sampling * BitsPerSample[0];
@@ -798,66 +839,66 @@ class TIFFimage {
             return;
         }
 
-        for (i = 0; i < size; ) {
+        for (i = 0; i < size;) {
             switch (BitsPerSample[0]) {
-                case 32:
-                    if (SampleFormat == 3) {
-                        int bits = (int) reader.getLong(start);
-                        // TODO HACK this is not really NaN.
-                        if (bits == 0xff7fffff) {
-                            // logger.debug("ArcGIS NaN? setting pixel " + i +
-                            // " to 0.");
-                            image.set(i++, 0);
-                        } else {
-                            image.set(i++, Float.intBitsToFloat(bits));
-                        }
+            case 32:
+                if (SampleFormat == 3) {
+                    int bits = (int) reader.getLong(start);
+                    // TODO HACK this is not really NaN.
+                    if (bits == 0xff7fffff) {
+                        // logger.debug("ArcGIS NaN? setting pixel " + i +
+                        // " to 0.");
+                        image.set(i++, 0);
                     } else {
-                        if (PhotometricInterpretation == 0) {
-                            image.set(i++, 0xffffff - reader.getLong(start));
-                        } else {
-                            image.set(i++, reader.getLong(start));
-                        }
+                        image.set(i++, Float.intBitsToFloat(bits));
                     }
-                    start += 4 * sampling;
-                    break;
-
-                case 16:
+                } else {
                     if (PhotometricInterpretation == 0) {
-                        image.set(i++, 0xffff - reader.getShort(start));
+                        image.set(i++, 0xffffff - reader.getLong(start));
                     } else {
-                        image.set(i++, reader.getShort(start));
+                        image.set(i++, reader.getLong(start));
                     }
-                    start += 2 * sampling;
-                    break;
+                }
+                start += 4 * sampling;
+                break;
 
-                case 8:
-                    if (PhotometricInterpretation == 0) {
-                        image.set(i++, 255 - reader.getByte(start));
-                    } else {
-                        image.set(i++, reader.getByte(start));
-                    }
-                    start += sampling;
-                    break;
+            case 16:
+                if (PhotometricInterpretation == 0) {
+                    image.set(i++, 0xffff - reader.getShort(start));
+                } else {
+                    image.set(i++, reader.getShort(start));
+                }
+                start += 2 * sampling;
+                break;
 
-                case 4:
-                    x = (reader.getByte(start) >> (8 - off)) & 0x0f << 4;
-                    if (PhotometricInterpretation == 0) {
-                        image.set(i++, 255 - x);
-                    } else {
-                        image.set(i++, x);
-                    }
-                    off += 4 * sampling;
-                    start += off / 8;
-                    off = off % 8;
-                    break;
+            case 8:
+                if (PhotometricInterpretation == 0) {
+                    image.set(i++, 255 - reader.getByte(start));
+                } else {
+                    image.set(i++, reader.getByte(start));
+                }
+                start += sampling;
+                break;
 
-                case 1:
-                    x = (reader.getByte(start) >> (8 - off)) & 0x01;
-                    image.set(i++, (x == PhotometricInterpretation) ? 255 : 0);
-                    off += sampling;
-                    start += off / 8;
-                    off = off % 8;
-                    break;
+            case 4:
+                x = (reader.getByte(start) >> (8 - off)) & 0x0f << 4;
+                if (PhotometricInterpretation == 0) {
+                    image.set(i++, 255 - x);
+                } else {
+                    image.set(i++, x);
+                }
+                off += 4 * sampling;
+                start += off / 8;
+                off = off % 8;
+                break;
+
+            case 1:
+                x = (reader.getByte(start) >> (8 - off)) & 0x01;
+                image.set(i++, (x == PhotometricInterpretation) ? 255 : 0);
+                off += sampling;
+                start += off / 8;
+                off = off % 8;
+                break;
             }
 
             col += sampling;
@@ -926,25 +967,25 @@ class TIFFimage {
         int start = row * rowskip + colskip;
         int off = (area.getCol() * BitsPerSample[0]) % 8;
 
-        for (i = 0; i < size; ) {
+        for (i = 0; i < size;) {
             switch (BitsPerSample[0]) {
-                case 16:
-                    x = (reader.getByte(start) & 0x0ff) << 8;
-                    x = x | (reader.getByte(start) & 0x0ff);
-                    start += 2 * sampling;
-                    break;
+            case 16:
+                x = (reader.getByte(start) & 0x0ff) << 8;
+                x = x | (reader.getByte(start) & 0x0ff);
+                start += 2 * sampling;
+                break;
 
-                case 8:
-                    x = reader.getByte(start) & 0xff;
-                    start += sampling;
-                    break;
+            case 8:
+                x = reader.getByte(start) & 0xff;
+                start += sampling;
+                break;
 
-                case 4:
-                    x = (reader.getByte(start) >> (8 - off)) & 0x0f << 4;
-                    off += 4 * sampling;
-                    start += off / 8;
-                    off = off % 8;
-                    break;
+            case 4:
+                x = (reader.getByte(start) >> (8 - off)) & 0x0f << 4;
+                off += 4 * sampling;
+                start += off / 8;
+                off = off % 8;
+                break;
             }
 
             // TODO is this correct?
@@ -1029,31 +1070,31 @@ class TIFFimage {
         int off = area.getCol() * BitsPerSample[0];
         int start = rowskip * row + off / 8;
         off = off % 8;
-        for (i = 0; i < size; ) {
+        for (i = 0; i < size;) {
             if (start >= reader.total) {
                 reader.read(start);
             }
 
             switch (BitsPerSample[0]) {
-                case 16:
-                    x = (reader.getByte(start) & 0x0ff) << 8;
-                    x = x | (reader.getByte(start) & 0x0ff);
-                    off += 16 * sampling;
-                    start += off / 8;
-                    off = off % 8;
-                    break;
+            case 16:
+                x = (reader.getByte(start) & 0x0ff) << 8;
+                x = x | (reader.getByte(start) & 0x0ff);
+                off += 16 * sampling;
+                start += off / 8;
+                off = off % 8;
+                break;
 
-                case 8:
-                    x = reader.getByte(start);
-                    start += sampling;
-                    break;
+            case 8:
+                x = reader.getByte(start);
+                start += sampling;
+                break;
 
-                case 4:
-                    x = (reader.getByte(start) >> (8 - off)) & 0x0f << 4;
-                    off += 4 * sampling;
-                    start += off / 8;
-                    off = off % 8;
-                    break;
+            case 4:
+                x = (reader.getByte(start) >> (8 - off)) & 0x0f << 4;
+                off += 4 * sampling;
+                start += off / 8;
+                off = off % 8;
+                break;
             }
             // TODO is this correct?
             if (usered) {
@@ -1175,24 +1216,24 @@ class TIFFimage {
 
         private void read(long offset) throws IOException {
             switch (Compression) {
-                case 1:
-                    noCompressionRead(offset);
-                    break;
+            case 1:
+                noCompressionRead(offset);
+                break;
 
-                // TODO compressed read
+            // TODO compressed read
 
-                default:
-                    if (firsttime) {
-                        logger.warn("Can not handle compression [" + Compression + "].");
-                        len = (int) (ImageWidth * SamplesPerPixel);
-                        total = len;
-                        loc = 0;
-                        imagebyte = new byte[len];
-                        firsttime = false;
-                    } else {
-                        loc -= len;
-                        total += len;
-                    }
+            default:
+                if (firsttime) {
+                    logger.warn("Can not handle compression [" + Compression + "].");
+                    len = (int) (ImageWidth * SamplesPerPixel);
+                    total = len;
+                    loc = 0;
+                    imagebyte = new byte[len];
+                    firsttime = false;
+                } else {
+                    loc -= len;
+                    total += len;
+                }
             }
             ImageLoader.fireProgress((int) offset, size);
         }
@@ -1247,7 +1288,7 @@ class TIFFimage {
                     long offset = 0;
 
                     // for each tile in a row
-                    for (int across = 0; across < TilesAcross; across++ ) {
+                    for (int across = 0; across < TilesAcross; across++) {
                         // read the tile in
 
                         // move the seek pointer to the offset
@@ -1285,7 +1326,7 @@ class TIFFimage {
                         }
 
                         // for each row of the tile
-                        for (int tilerow = 0; tilerow < numRowsInTile; tilerow++ ) {
+                        for (int tilerow = 0; tilerow < numRowsInTile; tilerow++) {
                             // we want to copy the entire row into the correct
                             // spot
                             // in imagebyte
@@ -1377,35 +1418,35 @@ class TIFFimage {
 
         private void read(long offset) throws IOException {
             switch (Compression) {
-                case 1:
-                    noCompressionRead(offset);
-                    break;
+            case 1:
+                noCompressionRead(offset);
+                break;
 
-                case 4:
-                    ccitRead(offset);
-                    break;
+            case 4:
+                ccitRead(offset);
+                break;
 
-                case 5:
-                    lzwRead(offset);
-                    break;
+            case 5:
+                lzwRead(offset);
+                break;
 
-                case 32773:
-                    unPackBitsRead(offset);
-                    break;
+            case 32773:
+                unPackBitsRead(offset);
+                break;
 
-                default:
-                    if (firsttime) {
-                        logger.warn("Can not handle compression [" + Compression + "].");
-                        len = (int) (ImageWidth * SamplesPerPixel);
-                        total = len;
-                        loc = 0;
-                        imagebyte = new byte[(int) len];
-                        firsttime = false;
-                    } else {
-                        loc -= len;
-                        total += len;
-                    }
-                    break;
+            default:
+                if (firsttime) {
+                    logger.warn("Can not handle compression [" + Compression + "].");
+                    len = (int) (ImageWidth * SamplesPerPixel);
+                    total = len;
+                    loc = 0;
+                    imagebyte = new byte[(int) len];
+                    firsttime = false;
+                } else {
+                    loc -= len;
+                    total += len;
+                }
+                break;
             }
             ImageLoader.fireProgress((int) offset, size);
         }
@@ -1547,11 +1588,11 @@ class TIFFimage {
                 // decompress
                 TIFFFaxDecoder decoder = new TIFFFaxDecoder(1, (int) ImageWidth, (int) ImageLength);
                 switch (Compression) {
-                    case 4:
-                        decoder.decodeT6(imagebyte, compressed, 0, (int) lines, 0);
-                        break;
-                    default:
-                        throw (new IOException(String.format("CCIT does not support compression %d.", Compression)));
+                case 4:
+                    decoder.decodeT6(imagebyte, compressed, 0, (int) lines, 0);
+                    break;
+                default:
+                    throw (new IOException(String.format("CCIT does not support compression %d.", Compression)));
                 }
             }
         }
@@ -1683,7 +1724,7 @@ class TIFFimage {
                 }
                 // count bytes
                 len = 0;
-                for (i = 0; i < clen; i++ ) {
+                for (i = 0; i < clen; i++) {
                     n = compressed[i];
                     if (n >= 0) {
                         len += n + 1;
@@ -1700,7 +1741,7 @@ class TIFFimage {
                     if (imagebyte.length < len) {
                         imagebyte = new byte[(int) len];
                     }
-                    for (j = 0, i = 0; i < clen; i++ ) {
+                    for (j = 0, i = 0; i < clen; i++) {
                         n = compressed[i];
                         if (n >= 0) {
                             i++;
