@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/isda.imagetools-plugins/src/main/java/edu/illinois/ncsa/isda/imagetools/main/CompareCoastlines.java"/>
+<listEntry value="/im2learn-ext-plugins/src/main/java/edu/illinois/ncsa/isda/im2learn/main/CompareCoastlines.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="edu.illinois.ncsa.isda.imagetools.main.CompareCoastlines"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="edu.illinois.ncsa.isda.im2learn.main.CompareCoastlines"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="Test_Data/TrainingImages/HandA.11.shp&#13;&#10;Test_Data/Synthetic_Test/vert_bar.shp 4 4"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="isda.imagetools-plugins"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="im2learn-ext-plugins"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dim2learn.ext=classes -Xmx1G"/>
 </launchConfiguration>

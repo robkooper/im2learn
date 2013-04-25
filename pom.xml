@@ -2,70 +2,70 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>imagetools-plugins</artifactId>
-        <name>ISDA ImageTools - Plugins</name>
+	<artifactId>im2learn-plugins</artifactId>
+        <name>ISDA Im2Learn - Plugins</name>
 	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>edu.illinois.ncsa.isda</groupId>
 		<version>3.0.0-SNAPSHOT</version>
-		<artifactId>imagetools</artifactId>
-                <relativePath>../imagetools-parent/pom.xml</relativePath>
+		<artifactId>im2learn</artifactId>
+                <relativePath>../im2learn-parent/pom.xml</relativePath>
 	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>edu.illinois.ncsa.isda</groupId>
-			<artifactId>imagetools-core</artifactId>
+			<artifactId>im2learn-core</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>edu.illinois.ncsa.isda</groupId>
-			<artifactId>imagetools-panel</artifactId>
+			<artifactId>im2learn-panel</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>edu.illinois.ncsa.isda</groupId>
-			<artifactId>imagetools-hdf</artifactId>
+			<artifactId>im2learn-hdf</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>edu.illinois.ncsa.isda</groupId>
-			<artifactId>imagetools-jai</artifactId>
+			<artifactId>im2learn-jai</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>edu.illinois.ncsa.isda</groupId>
-			<artifactId>imagetools-itext</artifactId>
+			<artifactId>im2learn-itext</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>edu.illinois.ncsa.isda</groupId>
-			<artifactId>imagetools-analyze</artifactId>
+			<artifactId>im2learn-analyze</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>edu.illinois.ncsa.isda</groupId>
-			<artifactId>imagetools-jpedal</artifactId>
+			<artifactId>im2learn-jpedal</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>edu.illinois.ncsa.isda</groupId>
-			<artifactId>imagetools-pdfbox</artifactId>
+			<artifactId>im2learn-pdfbox</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
@@ -145,7 +145,7 @@
 
 		<dependency>
 			<groupId>edu.illinois.ncsa.isda</groupId>
-			<artifactId>imagetools-core</artifactId>
+			<artifactId>im2learn-core</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>test-jar</type>
 			<scope>test</scope>
