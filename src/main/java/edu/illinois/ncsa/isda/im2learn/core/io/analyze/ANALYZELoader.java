@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.ANALYZE;
+package edu.illinois.ncsa.isda.im2learn.core.io.analyze;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
@@ -57,10 +57,10 @@ import javax.imageio.stream.ImageOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
 import edu.ucla.loni.analyze.plugin.*;
 
 
