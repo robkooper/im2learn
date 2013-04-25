@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.core.io.pdf;
+package edu.illinois.ncsa.isda.im2learn.core.io.pdf;
 
 /*******************************************************************************
  * University of Illinois/NCSA
@@ -57,7 +57,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import edu.illinois.ncsa.isda.imagetools.core.io.FileChooser;
+import edu.illinois.ncsa.isda.im2learn.core.io.FileChooser;
 
 public class Crypto {
 

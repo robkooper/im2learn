@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.main;
+package edu.illinois.ncsa.isda.im2learn.main;
 
 /*******************************************************************************
  * University of Illinois/NCSA
@@ -51,9 +51,9 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFWriter;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.io.pdf.PDFWriter;
 
 
 /**

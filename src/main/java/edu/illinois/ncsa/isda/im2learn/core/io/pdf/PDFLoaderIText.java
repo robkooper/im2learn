@@ -1,14 +1,14 @@
 /**
  * 
  */
-package edu.illinois.ncsa.isda.imagetools.core.io.pdf;
+package edu.illinois.ncsa.isda.im2learn.core.io.pdf;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageWriter;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageWriter;
 
 
 /**

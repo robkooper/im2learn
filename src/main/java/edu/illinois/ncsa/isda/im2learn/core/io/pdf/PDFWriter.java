@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.pdf;
+package edu.illinois.ncsa.isda.im2learn.core.io.pdf;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -73,9 +73,9 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.io.FileChooser;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.io.FileChooser;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
 
 /**
  * This class is a wrapper of iText library. It allows to create PDF files
