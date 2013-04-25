@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.hdf;
+package edu.illinois.ncsa.isda.im2learn.core.io.hdf;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -57,30 +57,30 @@ import ncsa.hdf.object.ScalarDS;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectByte;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectDouble;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectFloat;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectInt;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectLong;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectShort;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Datum;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoGraphicCoordinateSystem;
-import edu.illinois.ncsa.isda.imagetools.core.geo.ModelPoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.geo.ProjectionConvert;
-import edu.illinois.ncsa.isda.imagetools.core.geo.RasterPoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.TiePoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection.ProjectionType;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewSinusoidal;
-import edu.illinois.ncsa.isda.imagetools.core.io.FileChooser;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageWriter;
-import edu.illinois.ncsa.isda.imagetools.core.io.LoadSaveCheck;
-import edu.illinois.ncsa.isda.imagetools.core.io.tiff.GeoEntry;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectByte;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectDouble;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectFloat;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectInt;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectLong;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectShort;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Datum;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoGraphicCoordinateSystem;
+import edu.illinois.ncsa.isda.im2learn.core.geo.ModelPoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.ProjectionConvert;
+import edu.illinois.ncsa.isda.im2learn.core.geo.RasterPoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.TiePoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection.ProjectionType;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewSinusoidal;
+import edu.illinois.ncsa.isda.im2learn.core.io.FileChooser;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageWriter;
+import edu.illinois.ncsa.isda.im2learn.core.io.LoadSaveCheck;
+import edu.illinois.ncsa.isda.im2learn.core.io.tiff.GeoEntry;
 
 /**
  * Load an HDF image. Images in a HDF file are kept inside another file. The

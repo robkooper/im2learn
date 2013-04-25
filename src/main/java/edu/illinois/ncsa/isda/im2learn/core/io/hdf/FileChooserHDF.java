@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.hdf;
+package edu.illinois.ncsa.isda.im2learn.core.io.hdf;
 
 import ncsa.hdf.object.Dataset;
 import ncsa.hdf.object.FileFormat;

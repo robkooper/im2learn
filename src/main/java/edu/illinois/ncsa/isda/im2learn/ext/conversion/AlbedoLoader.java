@@ -40,16 +40,16 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.ext.conversion;
+package edu.illinois.ncsa.isda.im2learn.ext.conversion;
 
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.util.HashMap;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectShort;
-import edu.illinois.ncsa.isda.imagetools.core.io.hdf.HDF;
-import edu.illinois.ncsa.isda.imagetools.core.io.hdf.HDFLoader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectShort;
+import edu.illinois.ncsa.isda.im2learn.core.io.hdf.HDF;
+import edu.illinois.ncsa.isda.im2learn.core.io.hdf.HDFLoader;
 
 
 public class AlbedoLoader {
