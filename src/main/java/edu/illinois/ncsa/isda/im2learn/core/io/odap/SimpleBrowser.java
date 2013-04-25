@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.odap;
+package edu.illinois.ncsa.isda.im2learn.core.io.odap;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -76,12 +76,12 @@ import javax.swing.text.html.HTMLDocument;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMainFrame;
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
-import edu.illinois.ncsa.isda.imagetools.core.io.LoadSaveImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.io.hdf.FileChooserHDF;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMainFrame;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.im2learn.core.io.LoadSaveImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.io.hdf.FileChooserHDF;
 
 /**
  * Implements a simple web browser that can be used to navigate to files on HTTP
