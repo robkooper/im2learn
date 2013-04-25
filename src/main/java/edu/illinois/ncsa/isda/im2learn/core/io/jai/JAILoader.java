@@ -40,15 +40,15 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.jai;
+package edu.illinois.ncsa.isda.im2learn.core.io.jai;
 
 import com.sun.media.jai.codec.ImageCodec;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
 
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;

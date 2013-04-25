@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.jai;
+package edu.illinois.ncsa.isda.im2learn.core.io.jai;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -69,15 +69,15 @@ import javax.media.jai.TiledImage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectByte;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectDouble;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectFloat;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectInt;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectShort;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectUShort;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectByte;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectDouble;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectFloat;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectInt;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectShort;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectUShort;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
 
 /**
  * Wrapper class to provide easy access to JAI functions. All the JAI routines
