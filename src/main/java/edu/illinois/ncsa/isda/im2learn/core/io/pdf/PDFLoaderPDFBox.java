@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.pdf;
+package edu.illinois.ncsa.isda.im2learn.core.io.pdf;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -76,14 +76,14 @@ import org.apache.pdfbox.util.Matrix;
 import org.apache.pdfbox.util.PDFOperator;
 import org.apache.pdfbox.util.TextPosition;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.PDFAnnotation;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.PDFAnnotation;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
 
 public class PDFLoaderPDFBox implements ImageReader, Im2LearnMenu {
     private static boolean useAnnotations = false;
