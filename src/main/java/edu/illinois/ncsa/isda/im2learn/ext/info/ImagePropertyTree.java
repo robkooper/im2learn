@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.ext.info;
+package edu.illinois.ncsa.isda.im2learn.ext.info;
 
 import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Array;
@@ -56,16 +56,16 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectOutOfCore;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageAnnotation;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageComponent;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.geo.BoundingBox;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoException;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoUtilities;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.geo.ProjectionConvert;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectOutOfCore;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageAnnotation;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageComponent;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.geo.BoundingBox;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoException;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoUtilities;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.ProjectionConvert;
 
 /**
  * Create a tree with all the properties of an ImageObject. This allows for easy

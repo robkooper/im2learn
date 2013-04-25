@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.ext.panel;
+package edu.illinois.ncsa.isda.im2learn.ext.panel;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -63,10 +63,10 @@ import javax.swing.event.ChangeListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnFrame;
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnFrame;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageUpdateEvent;
 
 /*
  * Show a dialog that allows the user to scale the image. Pressing Apply will change

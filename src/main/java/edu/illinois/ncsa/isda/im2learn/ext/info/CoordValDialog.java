@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.ext.info;
+package edu.illinois.ncsa.isda.im2learn.ext.info;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -72,22 +72,22 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.Point2DDouble;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ShapeObject;
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnFrame;
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageMarker;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoUtilities;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.ModelProjection;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.io.FileChooser;
-import edu.illinois.ncsa.isda.imagetools.core.io.shapefile.ShapefileException;
-import edu.illinois.ncsa.isda.imagetools.core.io.shapefile.ShapefileLoader;
-import edu.illinois.ncsa.isda.imagetools.ext.misc.PlotComponent;
-import edu.illinois.ncsa.isda.imagetools.ext.misc.TableSorter;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.Point2DDouble;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ShapeObject;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnFrame;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageMarker;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoUtilities;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.ModelProjection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.io.FileChooser;
+import edu.illinois.ncsa.isda.im2learn.core.io.shapefile.ShapefileException;
+import edu.illinois.ncsa.isda.im2learn.core.io.shapefile.ShapefileLoader;
+import edu.illinois.ncsa.isda.im2learn.ext.misc.PlotComponent;
+import edu.illinois.ncsa.isda.im2learn.ext.misc.TableSorter;
 
 
 /**

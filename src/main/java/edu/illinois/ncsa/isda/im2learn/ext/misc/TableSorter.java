@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.ext.misc;
+package edu.illinois.ncsa.isda.im2learn.ext.misc;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;

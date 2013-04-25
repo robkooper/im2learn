@@ -40,17 +40,17 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.ext.info;
+package edu.illinois.ncsa.isda.im2learn.ext.info;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageMarker;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
-import edu.illinois.ncsa.isda.imagetools.ext.misc.PlotComponent;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageMarker;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.im2learn.ext.misc.PlotComponent;
 
 import javax.swing.*;
 import java.awt.*;

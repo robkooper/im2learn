@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.ext.info;
+package edu.illinois.ncsa.isda.im2learn.ext.info;
 
 import java.awt.Frame;
 import javax.swing.JOptionPane;

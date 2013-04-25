@@ -40,48 +40,78 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.ext.panel;
+package edu.illinois.ncsa.isda.im2learn.ext.panel;
 
 
 import javax.swing.*;
 
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageUpdateEvent;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 
-/**
- * Create a menu that allows toggling on and off of totals. Using totals will
- * use the absolute max and min to calculate what is red/green/blue.
- */
-public class UseTotalsDialog implements Im2LearnMenu {
+public class SelectionDialog implements Im2LearnMenu {
     private ImagePanel imagepanel = null;
-    private JMenuItem usetotals = null;
+    private JCheckBoxMenuItem allowselection = null;
+    private JMenuItem clearselection = null;
+    private JMenuItem showselection = null;
+    private JMenuItem fullimage = null;
 
-    /**
-     * Create the totals menu entry.
-     */
-    public UseTotalsDialog() {
-        usetotals = new JCheckBoxMenuItem(new AbstractAction("Use Totals?") {
+    public SelectionDialog() {
+        allowselection = new JCheckBoxMenuItem(new AbstractAction("Allow Selection?") {
             public void actionPerformed(ActionEvent e) {
                 JCheckBoxMenuItem chk = (JCheckBoxMenuItem) e.getSource();
-                imagepanel.setUseTotals(chk.isSelected());
+                if (chk.isSelected() != imagepanel.isSelectionAllowed()) {
+                    imagepanel.setSelectionAllowed(chk.isSelected());
+                }
             }
         });
+
+        clearselection = new JMenuItem(new AbstractAction("Clear Selection") {
+            public void actionPerformed(ActionEvent e) {
+                imagepanel.setSelection(null);
+            }
+        });
+
+        showselection = new JMenuItem(new AbstractAction("Show Selection") {
+            public void actionPerformed(ActionEvent e) {
+                Rectangle crop = imagepanel.getSelection();
+                if (crop != null) {
+                    imagepanel.setCrop(crop);
+                    imagepanel.setSelection(null);
+                }
+            }
+        });
+
+        fullimage = new JMenuItem(new AbstractAction("Full Image") {
+            public void actionPerformed(ActionEvent e) {
+                imagepanel.setCrop(null);
+                imagepanel.setSelection(null);
+            }
+        });
+
     }
+
 
     // ------------------------------------------------------------------------
     // Im2LearnMenu implementation
     // ------------------------------------------------------------------------
     public void setImagePanel(ImagePanel imagepanel) {
         this.imagepanel = imagepanel;
-        usetotals.setSelected(imagepanel.isUseTotals());
+        imageUpdated(null);
     }
 
     public JMenuItem[] getPanelMenuItems() {
-        return new JMenuItem[]{usetotals};
+        JMenu selection = new JMenu("Selection");
+        selection.add(allowselection);
+        selection.add(clearselection);
+        selection.add(showselection);
+        selection.add(fullimage);
+
+        return new JMenuItem[]{selection};
     }
 
     public JMenuItem[] getMainMenuItems() {
@@ -89,11 +119,25 @@ public class UseTotalsDialog implements Im2LearnMenu {
     }
 
     public void imageUpdated(ImageUpdateEvent event) {
-        usetotals.setSelected(imagepanel.isUseTotals());
+        allowselection.setSelected(imagepanel.isSelectionAllowed());
+        if (imagepanel.getCrop() != null) {
+            fullimage.setEnabled(true);
+        } else {
+            fullimage.setEnabled(false);
+        }
+        if (imagepanel.getSelection() != null) {
+            showselection.setEnabled(true);
+            clearselection.setEnabled(true);
+        } else {
+            showselection.setEnabled(false);
+            clearselection.setEnabled(false);
+        }
     }
 
-    public URL getHelp(String topic) {
-        // TODO Auto-generated method stub
-        return null;
+    public URL getHelp(String menu) {
+    	if (menu.equals("Selection")) {
+    		return getClass().getResource("help/selection.html");
+    	}
+    	return null;
     }
 }

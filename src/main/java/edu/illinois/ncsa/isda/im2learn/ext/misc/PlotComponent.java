@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.ext.misc;
+package edu.illinois.ncsa.isda.im2learn.ext.misc;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -86,8 +86,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.border.EmptyBorder;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
 
 /**
  * Created by IntelliJ IDEA. User: kooper Date: Oct 11, 2004 Time: 5:18:31 PM To

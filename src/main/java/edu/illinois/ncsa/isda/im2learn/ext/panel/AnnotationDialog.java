@@ -40,18 +40,18 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.ext.panel;
+package edu.illinois.ncsa.isda.im2learn.ext.panel;
 
 
 import javax.swing.*;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageAnnotation;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageMarker;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImageUpdateEvent;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageAnnotation;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageMarker;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImageUpdateEvent;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
