@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.core.io.jpeg2000;
+package edu.illinois.ncsa.isda.im2learn.core.io.jpeg2000;
 
 import icc.ICCProfileException;
 
@@ -34,15 +34,15 @@ import org.apache.commons.logging.LogFactory;
 
 import colorspace.ColorSpace;
 import colorspace.ColorSpaceException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectByte;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectInt;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageWriter;
-import edu.illinois.ncsa.isda.imagetools.core.io.pnm.PNMLoader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectByte;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectInt;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageWriter;
+import edu.illinois.ncsa.isda.im2learn.core.io.pnm.PNMLoader;
 
 public class JPEG2000Reader implements ImageReader, ImageWriter {
     private static Log log = LogFactory.getLog(JPEG2000Reader.class);
