@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools;
+package edu.illinois.ncsa.isda.im2learn;
 
 import java.awt.Frame;
 import java.lang.reflect.Constructor;
@@ -52,10 +52,10 @@ import javax.swing.UIManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.Im2LearnUtilities;
-import edu.illinois.ncsa.isda.imagetools.core.ResourceLocator;
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMainFrame;
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.im2learn.core.Im2LearnUtilities;
+import edu.illinois.ncsa.isda.im2learn.core.ResourceLocator;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMainFrame;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMenu;
 
 /**
  * Start the stand alone Im2Learn application. This class will be able to load

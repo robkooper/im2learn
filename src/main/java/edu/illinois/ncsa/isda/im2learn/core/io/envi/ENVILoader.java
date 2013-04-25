@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.envi;
+package edu.illinois.ncsa.isda.im2learn.core.io.envi;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -56,22 +56,22 @@ import java.io.IOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectByte;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectDouble;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectFloat;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectInt;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectLong;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectShort;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectUShort;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.AlbersEqualAreaConic;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.UTMNorth;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageWriter;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectByte;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectDouble;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectFloat;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectInt;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectLong;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectShort;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectUShort;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.AlbersEqualAreaConic;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.UTMNorth;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageWriter;
 
 /**
  * This class will read and write ENVI images. It will can read most keywords in the image header, but only write the

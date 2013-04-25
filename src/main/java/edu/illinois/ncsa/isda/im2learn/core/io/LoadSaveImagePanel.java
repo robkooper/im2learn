@@ -40,16 +40,16 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io;
+package edu.illinois.ncsa.isda.im2learn.core.io;
 
 import java.awt.Frame;
 
 import javax.swing.SwingUtilities;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.display.ImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.display.ProgressBlocker;
-import edu.illinois.ncsa.isda.imagetools.core.display.ProgressBlockerRun;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.display.ProgressBlocker;
+import edu.illinois.ncsa.isda.im2learn.core.display.ProgressBlockerRun;
 
 
 /**

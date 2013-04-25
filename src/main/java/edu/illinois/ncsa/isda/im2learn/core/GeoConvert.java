@@ -40,12 +40,12 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core;
+package edu.illinois.ncsa.isda.im2learn.core;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.GeoInformation;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.Point2DDouble;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.Point3DDouble;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.GeoInformation;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.Point2DDouble;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.Point3DDouble;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
 
 /*
  * GeoConvert.java

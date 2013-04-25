@@ -40,11 +40,11 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io;
+package edu.illinois.ncsa.isda.im2learn.core.io;
 
 import java.io.File;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.*;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.*;
 
 
 import junit.framework.TestCase;

@@ -1,19 +1,19 @@
 //Author: James Rapp  11/29/07
 
-package edu.illinois.ncsa.isda.imagetools.core.geo.java;
+package edu.illinois.ncsa.isda.im2learn.core.geo.java;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoException;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoGraphicCoordinateSystem;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeodeticPoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.LinearUnit;
-import edu.illinois.ncsa.isda.imagetools.core.geo.ModelPoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.geo.TiePoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoException;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoGraphicCoordinateSystem;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeodeticPoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.LinearUnit;
+import edu.illinois.ncsa.isda.im2learn.core.geo.ModelPoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.TiePoint;
 
 
 public class AlbersEqualAreaConic extends Projection implements Serializable {

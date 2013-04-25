@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io;
+package edu.illinois.ncsa.isda.im2learn.core.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,22 +54,22 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.display.ProgressListener;
-import edu.illinois.ncsa.isda.imagetools.core.io.csv.CSVLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.dem.DEMLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.envi.ENVILoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.fits.FitsLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.hgt.HGTLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.iip.IIPLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.imageio.ImageIOLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.object.ObjectLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.pnm.PNMLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.srtm.SRTMLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.tiff.TIFFLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.xml.XMLLoader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.display.ProgressListener;
+import edu.illinois.ncsa.isda.im2learn.core.io.csv.CSVLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.dem.DEMLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.envi.ENVILoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.fits.FitsLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.hgt.HGTLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.iip.IIPLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.imageio.ImageIOLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.object.ObjectLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.pnm.PNMLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.srtm.SRTMLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.tiff.TIFFLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.xml.XMLLoader;
 
 /**
  * This class contains only static methods. The class will be able to read and

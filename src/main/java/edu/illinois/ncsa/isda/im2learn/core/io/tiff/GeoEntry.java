@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.tiff;
+package edu.illinois.ncsa.isda.im2learn.core.io.tiff;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,19 +50,19 @@ import java.util.Map.Entry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.AngularUnit;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Datum;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Ellipsoid;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoException;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoGraphicCoordinateSystem;
-import edu.illinois.ncsa.isda.imagetools.core.geo.LinearUnit;
-import edu.illinois.ncsa.isda.imagetools.core.geo.ModelPoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.PrimeMeridian;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.geo.RasterPoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.TiePoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection.ProjectionType;
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.TransverseMercator;
+import edu.illinois.ncsa.isda.im2learn.core.geo.AngularUnit;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Datum;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Ellipsoid;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoException;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoGraphicCoordinateSystem;
+import edu.illinois.ncsa.isda.im2learn.core.geo.LinearUnit;
+import edu.illinois.ncsa.isda.im2learn.core.geo.ModelPoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.PrimeMeridian;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.RasterPoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.TiePoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection.ProjectionType;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.TransverseMercator;
 
 /**
  * Can parse the geotiff information and create a geoinformation from the values

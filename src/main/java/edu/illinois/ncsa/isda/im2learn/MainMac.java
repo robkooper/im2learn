@@ -40,16 +40,16 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools;
+package edu.illinois.ncsa.isda.im2learn;
 
 
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationEvent;
 import com.apple.eawt.ApplicationListener;
 
-import edu.illinois.ncsa.isda.imagetools.core.Im2LearnUtilities;
-import edu.illinois.ncsa.isda.imagetools.core.display.About;
-import edu.illinois.ncsa.isda.imagetools.core.io.LoadSaveImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.Im2LearnUtilities;
+import edu.illinois.ncsa.isda.im2learn.core.display.About;
+import edu.illinois.ncsa.isda.im2learn.core.io.LoadSaveImagePanel;
 
 /**
  * Start the stand alone Im2Learn application. This class will be able to load the

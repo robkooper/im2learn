@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.core.display;
+package edu.illinois.ncsa.isda.im2learn.core.display;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,8 +32,8 @@ import javax.swing.JScrollPane;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
 
 
 public class MultiImagePanel extends JPanel implements ImageUpdateListener {

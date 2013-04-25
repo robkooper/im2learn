@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.main;
+package edu.illinois.ncsa.isda.im2learn.main;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

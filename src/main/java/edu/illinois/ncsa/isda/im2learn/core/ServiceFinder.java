@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core;
+package edu.illinois.ncsa.isda.im2learn.core;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,9 +48,9 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Enumeration;
 
-import edu.illinois.ncsa.isda.imagetools.core.display.Im2LearnMenu;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageWriter;
+import edu.illinois.ncsa.isda.im2learn.core.display.Im2LearnMenu;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageWriter;
 
 
 public class ServiceFinder {

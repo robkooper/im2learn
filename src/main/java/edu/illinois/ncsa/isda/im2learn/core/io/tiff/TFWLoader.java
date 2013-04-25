@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.tiff;
+package edu.illinois.ncsa.isda.im2learn.core.io.tiff;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -51,7 +51,7 @@ import java.io.IOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection;
 
 /**
  * Detect the presence of a .tfw file/url. If present, read it in and use its

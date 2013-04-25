@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.core.geo;
+package edu.illinois.ncsa.isda.im2learn.core.geo;
 
 public class ModelPoint {
 	private double		x;

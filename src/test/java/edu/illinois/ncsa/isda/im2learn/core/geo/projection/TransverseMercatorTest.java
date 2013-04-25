@@ -40,12 +40,12 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.geo.projection;
+package edu.illinois.ncsa.isda.im2learn.core.geo.projection;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.Datum;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoGraphicCoordinateSystem;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeodeticPoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.TransverseMercator;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Datum;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoGraphicCoordinateSystem;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeodeticPoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.TransverseMercator;
 import junit.framework.TestCase;
 
 public class TransverseMercatorTest extends TestCase {

@@ -1,6 +1,6 @@
-package edu.illinois.ncsa.isda.imagetools.core.geo.projection;
+package edu.illinois.ncsa.isda.im2learn.core.geo.projection;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoException;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoException;
 
 public class NewLambertAzimuthalEqualArea extends ModelProjection {
 

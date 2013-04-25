@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.srtm;
+package edu.illinois.ncsa.isda.im2learn.core.io.srtm;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -58,17 +58,17 @@ import java.io.RandomAccessFile;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.GeoConvert;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.GeoInformation;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectShort;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.LimitValues;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageWriter;
+import edu.illinois.ncsa.isda.im2learn.core.GeoConvert;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.GeoInformation;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectShort;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.LimitValues;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageWriter;
 
 /**
  * 

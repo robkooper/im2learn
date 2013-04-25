@@ -1,8 +1,8 @@
-package edu.illinois.ncsa.isda.imagetools.core.geo;
+package edu.illinois.ncsa.isda.im2learn.core.geo;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection.ProjectionType;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection.ProjectionType;
 
 public class GeoConvert {
     static public ImageObject toGeoGraphic(ImageObject imgobj) throws ImageException {

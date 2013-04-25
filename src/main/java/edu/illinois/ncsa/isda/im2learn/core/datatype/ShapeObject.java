@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.datatype;
+package edu.illinois.ncsa.isda.im2learn.core.datatype;
 
 import java.io.Serializable;
 
@@ -48,10 +48,10 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoException;
-import edu.illinois.ncsa.isda.imagetools.core.geo.PRJLoader;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection.ProjectionType;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoException;
+import edu.illinois.ncsa.isda.im2learn.core.geo.PRJLoader;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection.ProjectionType;
 
 /**
  * ShapeObject is a data structure that holds geographic vector data in a variety of projections.

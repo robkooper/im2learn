@@ -1,6 +1,6 @@
-package edu.illinois.ncsa.isda.imagetools.core.geo.projection;
+package edu.illinois.ncsa.isda.im2learn.core.geo.projection;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.*;
+import edu.illinois.ncsa.isda.im2learn.core.geo.*;
 
 /**
  *

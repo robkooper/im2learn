@@ -18,7 +18,7 @@
 /* $Id: TIFFFaxDecoder.java,v 1.1 2009-08-17 15:31:03 kooper Exp $ */
 //package org.apache.xmlgraphics.image.codec.tiff;
 
-package edu.illinois.ncsa.isda.imagetools.core.io.tiff;
+package edu.illinois.ncsa.isda.im2learn.core.io.tiff;
 
 class TIFFFaxDecoder {
 

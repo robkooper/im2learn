@@ -40,15 +40,15 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.imageio;
+package edu.illinois.ncsa.isda.im2learn.core.io.imageio;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.*;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageWriter;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.*;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageWriter;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;

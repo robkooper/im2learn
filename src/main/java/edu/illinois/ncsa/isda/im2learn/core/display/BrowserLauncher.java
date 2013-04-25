@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.core.display;
+package edu.illinois.ncsa.isda.im2learn.core.display;
 
 import java.io.File;
 import java.io.IOException;

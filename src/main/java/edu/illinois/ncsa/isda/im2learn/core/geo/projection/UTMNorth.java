@@ -40,10 +40,10 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.geo.projection;
+package edu.illinois.ncsa.isda.im2learn.core.geo.projection;
 
 //import ncsa.im2learn.core.datatype.GeoInformation;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoException;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoException;
 
 /**
      * Created by IntelliJ IDEA. User: kooper Date: Aug 30, 2004 Time: 4:29:35 PM To

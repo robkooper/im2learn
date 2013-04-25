@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.core.geo;
+package edu.illinois.ncsa.isda.im2learn.core.geo;
 
 import java.util.HashMap;
 
@@ -6,15 +6,15 @@ import java.util.HashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection.ProjectionType;
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.TransverseMercator;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.LambertConformalConic;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.Mercator;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewAlbersEqualAreaConic;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewLambertAzimuthalEqualArea;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewSinusoidal;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewUTMNorth;
-import edu.illinois.ncsa.isda.imagetools.core.io.tiff.GeoEntry;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection.ProjectionType;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.TransverseMercator;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.LambertConformalConic;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.Mercator;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewAlbersEqualAreaConic;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewLambertAzimuthalEqualArea;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewSinusoidal;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewUTMNorth;
+import edu.illinois.ncsa.isda.im2learn.core.io.tiff.GeoEntry;
 
 /**
  * This class is to support ShapeObject re-projection using the latest projection code
@@ -32,27 +32,27 @@ public class ProjectionConvert {
 		}
 		if (obj instanceof Projection) {
 			return (Projection) obj;
-		} else if (obj instanceof edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection) {
-			return toNew((edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection) obj);
+		} else if (obj instanceof edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection) {
+			return toNew((edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection) obj);
 		} else {
 			throw (new GeoException("Object is not a projection."));
 		}
 	}
 
-	public static edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection getOldProjection(Object obj) throws GeoException {
+	public static edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection getOldProjection(Object obj) throws GeoException {
 		if (obj == null) {
 			return null;
 		}
 		if (obj instanceof Projection) {
 			return toOld((Projection) obj);
-		} else if (obj instanceof edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection) {
-			return (edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection) obj;
+		} else if (obj instanceof edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection) {
+			return (edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection) obj;
 		} else {
 			throw (new GeoException("Object is not a projection."));
 		}
 	}
 
-	public static Projection toNew(edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection oldPRJ) throws GeoException {
+	public static Projection toNew(edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection oldPRJ) throws GeoException {
 		if (oldPRJ == null) {
 			return null;
 		}
@@ -63,25 +63,25 @@ public class ProjectionConvert {
 		// see the datum class
 		Datum dat = null;
 		switch (oldPRJ.getEllipsoid()) {
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Ellipsoid.WGS_84:
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Ellipsoid.WGS_84:
 			dat = Datum.WGS_1984;
 			break;
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Ellipsoid.AIRY_1830:
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Ellipsoid.AIRY_1830:
 			// mapping based on
 			// http://www.scanex.ru/en/software/scanmagic/SMD_SPC_ENG_SupportedDatums.pdf
 			dat = Datum.Ordnance_Survey_Great_Britain_1936_Mean;
 			break;
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Ellipsoid.CLARKE_1866:
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Ellipsoid.CLARKE_1866:
 			// mapping based on
 			// http://www.scanex.ru/en/software/scanmagic/SMD_SPC_ENG_SupportedDatums.pdf
 			dat = Datum.North_American_1927_Conus;
 			break;
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Ellipsoid.GRS_1980:
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Ellipsoid.GRS_1980:
 			// mapping based on
 			// http://www.scanex.ru/en/software/scanmagic/SMD_SPC_ENG_SupportedDatums.pdf
 			dat = Datum.North_American_1983_Conus;
 			break;
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Ellipsoid.SPHERE:
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Ellipsoid.SPHERE:
 			// http://publib.boulder.ibm.com/infocenter/idshelp/v10/index.jsp?topic=/com.ibm.spatial.doc/spat262.htm
 			// 7035 Authalic sphere SPHEROID["Sphere",6371000,0]
 			// 107008 Authalic sphere (ARC/INFO)
@@ -192,8 +192,8 @@ public class ProjectionConvert {
 		HashMap<String, String> param = new HashMap<String, String>();
 
 		switch (oldPRJ.getType()) {
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection.ALBERS_EQUAL_AREA_CONIC:
-			edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewAlbersEqualAreaConic foo = (edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewAlbersEqualAreaConic) oldPRJ;
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection.ALBERS_EQUAL_AREA_CONIC:
+			edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewAlbersEqualAreaConic foo = (edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewAlbersEqualAreaConic) oldPRJ;
 			param.put(Projection.FALSE_EASTING, "" + foo.getFalseEast());
 			param.put(Projection.FALSE_NORTHING, "" + foo.getFalseNorth());
 			param.put(Projection.STANDARD_PARALLEL_1, "" + foo.getLat1());
@@ -202,21 +202,21 @@ public class ProjectionConvert {
 			param.put(Projection.CENTRAL_MERIDIAN, "" + foo.getLon0());
 			return Projection.getProjection("Albers", ProjectionType.Albers, geogcs, param, tp, unit);
 
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection.LAMBERT_AZIMUTHAL_EQUAL_AREA:
-			edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewLambertAzimuthalEqualArea foo1 = (edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewLambertAzimuthalEqualArea) oldPRJ;
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection.LAMBERT_AZIMUTHAL_EQUAL_AREA:
+			edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewLambertAzimuthalEqualArea foo1 = (edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewLambertAzimuthalEqualArea) oldPRJ;
 			param.put(Projection.FALSE_EASTING, "" + foo1.getFalseEast());
 			param.put(Projection.FALSE_NORTHING, "" + foo1.getFalseNorth());
 			param.put(Projection.LATITUDE_OF_CENTER, "" + foo1.getCenterLat());
 			param.put(Projection.LONGITUDE_OF_CENTER, "" + foo1.getCenterLong());
 			return Projection.getProjection("Lambert Azimuthal Equal Area", ProjectionType.Lambert_Azimuthal_Equal_Area, geogcs, param, tp, unit);
 
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection.SINUSOIDAL:
-			edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewSinusoidal foo2 = (edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewSinusoidal) oldPRJ;
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection.SINUSOIDAL:
+			edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewSinusoidal foo2 = (edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewSinusoidal) oldPRJ;
 			param.put(Projection.CENTRAL_MERIDIAN, "" + foo2.getCenterLong());
 			return Projection.getProjection("Sinusoidal", ProjectionType.Sinusoidal, geogcs, param, tp, unit);
 
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection.LAMBERT_CONFORMAL_CONIC:
-			edu.illinois.ncsa.isda.imagetools.core.geo.projection.LambertConformalConic foo3 = (edu.illinois.ncsa.isda.imagetools.core.geo.projection.LambertConformalConic) oldPRJ;
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection.LAMBERT_CONFORMAL_CONIC:
+			edu.illinois.ncsa.isda.im2learn.core.geo.projection.LambertConformalConic foo3 = (edu.illinois.ncsa.isda.im2learn.core.geo.projection.LambertConformalConic) oldPRJ;
 			param.put(Projection.FALSE_EASTING, "" + +foo3.getFalseEast());
 			param.put(Projection.FALSE_NORTHING, "" + foo3.getFalseNorth());
 			param.put(Projection.CENTRAL_MERIDIAN, "" + foo3.getCenterLong());
@@ -225,8 +225,8 @@ public class ProjectionConvert {
 			param.put(Projection.LATITUDE_OF_ORIGIN, "" + foo3.getCenterLat());
 			return Projection.getProjection("Lambert Conformal Conic", ProjectionType.Lambert_Conformal_Conic, geogcs, param, tp, unit);
 
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection.TRANSVERSE_MERCATOR:
-			edu.illinois.ncsa.isda.imagetools.core.geo.projection.TransverseMercator foo4 = (edu.illinois.ncsa.isda.imagetools.core.geo.projection.TransverseMercator) oldPRJ;
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection.TRANSVERSE_MERCATOR:
+			edu.illinois.ncsa.isda.im2learn.core.geo.projection.TransverseMercator foo4 = (edu.illinois.ncsa.isda.im2learn.core.geo.projection.TransverseMercator) oldPRJ;
 			param.put(Projection.FALSE_EASTING, "" + +foo4.getFalseEast());
 			param.put(Projection.FALSE_NORTHING, "" + foo4.getFalseNorth());
 			param.put(Projection.LATITUDE_OF_CENTER, "" + foo4.getCenterLat());
@@ -234,8 +234,8 @@ public class ProjectionConvert {
 			param.put(Projection.SCALE_FACTOR, "" + foo4.getScaleFactor());
 			return Projection.getProjection("Transverse Mercator", ProjectionType.Transverse_Mercator, geogcs, param, tp, unit);
 
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection.UTM_NORTHERN_HEMISPHERE:
-			edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewUTMNorth foo6 = (edu.illinois.ncsa.isda.imagetools.core.geo.projection.NewUTMNorth) oldPRJ;
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection.UTM_NORTHERN_HEMISPHERE:
+			edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewUTMNorth foo6 = (edu.illinois.ncsa.isda.im2learn.core.geo.projection.NewUTMNorth) oldPRJ;
 			param.put(Projection.FALSE_EASTING, "500000.0");
 			param.put(Projection.FALSE_NORTHING, "0.0");
 			param.put(Projection.LATITUDE_OF_CENTER, "0");
@@ -243,15 +243,15 @@ public class ProjectionConvert {
 			param.put(Projection.SCALE_FACTOR, "" + foo6.getScaleFact());
 			return Projection.getProjection("UTM North", ProjectionType.Transverse_Mercator, geogcs, param, tp, unit);
 
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection.MERCATOR:
-			edu.illinois.ncsa.isda.imagetools.core.geo.projection.Mercator foo7 = (edu.illinois.ncsa.isda.imagetools.core.geo.projection.Mercator) oldPRJ;
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection.MERCATOR:
+			edu.illinois.ncsa.isda.im2learn.core.geo.projection.Mercator foo7 = (edu.illinois.ncsa.isda.im2learn.core.geo.projection.Mercator) oldPRJ;
 			param.put(Projection.FALSE_EASTING, "" + foo7.getFalseEast());
 			param.put(Projection.FALSE_NORTHING, "" + foo7.getFalseNorth());
 			param.put(Projection.LATITUDE_OF_CENTER, "" + foo7.getCenterLat());
 			param.put(Projection.LONGITUDE_OF_CENTER, "" + foo7.getCenterLon());
 			return Projection.getProjection("Mercator", ProjectionType.Mercator, geogcs, param, tp, unit);
 
-		case edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection.GEOGRAPHIC:
+		case edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection.GEOGRAPHIC:
 			tp.getModelPoint().setXYUnit(AngularUnit.Decimal_Degree);
 			tp.getModelPoint().setZUnit(LinearUnit.Meter);
 			return Projection.getProjection("Geographic", ProjectionType.Geographic, geogcs, param, tp, unit);
@@ -261,7 +261,7 @@ public class ProjectionConvert {
 		}
 	}
 
-	public static edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection toOld(Projection newPRJ) throws GeoException {
+	public static edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection toOld(Projection newPRJ) throws GeoException {
 		if (newPRJ == null) {
 			return null;
 		}
@@ -271,10 +271,10 @@ public class ProjectionConvert {
 		RasterPoint rp = newPRJ.getTiePoint().getRasterPoint();
 		ModelPoint mp = newPRJ.getTiePoint().getModelPoint();
 
-		edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection res;
+		edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection res;
 		switch (newPRJ.getType()) {
 		case Geographic:
-			return new edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection(rp.getX(), rp.getY(), mp.getX(), mp.getY(), newPRJ.getTiePoint().getScaleX(), newPRJ.getTiePoint().getScaleY(), 0, 0);
+			return new edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection(rp.getX(), rp.getY(), mp.getX(), mp.getY(), newPRJ.getTiePoint().getScaleX(), newPRJ.getTiePoint().getScaleY(), 0, 0);
 
 		case Albers:
 			res = new NewAlbersEqualAreaConic(newPRJ.getGeographicCoordinateSystem().getDatum().getEllipsoid().getMajor(), newPRJ.getGeographicCoordinateSystem().getDatum().getEllipsoid().getMinor(),

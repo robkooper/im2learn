@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.object;
+package edu.illinois.ncsa.isda.im2learn.core.io.object;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -56,13 +56,13 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageReader;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageWriter;
-import edu.illinois.ncsa.isda.imagetools.core.io.ProgressInputStream;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageReader;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageWriter;
+import edu.illinois.ncsa.isda.im2learn.core.io.ProgressInputStream;
 
 /**
  * This class encapsulates the imageio loader from SUN.

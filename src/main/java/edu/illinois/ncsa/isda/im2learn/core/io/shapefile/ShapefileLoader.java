@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.shapefile;
+package edu.illinois.ncsa.isda.im2learn.core.io.shapefile;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -61,17 +61,17 @@ import java.util.ArrayList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.Point2DDouble;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ShapeObject;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Datum;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoException;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoGraphicCoordinateSystem;
-import edu.illinois.ncsa.isda.imagetools.core.geo.PRJLoader;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection.ProjectionType;
-import edu.illinois.ncsa.isda.imagetools.core.io.DBFLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.util.LEDataInputStream;
-import edu.illinois.ncsa.isda.imagetools.core.io.util.LEDataOutputStream;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.Point2DDouble;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ShapeObject;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Datum;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoException;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoGraphicCoordinateSystem;
+import edu.illinois.ncsa.isda.im2learn.core.geo.PRJLoader;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection.ProjectionType;
+import edu.illinois.ncsa.isda.im2learn.core.io.DBFLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.util.LEDataInputStream;
+import edu.illinois.ncsa.isda.im2learn.core.io.util.LEDataOutputStream;
 
 /**
  * An API to read and write shapefiles. The records of a shapefile are kept as objects in an ArrayList. The shapefile

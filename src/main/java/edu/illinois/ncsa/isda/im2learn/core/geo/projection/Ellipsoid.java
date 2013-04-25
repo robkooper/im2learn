@@ -40,9 +40,9 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.geo.projection;
+package edu.illinois.ncsa.isda.im2learn.core.geo.projection;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.*;
+import edu.illinois.ncsa.isda.im2learn.core.geo.*;
 
 /**
  * Get the constants for the Ellipsoid.  The supported ellipsoids are defined

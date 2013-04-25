@@ -40,16 +40,16 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.geo;
+package edu.illinois.ncsa.isda.im2learn.core.geo;
 
 import java.io.IOException;
 import java.io.PrintStream;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.Point2DDouble;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ShapeObject;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.Point2DDouble;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ShapeObject;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
 
 
 /**

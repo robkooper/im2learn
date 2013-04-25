@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.display;
+package edu.illinois.ncsa.isda.im2learn.core.display;
 
 
 import java.awt.Frame;
@@ -63,11 +63,11 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.Im2LearnUtilities;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.io.FileChooser;
-import edu.illinois.ncsa.isda.imagetools.core.io.LoadSaveImagePanel;
-import edu.illinois.ncsa.isda.imagetools.core.io.SubFile;
+import edu.illinois.ncsa.isda.im2learn.core.Im2LearnUtilities;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.io.FileChooser;
+import edu.illinois.ncsa.isda.im2learn.core.io.LoadSaveImagePanel;
+import edu.illinois.ncsa.isda.im2learn.core.io.SubFile;
 
 /**
  * File menu with default options enabled. What is displayed depends if this

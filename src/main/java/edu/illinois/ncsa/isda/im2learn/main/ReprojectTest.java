@@ -1,21 +1,21 @@
-package edu.illinois.ncsa.isda.imagetools.main;
+package edu.illinois.ncsa.isda.im2learn.main;
 
 import java.util.HashMap;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.geo.AngularUnit;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Datum;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoGraphicCoordinateSystem;
-import edu.illinois.ncsa.isda.imagetools.core.geo.GeoUtilities;
-import edu.illinois.ncsa.isda.imagetools.core.geo.LinearUnit;
-import edu.illinois.ncsa.isda.imagetools.core.geo.ModelPoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.PrimeMeridian;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.geo.ProjectionConvert;
-import edu.illinois.ncsa.isda.imagetools.core.geo.RasterPoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.TiePoint;
-import edu.illinois.ncsa.isda.imagetools.core.geo.Projection.ProjectionType;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.geo.AngularUnit;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Datum;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoGraphicCoordinateSystem;
+import edu.illinois.ncsa.isda.im2learn.core.geo.GeoUtilities;
+import edu.illinois.ncsa.isda.im2learn.core.geo.LinearUnit;
+import edu.illinois.ncsa.isda.im2learn.core.geo.ModelPoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.PrimeMeridian;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.geo.ProjectionConvert;
+import edu.illinois.ncsa.isda.im2learn.core.geo.RasterPoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.TiePoint;
+import edu.illinois.ncsa.isda.im2learn.core.geo.Projection.ProjectionType;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
 
 
 public class ReprojectTest {
@@ -44,12 +44,12 @@ public class ReprojectTest {
 		// ///////////////
 		// parameters
 		HashMap<String, String> param = new HashMap<String, String>();
-		param.put(edu.illinois.ncsa.isda.imagetools.core.geo.Projection.FALSE_EASTING, "0");
-		param.put(edu.illinois.ncsa.isda.imagetools.core.geo.Projection.FALSE_NORTHING, "0");
-		param.put(edu.illinois.ncsa.isda.imagetools.core.geo.Projection.STANDARD_PARALLEL_1, "29.5");
-		param.put(edu.illinois.ncsa.isda.imagetools.core.geo.Projection.STANDARD_PARALLEL_2, "45.5");
-		param.put(edu.illinois.ncsa.isda.imagetools.core.geo.Projection.LATITUDE_OF_ORIGIN, "23.0");
-		param.put(edu.illinois.ncsa.isda.imagetools.core.geo.Projection.CENTRAL_MERIDIAN, "-96");
+		param.put(edu.illinois.ncsa.isda.im2learn.core.geo.Projection.FALSE_EASTING, "0");
+		param.put(edu.illinois.ncsa.isda.im2learn.core.geo.Projection.FALSE_NORTHING, "0");
+		param.put(edu.illinois.ncsa.isda.im2learn.core.geo.Projection.STANDARD_PARALLEL_1, "29.5");
+		param.put(edu.illinois.ncsa.isda.im2learn.core.geo.Projection.STANDARD_PARALLEL_2, "45.5");
+		param.put(edu.illinois.ncsa.isda.im2learn.core.geo.Projection.LATITUDE_OF_ORIGIN, "23.0");
+		param.put(edu.illinois.ncsa.isda.im2learn.core.geo.Projection.CENTRAL_MERIDIAN, "-96");
 
 		// the unit of the parameters
 		LinearUnit unit = LinearUnit.Meter;

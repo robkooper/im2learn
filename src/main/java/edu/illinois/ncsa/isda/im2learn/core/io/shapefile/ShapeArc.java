@@ -48,12 +48,12 @@
  /* TO DO: CHANGE THE IMPLEMENTATTION TO HAVE Point2DDouble instead of ShapePoint */
 
 
-package edu.illinois.ncsa.isda.imagetools.core.io.shapefile;
+package edu.illinois.ncsa.isda.im2learn.core.io.shapefile;
 
 import java.io.*;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.*;
-import edu.illinois.ncsa.isda.imagetools.core.io.util.*;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.*;
+import edu.illinois.ncsa.isda.im2learn.core.io.util.*;
 
 /**
  * Wrapper for a Shapefile arc.

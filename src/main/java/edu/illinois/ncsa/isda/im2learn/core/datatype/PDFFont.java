@@ -1,4 +1,4 @@
-package edu.illinois.ncsa.isda.imagetools.core.datatype;
+package edu.illinois.ncsa.isda.im2learn.core.datatype;
 
 public class PDFFont {
 

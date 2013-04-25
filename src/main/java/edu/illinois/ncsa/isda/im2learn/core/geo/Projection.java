@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.geo;
+package edu.illinois.ncsa.isda.im2learn.core.geo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,14 +51,14 @@ import java.util.Map.Entry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.AlbersEqualAreaConic;
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.Geographic;
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.LambertAzimuthalEqualArea;
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.LambertConformalConic;
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.Mercator;
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.PlateCarree;
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.Sinusoidal;
-import edu.illinois.ncsa.isda.imagetools.core.geo.java.TransverseMercator;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.AlbersEqualAreaConic;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.Geographic;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.LambertAzimuthalEqualArea;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.LambertConformalConic;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.Mercator;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.PlateCarree;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.Sinusoidal;
+import edu.illinois.ncsa.isda.im2learn.core.geo.java.TransverseMercator;
 
 /**
  * Use this class to geo-reference an ImageObject if the bounds are specified in

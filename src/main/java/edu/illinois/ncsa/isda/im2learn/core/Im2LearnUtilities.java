@@ -1,12 +1,12 @@
-package edu.illinois.ncsa.isda.imagetools.core;
+package edu.illinois.ncsa.isda.im2learn.core;
 
 
 import javax.swing.*;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectByte;
-import edu.illinois.ncsa.isda.imagetools.core.display.About;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectByte;
+import edu.illinois.ncsa.isda.im2learn.core.display.About;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;

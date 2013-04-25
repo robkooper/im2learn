@@ -46,7 +46,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package edu.illinois.ncsa.isda.imagetools.core.datatype;
+package edu.illinois.ncsa.isda.im2learn.core.datatype;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

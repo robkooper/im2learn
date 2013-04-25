@@ -65,7 +65,7 @@
   * Then repeated.
   *
   */
-package edu.illinois.ncsa.isda.imagetools.core.io.util;
+package edu.illinois.ncsa.isda.im2learn.core.io.util;
 import java.io.*;
 
 public class LETest

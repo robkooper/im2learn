@@ -44,7 +44,7 @@
  * Created on Sep 3, 2004
  *
  */
-package edu.illinois.ncsa.isda.imagetools.core.datatype;
+package edu.illinois.ncsa.isda.im2learn.core.datatype;
 
 import java.io.Serializable;
 

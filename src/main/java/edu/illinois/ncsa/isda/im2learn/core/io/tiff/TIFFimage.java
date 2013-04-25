@@ -40,7 +40,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.core.io.tiff;
+package edu.illinois.ncsa.isda.im2learn.core.io.tiff;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -53,13 +53,13 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageException;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObjectOutOfCore;
-import edu.illinois.ncsa.isda.imagetools.core.datatype.SubArea;
-import edu.illinois.ncsa.isda.imagetools.core.geo.ProjectionConvert;
-import edu.illinois.ncsa.isda.imagetools.core.geo.projection.Projection;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectOutOfCore;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.SubArea;
+import edu.illinois.ncsa.isda.im2learn.core.geo.ProjectionConvert;
+import edu.illinois.ncsa.isda.im2learn.core.geo.projection.Projection;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
 
 /**
  * This class will hold all the information about the tiff file. Most important
