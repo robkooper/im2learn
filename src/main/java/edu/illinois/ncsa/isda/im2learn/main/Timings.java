@@ -40,59 +40,39 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  *******************************************************************************/
-package edu.illinois.ncsa.isda.imagetools.main;
+package edu.illinois.ncsa.isda.im2learn.main;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.io.ImageLoader;
+import edu.illinois.ncsa.isda.im2learn.core.io.pdf.PDFLoaderJPedal;
 
-import edu.illinois.ncsa.isda.imagetools.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.imagetools.core.io.ImageLoader;
-import edu.illinois.ncsa.isda.imagetools.core.io.pdf.PDFLoaderJPedal;
-
-
-/**
- * Load the files in the PDF directory and save them as object.gz in the OBJECT
- * directory.
- * 
- * @author kooper
- *
- */
-public class PDF2ObjectGZ {
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        File[] files = new File("PDF").listFiles(new FileFilter() {
-            public boolean accept(File pathname) {
-                return pathname.getName().toLowerCase().endsWith(".pdf");
-            }
-        });
-
+public class Timings {
+    static public void main(String[] args) {
+    	String text;
+    	long time;
         PDFLoaderJPedal.setUseAnnotations(true);
-
-        for (File input : files) {
-            try {
-                String filename = input.getName();
-                filename = filename.substring(0, filename.lastIndexOf('.'));
-                filename = "OBJECT/" + filename + ".object.gz";
-                File output = new File(filename);
-
-                if (input.lastModified() > output.lastModified()) {
-                    System.out.println("READ  : " + input.getAbsolutePath());
-                    ImageObject imgobj = ImageLoader.readImage(input
-                            .getAbsolutePath());
-
-                    System.out.println("WRITE : " + output.getAbsolutePath());
-                    ImageLoader.writeImage(output.getAbsolutePath(), imgobj);
-                } else {
-                    System.out.println("SKIP  : " + input.getAbsolutePath());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    	
+        text = "Filename\tLoad\tSave\tLoad OBJ\n" + args[0] + "\t";
+        
+        try {
+	        time = System.nanoTime();
+	        ImageObject imageobject = ImageLoader.readImage(args[0]);
+	        text += (System.nanoTime() - time) + "\t";
+	
+	        time = System.nanoTime();
+	        ImageLoader.writeImage("timings.object.gz", imageobject);
+	        text += (System.nanoTime() - time) + "\t";
+	
+	        time = System.nanoTime();
+	        imageobject = ImageLoader.readImage("timings.object.gz");
+	        text += (System.nanoTime() - time) + "\t";
+	        
+        } catch (Exception exc) {
+        	text += exc.toString();
+        	exc.printStackTrace();
         }
+        
+        System.out.println(text);
     }
-
 }
+        
