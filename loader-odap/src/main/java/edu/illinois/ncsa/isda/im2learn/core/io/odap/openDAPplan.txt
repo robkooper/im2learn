@@ -1,0 +1,82 @@
+Author: Yakov Keselman
+Version: June 14, 2006.
+
+========
+
+Ideas and remarks related to embedding OpenDAP (a.k.a. DODS) into GeoLearn:
+
+- We need a way to put together a set of relevant links (pointing to NASA data).
+
+- Since the set of links is likely to change (as well as to give the user a way
+to navigate to other, non-NASA data) it's best to embed a small web browser into
+our software. The browser should differentiate between the regular web server
+and a DODS server on top of a web server. See below.
+
+- The main difference between web servers and DODS servers is that web servers
+treat everything figuratively: if a file ends with .hdf, its binary contents will
+be served; if a file ends with .html, its html contents will be served. On the
+other hand, a DODS server will serve a file that ends with .hdf.html as an html
+page with java script embedded (which will allow the user to select a slice of
+the .hdf file). Likewise, if a DODS server is given a URL that ends with .hdf,
+it will respond with an error message. So, to summarize:
+
+Web server:
+- .hdf => contents of .hdf
+- .html => contents of .html
+
+DODS server:
+- .hdf => error message.
+- .hdf.html => specialized HTML that can't be handled by most java-based
+web browsers.
+- .dat.asc, .asc => a directory listing with links to the server's .hdf files.
+- .hdf.dods => contents of .hdf
+
+================================
+
+So, how about this plan:
+
+
+[0] Figure out a list of suffixes that data files can end with (.hdf being one
+of them; stick with it for now).
+
+
+[1] If a link ends with .hdf:
+
+  [1] Assume it sits on a DODS server, in which case the .hdf.info URL will
+  be valid. Send the new URL to the server. If we succeed, it was a DODS server.
+  If we fail, it was a regular server.
+   
+  [2] Once we know what server it sits on, send .hdf URL to a non-DODS server 
+  or send .hdf.dods URL to the DODS server. Save the file under an .hdf name.
+
+  [3] Try creating an HDF object out of the fle. If we don't succeed, it may have
+  been a bad link or other error. Signal the error to the user.
+
+  
+[2] If a link ends with .html:
+
+  [1] If it ends with .hdf.html, assume that it points to a DODS server and we
+  currently can't display the html page because of Java Script. Thus, strip the
+  link of the trailing .html (to make it .hdf) and handle as in [1.2].
+  
+  [2] If it ends with .html, assume it's a plain html file that we can handle with
+  the html broswer. Display it there.
+
+  
+[3] If a link ends with .hdf.xxx:
+  
+  Assume that it points to a DODS server. Strip the link of the trailing
+  suffix and handle as in [1.2].
+
+  
+[4] If it is a link that does not end in any of the above:
+  
+  Assume it to be a link to a directory of files of the above kind 
+  (.hdf, .hdf.html, or .hdf.xxx). Extract from the target page a list of such
+  links; create a web page out of it, and display the web page in the browser.
+
+[5] Some files are to be ignored. If the URL ends with that suffix, ignore it.
+
+
+Note: since we'll be creating HDF objects not on-the-fly but from files, we will
+save these objects as files and we will use existing loaders to create objects.
