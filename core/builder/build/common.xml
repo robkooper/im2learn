@@ -1,0 +1,226 @@
+<project name="common">
+    <!-- Location of Im2Learn source code -->
+    <property name="im2learn" location="../.."/>
+
+    <!-- Where final compile should go -->
+    <property name="dist" value="dist"/>
+
+    <!-- Where shall the signed jar files be stored -->
+    <property name="ws" value="ws"/>
+
+    <!-- How to compile the source -->
+    <property name="debug" value="yes"/>
+    <property name="deprecation" value="no"/>
+    <property name="source" value="1.4"/>
+    <property name="target" value="1.4"/>
+    
+    <!-- Key file to be used, if not found create one using defaults -->
+    <propertyfile file="${user.home}/.key.properties">
+        <entry key="key.file" default="${user.home}/.keyfile"/>
+        <entry key="key.alias" default="${user.name}"/>
+        <entry key="key.password" default="password"/>
+        <entry key="key.CN" default="${user.name}"/>
+        <entry key="key.OU" default="unknown"/>
+        <entry key="key.O" default="unknown"/>
+        <entry key="key.C" default="${user.country}"/>
+    </propertyfile>
+    <property file="${user.home}/.key.properties"/>
+
+    <!-- Check for the keyfile -->
+    <condition property="haskey">
+        <available file="${key.file}"/>
+    </condition>
+   
+    <!-- what os are we running -->
+    <condition property="iswindows">
+        <os family="windows"/>
+    </condition>
+    <condition property="ismac">
+        <os family="mac"/>
+    </condition>
+    <condition property="isunix">
+        <and>
+            <os family="unix"/>
+            <not>
+                <os family="mac"/>
+            </not>
+        </and>
+    </condition>
+    
+    <!-- location of D2K toolkit (this is default for windows) -->
+    <condition property="d2ktoolkit" value="C:\Program Files\D2KToolkit">
+        <isset property="iswindows"/>
+    </condition>
+
+    <!-- location of D2K toolkit (this is default for mac) -->
+    <condition property="d2ktoolkit" value="/Applications/D2KToolkit">
+        <isset property="ismac"/>
+    </condition>
+
+    <!-- location of D2K toolkit (this is default for Unix) -->
+    <condition property="d2ktoolkit" value="${user.home}/D2KToolkit">
+        <isset property="isunix"/>
+    </condition>
+
+    <!-- property will only exist if the d2ktoolkit exists -->
+    <condition property="haved2k">
+        <available file="${d2ktoolkit}"/>
+    </condition>
+ 
+    <!-- set up the classpath for D2K -->
+    <path id="d2ktoolkit">
+        <pathelement location="${d2ktoolkit}/lib/infrastructure.jar"/>
+        <pathelement location="${d2ktoolkit}/modules/modules.jar"/>
+    </path>
+        
+    <!-- ================================================================= -->
+    <!-- create any directories we need                                    -->
+    <!-- ================================================================= -->
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+
+        <!-- Create the directory where finale zip files will end up -->
+        <mkdir dir="${dist}"/>
+        <mkdir dir="${ws}"/>
+
+        <!-- Create the directory struture needed to compile -->
+        <mkdir dir="${build}"/>        
+        <mkdir dir="${build}/src"/>
+        <mkdir dir="${build}/lib"/>
+        <mkdir dir="${build}/classes"/>
+        <mkdir dir="${build}/dist"/>
+        <mkdir dir="${build}/dist/ext"/>
+        <mkdir dir="${build}/dist/lib"/>
+        
+        <!-- set the ext variable based on what we build -->
+        <condition property="ext" value="ext/">
+           <not><equals arg1="${build}" arg2="im2learn"/></not>
+        </condition>
+        <condition property="ext" value="">
+           <not><isset property="ext"/></not>
+        </condition>
+        
+        <!-- set the jnlp.codebase -->
+        <condition property="jnlp.codebase" value="file://${basedir}/${ws}">
+            <not><isset property="jnlp.codebase"/></not>
+        </condition>       
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- CVS update                                                         -->
+    <!-- ================================================================== -->
+    <target name="cvs" depends="init" description="do a update from cvs" if="cvsupdate">
+       <cvs command="checkout -P" dest="${im2learn}" quiet="true" cvsrsh="ssh" cvsroot=":ext:${user.name}@poisson.ncsa.uiuc.edu:/cvsroot/d2kprojects" package="im2learn" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- copy the Im2Learn code that we want to compile                     -->
+    <!-- ================================================================== -->
+    <target name="copyIm2Learn" depends="init" >
+       <echo>NO FILES COPIED FOR Im2Learn!!!!</echo>
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- copy the D2K code that we want to compile                          -->
+    <!-- ================================================================== -->
+    <target name="copyD2K" depends="init" >
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- create the manifest                                                -->
+    <!-- ================================================================== -->
+    <target name="manifest" depends="compile">
+        <manifest file="${build}/MANIFEST.MF"/>
+        <java classname="ncsa.im2learn.core.ServiceFinder" fork="true">
+            <arg value="${build}/classes"/>
+            <classpath>
+                <fileset dir="${build}/lib" includes="*.jar"/>
+                <path refid="d2ktoolkit"/>
+                <path refid="classpath"/>
+            </classpath>
+        </java>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- create the keyfile                                                 -->
+    <!-- ================================================================== -->
+    <target name="createkey" unless="haskey">
+        <antcall target="forcekey"/>
+    </target>
+
+    <target name="forcekey" description="Force key creation">
+        <delete file="${key.file}"/>
+        <genkey keystore="${key.file}" alias="${key.alias}" storepass="${key.password}" validity="3650">
+            <dname>
+                <param name="CN" value="${key.CN}"/>
+                <param name="OU" value="${key.OU}"/>
+                <param name="O" value="${key.O}"/>
+                <param name="C" value="${key.C}}"/>
+            </dname>
+        </genkey>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- compile all the source code                                        -->
+    <!-- ================================================================== -->
+    <target name="compile" depends="copyIm2Learn, copyD2K">
+        <!-- compile source code -->
+        <javac srcdir="${build}/src" destdir="${build}/classes">
+            <classpath>
+                <fileset dir="${build}/lib" includes="*.jar"/>
+                <path refid="d2ktoolkit"/>
+                <path refid="classpath"/>
+            </classpath>
+        </javac>
+    </target>
+ 
+    <!-- ================================================================== -->
+    <!-- sign all jarfiles and package them up                              -->
+    <!-- ================================================================== -->
+    <target name="package" depends="compile, createkey, manifest">
+        <!-- copy resources -->
+        <copy todir="${build}/classes">
+            <fileset dir="${build}/src" excludes="**/*.java"/>
+        </copy>
+        
+        <!-- jar up file -->
+        <jar destfile="${build}/dist/${ext}${build}.jar" basedir="${build}/classes" manifest="${build}/MANIFEST.MF"/>
+        
+        <!-- copy over other jar files needed -->
+        <copy todir="${build}/dist/lib">
+            <fileset dir="${build}/lib" includes="*.jar" excludes="apple.jar"/>
+        </copy>
+    
+        <!-- sign jar files -->
+        <signjar alias="${key.alias}" storepass="${key.password}" keystore="${key.file}" lazy="true">
+            <fileset dir="${build}/dist" includes="**/*.jar"/>
+        </signjar>
+
+        <!-- zip up final result -->
+        <zip destfile="${dist}/${build}.zip" basedir="${build}/dist"/>
+
+        <!-- copy files across -->
+        <copy todir="${ws}">
+            <fileset dir="${build}/dist"/>
+        </copy>
+        
+        <!-- copy jnlp if it exists -->
+        <delete file="${ws}/${ext}${build}.jnlp"/>
+        <copy file="jnlp/${build}.jnlp" todir="${ws}/${ext}" failonerror="false"/>        
+
+        <!-- set the codebase -->
+        <replaceregexp file="${ws}/${ext}${build}.jnlp">
+            <regexp pattern="@CODEBASE@"/>
+            <substitution expression="${jnlp.codebase}"/>
+        </replaceregexp>
+    </target>
+
+    <!-- ================================================================= -->
+    <!-- clean up any files we created                                     -->
+    <!-- ================================================================= -->
+    <target name="clean" description="remove build files">
+        <delete dir="${build}"/>
+        <delete file="${dist}/${build}.zip"/>
+    </target>
+</project>   

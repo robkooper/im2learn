@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- JNLP for Im2Learn -->
+<jnlp spec="1.0+" codebase="@CODEBASE@" href="Im2Learn.jnlp">
+
+    <!-- description of the application, shown in java webstart app -->
+    <information>
+        <title>Im2Learn</title>
+        <vendor>NCSA</vendor>
+        <homepage href="http://isda.ncsa.uiuc.edu"/>
+        <description>Im2Learn</description>
+        <description kind="short">Im2Learn</description>
+        <offline-allowed/>
+    </information>
+
+    <!-- I need all security permissions -->
+    <security>
+        <all-permissions/>
+    </security>
+
+    <!-- What resources are needed to run this application, i.e. jar files -->
+    <resources>
+        <j2se version="1.4+" href="http://java.sun.com/products/autodl/j2se"
+              initial-heap-size="64M" max-heap-size="512M"/>
+
+        <!-- The main jar file, this contains the main function -->
+        <jar href="Im2Learn.jar"/>
+
+        <!-- Logging class used in the browser -->
+        <jar href="lib/commons-logging.jar"/>
+
+        <!-- Extentions -->
+        <!-- list all of the jnlp's that are in ext here -->
+        <extension name="Im2Learn - JAI" href="ext/Im2Learn-jai.jnlp"/>
+        <extension name="Im2Learn - INFO" href="ext/Im2Learn-info.jnlp"/>
+        <extension name="Im2Learn - PANEL" href="ext/Im2Learn-panel.jnlp"/>
+        <extension name="Im2Learn - PDF" href="ext/Im2Learn-pdf.jnlp"/>
+        <extension name="Im2Learn - VIS" href="ext/Im2Learn-vis.jnlp"/>
+        <extension name="Im2Learn - HS" href="ext/Im2Learn-hs.jnlp"/>
+    </resources>
+
+    <!-- Application parameters and main class -->
+    <application-desc main-class="ncsa.im2learn.Main"/>
+</jnlp>
+

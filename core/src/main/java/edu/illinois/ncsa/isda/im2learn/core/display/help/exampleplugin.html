@@ -1,0 +1,217 @@
+<html>
+<body>
+<h1>Example Plugin</h1>
+<p>This appendix shows how to build a plugin.</p>
+<pre>
+package ncsa.Im2Learn.ext.test;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+import java.net.URL;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import ncsa.Im2Learn.core.datatype.ImageObject;
+import ncsa.Im2Learn.core.display.*;
+
+// ------------------------------------------------------------
+public class ExamplePlugin extends Im2LearnFrame
+                           implements Im2LearnMenu {
+    /**
+     * Reference to the imagepanel this menu is associated
+     * with.
+     */
+    private ImagePanel imagepanel;
+
+    /**
+     * Preview of the swap operation.
+     */
+    private ImagePanel ipPreview;
+
+    /**
+     * Logger used for debug and warning messages.
+     */
+    static private Log logger = LogFactory.
+                                 getLog(ExamplePlugin.class);
+
+    /**
+     * Create the UI for this menu. Show a preview panel in the
+     * middle of the frame and buttons below to do the swap,
+     * apply changes to imagepanel and close the window.
+     *
+     */
+    public ExamplePlugin() {
+        super(&quot;COLOR SWAP&quot;);
+
+        imagepanel = null;
+        createUI();
+    }
+
+    /**
+     * Called when the user hides the window.
+     */
+    public void hiding() {
+        ipPreview.setImageObject(null);
+    }
+
+    /**
+     * Called when the user shows the window.
+     */
+    public void showing() {
+        reset();
+    }
+
+    /**
+     * Create the UI. The UI consists of a preview imagepanel
+     * which will show the swapped image, and three buttons to
+     * swap the image, apply changes to the imagepanel and close
+     * the window.
+     */
+    private void createUI() {
+        ipPreview = new ImagePanel();
+        ipPreview.setAutozoom(true);
+        getContentPane().add(ipPreview, BorderLayout.CENTER);
+
+        JPanel pnlButtons = new JPanel(new FlowLayout());
+        pnlButtons.add(new JButton(new AbstractAction(&quot;Swap&quot;) {
+            public void actionPerformed(ActionEvent e) {
+                swap();
+            }
+        }));
+        pnlButtons.add(new JButton(new AbstractAction(&quot;Apply&quot;) {
+            public void actionPerformed(ActionEvent e) {
+                if (ipPreview.getImageObject() == null) {
+                    swap();
+                }
+                ImageObject imgobj = ipPreview.getImageObject();
+                imagepanel.setImageObject(imgobj);
+            }
+        }));
+        pnlButtons.add(new JButton(new AbstractAction(&quot;Close&quot;) {
+            public void actionPerformed(ActionEvent e) {
+                ExamplePlugin.this.setVisible(false);
+            }
+        }));
+        getContentPane().add(pnlButtons, BorderLayout.SOUTH);
+
+        pack();
+    }
+
+    /**
+     * Set the image shown in the preview to null.
+     */
+    private void reset() {
+        ipPreview.setImageObject(null);
+    }
+
+    /**
+     * Change the colors of the imageobject. This will take
+     * the current maximum color and subtract the color of
+     * the pixel.
+     */
+    private void swap() {
+        ImageObject imgobj = imagepanel.getImageObject();
+        if ((imgobj == null) || !imgobj.isDataValid()) {
+            return;
+        }
+
+        // create a copy that we work with
+        ImageObject clone = null;
+        try {
+            clone = (ImageObject) imgobj.clone();
+        } catch (CloneNotSupportedException exc) {
+            logger.warn(&quot;Could not clone image.&quot;, exc);
+            return;
+        }
+        double max = clone.getMax();
+
+        // change all pixels, see Appendix B for more
+        // efficient methods
+        for (int i = 0; i < clone.getSize(); i++) {
+            clone.setDouble(i, max - clone.getDouble(i));
+        }
+
+        // set the preview pane
+        ipPreview.setImageObject(clone);
+    }
+
+    // ------------------------------------------------------------
+    // Im2LearnMenu implementation
+    // ------------------------------------------------------------
+    /**
+     * Store the reference to the imagepanel for later use.
+     * The imagepanel passed in as argument is the
+     * imagepanel to which this tools is associated.
+     */
+    public void setImagePanel(ImagePanel imagepanel) {
+        this.imagepanel = imagepanel;
+    }
+
+    /**
+     * For this tool there is no operation that works on the
+     * imagepanel directly and thus we return null
+     * indicating that no menu entries need to be created on
+     * the panel.
+     */
+    public JMenuItem[] getPanelMenuItems() {
+        return null;
+    }
+
+    /**
+     * Create a menu entry called Tools, and attach a
+     * submenu entry to this for this class, called swap. If
+     * the user selects this class
+     */
+    public JMenuItem[] getMainMenuItems() {
+        JMenu menu = new JMenu(&quot;Tools&quot;);
+
+        JMenuItem item = new JMenuItem(new AbstractAction(&quot;Swap&quot;) {
+            public void actionPerformed(ActionEvent e) {
+                if (!isVisible()) {
+                    Window win = SwingUtilities.
+                                  getWindowAncestor(imagepanel);
+                    setLocationRelativeTo(win);
+                    setVisible(true);
+                }
+                toFront();
+            }
+        });
+        menu.add(item);
+
+        return new JMenuItem[] { menu };
+    }
+
+    /**
+     * When a new image is loaded make sure that the current
+     * swapped image is removed, i.e. perform a reset. Only
+     * need to reset the image if this frame is visible.
+     */
+    public void imageUpdated(ImageUpdateEvent event) {
+        if (!isVisible()) {
+            return;
+        }
+        if (event.getId() == ImageUpdateEvent.NEW_IMAGE) {
+            reset();
+        }
+    }
+
+    /**
+     * Return the right documentation depending on what node
+     * is selected, in this case only the Swap node should
+     * exist.
+     */
+    public URL getHelp(String menu) {
+        if (menu.equals(&quot;Swap&quot;)) {
+            return getClass().getResource(&quot;help/swap.html&quot;);
+        } else {
+            return null;
+        }
+    }
+}
+</pre>
+</body>
+</html>

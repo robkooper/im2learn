@@ -1,0 +1,47 @@
+<project name="Im2Learn" default="package">
+    <description>Im2Learn - Core build</description>    
+    
+    <!-- use the common file with definitions -->
+    <import file="build/common.xml"/>
+    
+    <!-- update cvs before doing a build -->
+    <property name="cvsupdate" value="yes"/>
+
+    <target name="init">        
+        <mkdir dir="${dist}"/>
+    </target>
+        
+    <target name="package" depends="init, cvs">
+        <property name="execute" value="package"/>
+        <antcall target="doit"/>
+    </target>
+        
+    <target name="clean">
+        <property name="execute" value="clean"/>
+        <antcall target="doit"/>        
+        <delete dir="${dist}"/>
+        <delete dir="${ws}"/>
+    </target>
+        
+    <target name="doit">
+        <ant antfile="build/core.xml"  target="${execute}"/>
+        <ant antfile="build/info.xml"  target="${execute}"/>
+        <ant antfile="build/panel.xml" target="${execute}"/>
+        <ant antfile="build/pdf.xml"   target="${execute}"/>
+        <ant antfile="build/jai.xml"   target="${execute}"/>
+        <ant antfile="build/vis.xml"   target="${execute}"/>
+    </target>
+    
+    <target name="webstart">
+        <property name="jnlp.codebase" value="http://isda.ncsa.uiuc.edu/kooper/webstart/Im2Learn"/>
+        <antcall target="package"/>
+        <exec executable="scp" failonerror="true">
+            <arg value="-r"/>
+            <arg value="${ws}/Im2Learn.jar"/>
+            <arg value="${ws}/Im2Learn.jnlp"/>
+            <arg value="${ws}/lib"/>
+            <arg value="${ws}/ext"/>
+            <arg value="${user.name}@misspiggy.ncsa.uiuc.edu:/home/www/kooper/webstart/Im2Learn"/>
+        </exec>
+    </target>
+</project>

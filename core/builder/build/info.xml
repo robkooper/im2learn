@@ -1,0 +1,55 @@
+<project name="Im2Learn - INFO" default="package" basedir="..">
+    <description>Im2Learn - INFO build</description>
+    
+    <!-- ================================================================== -->
+    <!-- COMMON CODE                                                        -->
+    <!-- ================================================================== -->
+    <import file="common.xml"/>
+    
+    <!-- ================================================================== -->
+    <!-- what are we building and what is the main class                    -->
+    <!-- ================================================================== -->
+    <property name="build" value="Im2Learn-info"/>    
+    
+    <!-- ================================================================== -->
+    <!-- additional jar files I need                                        -->
+    <!-- ================================================================== -->
+    <path id="classpath">
+        <pathelement location="${ws}/Im2Learn.jar"/>
+        <pathelement location="${ws}/lib/commons-logging.jar"/>
+    </path>
+    
+    <!-- ================================================================== -->
+    <!-- copy the Im2Learn code that we want to compile                     -->
+    <!-- ================================================================== -->
+    <target name="copyIm2Learn" depends="init" >
+        <copy todir="${build}">
+            <fileset dir="${im2learn}/im2learn/">
+                <patternset>
+                    <!-- Im2Learn core source code -->
+                    <include name="src/ncsa/im2learn/ext/info/**/*"/>
+                    <exclude name="src/ncsa/im2learn/ext/info/MouseLocationDialog.java"/>
+
+                    <!-- Always ignore CVS files -->
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- copy the D2K code that we want to compile                          -->
+    <!-- ================================================================== -->
+    <target name="copyD2K" depends="init" if="haved2k">
+        <copy todir="${build}">
+            <fileset dir="${im2learn}/im2learn/">
+                <patternset>
+                    <include name="src/ncsa/d2k/modules/im2learn/vis/ImageInfo.java"/>
+
+                    <!-- Always ignore CVS files -->
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+    </target>
+</project>

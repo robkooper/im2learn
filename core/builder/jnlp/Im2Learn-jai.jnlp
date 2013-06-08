@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<jnlp spec="1.0+" codebase="@CODEBASE@" href="ext/Im2Learn-jai.jnlp">
+    <information>
+        <title>Im2Learn - JAI</title>
+        <vendor>NCSA</vendor>
+    </information>
+
+    <!-- I need all security permissions -->
+    <security>
+        <all-permissions/>
+    </security>
+
+    <!-- All jar files needed for this -->
+    <resources>
+        <jar href="ext/Im2Learn-jai.jar"/>
+        <jar href="lib/jai_codec.jar"/>
+        <jar href="lib/jai_core.jar"/>
+    </resources>
+
+    <component-desc/>
+</jnlp>

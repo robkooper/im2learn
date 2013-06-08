@@ -1,0 +1,157 @@
+<html>
+<body>
+<h1>ImageReader</h1>
+<p>To be able to load a new fileformat the
+ImageReader interface needs to be implemented. The example gives an
+implementation of an ImageReader that can read serialized
+ImageObjects from disk.</P>
+<P CLASS="western">The ImageLoader will first call <FONT SIZE=2><FONT FACE="Courier New, monospace">canRead</FONT></FONT>
+with the filename and the first 100 bytes of the file. Based on
+either one of those the loader should decide if it can read the rest
+of the file. Most images will have a magic set of bytes at the
+beginning that identify what type of image it is, for example GIF
+files start always with GIF.</P>
+<P CLASS="western">Next either <FONT SIZE=2><FONT FACE="Courier New, monospace">readImageHeader</FONT></FONT>
+or <FONT SIZE=2><FONT FACE="Courier New, monospace">readImage</FONT></FONT>
+is called to load the image from disk. This function should return a
+reference to the ImageObject that was loaded from disk.</P>
+
+<pre>
+import ncsa.Im2Learn.core.datatype.ImageException;
+import ncsa.Im2Learn.core.datatype.ImageObject;
+import ncsa.Im2Learn.core.datatype.SubArea;
+import ncsa.Im2Learn.core.io.ImageReader;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.*;
+
+/**
+ * Load an object that was saved as a serialized object. This class
+ * will load an object that was previously saved as an serialized
+ * object. This could fail if the object uses classes in the 
+ * properties that are not known to the current instance.
+ */
+public class ObjectLoader implements ImageReader {
+    private static Log logger =
+                             LogFactory.getLog(ObjectLoader.class);
+
+    /**
+     * Try and find a reader, if one found we can actually read the
+     * file.
+     *
+     * @param filename of file to be read.
+     * @param hdr      used for magic number
+     * @return true if image can be read.
+     */
+    public boolean canRead(String filename, byte[] hdr) {
+        return (filename.endsWith(&quot;.object&quot;));
+    }
+
+    /**
+     * Loads an image and returns the imageobject containing the
+     * image.
+     *
+     * @param filename of the file to load.
+     * @param subarea  of the file to load, or null to load full
+     *                 image.
+     * @param sampling is the sampling that needs to be done.
+     * @return the imageobject containing the loaded image
+     * @throws java.io.IOException if an error occurrs reading the
+     *                             file.
+     */
+    public ImageObject readImage(String filename, SubArea subarea,
+                                 int sampling) throws IOException {
+        return readImage(filename, subarea, sampling, false);
+    }
+
+    /**
+     * This function will read the file and return an imageobject
+     * that contains the information of the image but not the
+     * imagedata itself.
+     *
+     * @param filename of the file to be read
+     * @return the file as an imageobject except of the imagedata.
+     * @throws java.io.IOException if the file could not be read.
+     */
+    public ImageObject readImageHeader(String filename)
+                                              throws IOException {
+        return readImage(filename, null, 1, true);
+    }
+
+    /**
+     * Return a list of extensions this class can read.
+     *
+     * @return a list of extensions that are understood by this
+     *         class.
+     */
+    public String[] readExt() {
+        return new String[]{&quot;object&quot;};
+    }
+
+    /**
+     * Loads an image and returns the imageobject containing the
+     * image.
+     *
+     * @param filename of the file to load.
+     * @param subarea  of the file to load, or null to load full
+     *                 image.
+     * @param sampling is the sampling that needs to be done.
+     * @param header   true if only header needs to be read.
+     * @return the imageobject containing the loaded image
+     * @throws java.io.IOException if an error occurrs reading the
+     *                             file.
+     */
+    public ImageObject readImage(String filename, SubArea subarea,
+                                 int sampling, boolean header)
+                                            throws IOException {
+        FileInputStream   fis = new FileInputStream(filename);
+        ObjectInputStream inp = new ObjectInputStream(fis);
+        ImageObject result;
+        try {
+            result = (ImageObject) inp.readObject();
+        } catch (ClassNotFoundException exc) {
+            logger.debug(&quot;Could not load file.&quot;, exc);
+            throw(new IOException(exc.toString()));
+        } catch (ClassCastException exc) {
+            logger.debug(&quot;Could not load file.&quot;, exc);
+            throw(new IOException(exc.toString()));
+        }
+        inp.close();
+        fis.close();
+
+        // subsample and subarea
+        if (subarea != null) {
+            try {
+                result = result.crop(subarea);
+            } catch (ImageException exc) {
+                logger.debug(&quot;Could not crop file.&quot;, exc);
+                throw(new IOException(exc.toString()));
+            }
+        }
+
+        if (sampling != 1) {
+            try {
+                result = result.scale(sampling);
+            } catch (ImageException exc) {
+                logger.debug(&quot;Could not sample file.&quot;, exc);
+                throw(new IOException(exc.toString()));
+            }
+        }
+
+        return result;
+    }
+
+    /** 
+     * Return the description of the reader.
+     *
+     * @return decription of the reader
+     */
+    public String getDescription() {
+        return &quot;Java Serialized Loader&quot;;
+    }
+}
+</pre>
+</body>
+</html>

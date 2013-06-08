@@ -1,0 +1,80 @@
+<project name="Im2Learn - CORE" default="package" basedir="..">
+    <description>Im2Learn - CORE build</description>
+    
+    <!-- ================================================================== -->
+    <!-- COMMON CODE                                                        -->
+    <!-- ================================================================== -->
+    <import file="common.xml"/>
+    
+    <!-- ================================================================== -->
+    <!-- what are we building and what is the main class                    -->
+    <!-- ================================================================== -->
+    <property name="build" value="Im2Learn"/>
+    <property name="main" value="ncsa.im2learn.Main"/>
+    
+    <!-- ================================================================== -->
+    <!-- additional jar files I need                                        -->
+    <!-- ================================================================== -->
+    <path id="classpath">
+    </path>
+
+    <!-- ================================================================== -->
+    <!-- copy the Im2Learn code that we want to compile                     -->
+    <!-- ================================================================== -->
+    <target name="copyIm2Learn" depends="init" >
+        <delete failonerror="false" file="${build}/src/ncsa/im2learn/core/io/ImageLoader.java"/>
+        <copy todir="${build}">
+            <fileset dir="${im2learn}/im2learn/">
+                <patternset>
+                    <!-- Im2Learn core source code -->
+                    <include name="src/ncsa/im2learn/core/**/*"/>
+                    <exclude name="src/ncsa/im2learn/core/io/hdf/*"/>
+                    <exclude name="src/ncsa/im2learn/core/io/jai/*"/>
+
+                    <include name="src/ncsa/im2learn/Main*.java"/>
+                    
+                    <include name="src/ncsa/im2learn/ext/misc/**/*"/>
+                    <exclude name="src/ncsa/im2learn/ext/misc/PopupAppender.java"/>
+                    <exclude name="src/ncsa/im2learn/ext/misc/ImEnhance.java"/>
+
+                    <!-- Libraries needed to compile -->
+                       <include name="lib/apple.jar"/>
+                    <include name="lib/commons-logging.jar"/>
+
+                    <!-- Always ignore CVS files -->
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+        <patch patchfile="patch/ImageLoader.patch" strip="0"/>
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- copy the D2K code that we want to compile                          -->
+    <!-- ================================================================== -->
+    <target name="copyD2K" depends="init" if="haved2k">
+        <copy todir="${build}">
+            <fileset dir="${im2learn}/im2learn/">
+                <patternset>
+                    <include name="src/ncsa/d2k/modules/im2learn/vis/AboutIm2Learn.java"/>
+                    <include name="src/ncsa/d2k/modules/im2learn/io/ImageFileChooser.java"/>
+                    <include name="src/ncsa/d2k/modules/im2learn/io/LoadImage.java"/>
+                    <include name="src/ncsa/d2k/modules/im2learn/io/SaveImage.java"/>
+
+                    <!-- Always ignore CVS files -->
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- create the manifest                                                -->
+    <!-- ================================================================== -->
+    <target name="manifest">
+        <manifest file="${build}/MANIFEST.MF">
+            <attribute name="Main-Class" value="${main}"/>
+            <attribute name="Class-Path" value="lib/commons-logging.jar"/>
+        </manifest>
+    </target>
+</project>

@@ -1,0 +1,74 @@
+<html>
+<body>
+<h1>ImageWriter</h1>
+<p>To be able to write a new file format the
+ImageWriter interface needs to be implemented. The example gives an
+implementation of an ImageWriter that can read serialized
+ImageObjects to disk.</P>
+<p>The ImageLoader will first call <code>canWrite</code>
+with the filename. Based on the filename the writer should decide if
+it can write the ImageObject to disk. Most images will have specific
+extensions that identify what type of image it is, for example GIF
+files start use gif.</P>
+<P>Next <code>writeImage</code>
+is called to write the image to disk.</p>
+<pre>
+import ncsa.Im2Learn.core.datatype.ImageObject;
+import ncsa.Im2Learn.core.io.ImageWriter;
+
+import java.io.*;
+
+/**
+ * Write a serialized ImageObject to disk. This class is responsible
+ * for serializing an ImageObject and writing the bytes to disk that
+ * make up the ImageObject.
+ */
+public class ObjectLoader implements ImageWriter {
+    /**
+     * Returns true if the class can write the file.
+     *
+     * @param filename of the file to be written.
+     * @return true if the file can be written by this class.
+     */
+    public boolean canWrite(String filename) {
+        return filename.endsWith(&quot;.object&quot;);
+    }
+
+    /**
+     * This function will write the imageobject to a file.
+     *
+     * @param filename    of the file to be written.
+     * @param imageobject the image image to be written.
+     * @throws java.io.IOException if the file could not be written.
+     */
+    public void writeImage(String filename, ImageObject imageobject)
+                                                throws IOException {
+      FileOutputStream fos = new FileOutputStream(filename);
+      ObjectOutput out = new ObjectOutputStream(fos);
+      out.writeObject(imageobject);
+      out.close();
+      fos.close();
+    }
+
+    /**
+     * Return a list of extentions this class can write.
+     *
+     * @return a list of extentions that are understood by this
+     *         class.
+     */
+    public String[] writeExt() {
+        return new String[]{&quot;object&quot;};
+    }
+
+    /**
+     * Return the description of the writer.
+     *
+     * @return decription of the writer
+     */
+    public String getDescription() {
+        return &quot;Java Serialized Loader&quot;;
+    }
+}
+</pre>
+</body>
+</html>

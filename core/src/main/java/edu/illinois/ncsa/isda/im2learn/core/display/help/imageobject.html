@@ -1,0 +1,43 @@
+<html>
+<body>
+<h1>ImageObject</h1>
+<p>The heart and soul of Im2Learn is
+the ImageObject class. It is used to modify and display the images
+and to produce all the abbreviations of it, like segmenting the image
+for instance.</P>
+<p>The ImageObject class is used to store
+information about an image. The image is stored in row major order
+with the bands interleaving the pixels (for example an image with 3
+rows, 2 columns and 3 bands is stored as RGBRGBRGBRGBRGBRGB where the
+first triplet is the pixel at row 1, column 1, the second triplet is
+the pixel at row 1, column 2 etc.). ImageObject can be of any
+datatype, any number of bands (samples per pixel), rows (height) or
+columns (width).</P>
+<p>Any additional information about the
+image can be stored as a property associated with the image.
+Properties that begin with an underscore are temporary properties and
+will not be copied when the image is cloned, or saved to disk. Some
+common properties have their keys predefined in this class.</P>
+<p>How to speed up your application: This
+class is an abstract class, any time you call getXXX() it will have
+to do a lookup to see what class really to call, and call the
+functions on this class. So one speedup is to simply do the check
+your self, typecast the ImageObject to the appropriate class and call
+the functions on this class. Do this either inside the loop or make
+multiple loops for each datatype (still keeping the abstract version
+in case a datatype is missing in your implementation). The fastest
+way is to use the getData function and typecast the returned object
+to the appropriate array (byte[], double[] etc.), this will give you
+direct access to the imagedata. If any data is modified computeMinMax
+or setMinMaxInvalid will need to be called to mark the fact that the
+current minimum and maximum values associated with the image are not
+valid.</P>
+<p>An ImageObject can also be used to just
+store information about an image and will not have any imagedata
+associated with it in that case. To test if an ImageObject has any
+data, use either getData() or isDataValid(). Accessing one of the get
+or set functions when no data is present will throw a NullPointer
+exception. No checks are done in the get and set function to see if
+there is any imagedata to speed them up.</p>
+</body>
+</html>

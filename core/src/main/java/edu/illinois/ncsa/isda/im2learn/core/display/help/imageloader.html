@@ -1,0 +1,19 @@
+<html>
+<body>
+<h1>ImageLoader</h1>
+<p>To load an image from disk or to
+save an image to disk the developer can use the <code>ImageLoader</code>
+class. This class has static methods <code>readImage</code>
+methods that will take a String as argument that points to the file
+that needs to be loaded. The ImageLoader class will then use the
+loaders provided to find the best loader to load the image. When
+saving an image the developer can call <code>writeImage</code>
+with the ImageObject and the filename as a String. Again the
+ImageLoader will find the best writer to save the image.</P>
+<p>The ImageLoader can be extended to
+include new readers and writers by the application developer. To do
+this the extension will need to implement the ImageReader class to be
+able to load images and the ImageWriter class to write images to
+disk.</p>
+</body>
+</html>
