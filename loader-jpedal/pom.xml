@@ -10,7 +10,6 @@
 		<groupId>edu.illinois.ncsa.isda</groupId>
 		<version>3.0.0-SNAPSHOT</version>
 		<artifactId>im2learn</artifactId>
-                <relativePath>../im2learn-parent/pom.xml</relativePath>
 	</parent>
 
 	<dependencies>

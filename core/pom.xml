@@ -3,10 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>im2learn-core</artifactId>
-	<groupId>edu.illinois.ncsa.isda</groupId>
-	<version>3.0.0-SNAPSHOT</version>
         <name>ISDA Im2Learn - Core</name>
 	<packaging>jar</packaging>
+
+        <parent>
+                <groupId>edu.illinois.ncsa.isda</groupId>
+                <version>3.0.0-SNAPSHOT</version>
+                <artifactId>im2learn</artifactId>
+        </parent>
 
         <properties>
                 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

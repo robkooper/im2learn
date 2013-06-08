@@ -45,8 +45,6 @@
 		<module>loader-jpeg2000</module>
 		<module>loader-odap</module>
 		<module>loader-pdfbox</module>
-<!--		<module>projects</module> -->
-		<module>tools-cyberintegrator</module>
 	</modules>
 
 	<distributionManagement>
