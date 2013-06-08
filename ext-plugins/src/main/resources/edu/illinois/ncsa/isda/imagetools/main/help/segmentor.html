@@ -1,0 +1,6 @@
+<title> Segmentor </title>
+<h1> Segmentor </h1>
+<p>
+The segmentation algorithm in segmentor.java works by extracting regions whose shape is most similar to that of a given example (typically a manually segmented mask derived from a canonical example of the desired object). The algorithm uses ball-based region-growing segmentation combined with the seven Hu moments to evaluate shape similarity. The ball-based segmentation places a circular region into a seed location and grows the region subject to color homogeneity and spatial contiguity constraints. Each resulting region is described by a vector of Hu moments and compared to the Hu moments of a given example. The algorithm searches over a space of parameters including the region growing criteria and seed placement. There are two region growing parameters: the threshold, which determines how different the color of a candidate pixel must be from the seed color before it is labeled as part of the background, and the ball size, which determines the minimum size of a gap in the object boundary through which the region can escape. A block diagram of the algorithm is shown below, illustrating the application of the algorithm to an image of Lake Ontario.
+</P>
+<img src = "BlockDiagram.png">
