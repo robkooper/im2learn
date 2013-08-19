@@ -42,16 +42,13 @@
  *******************************************************************************/
 package edu.illinois.ncsa.isda.im2learn.core.display;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
-import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectByte;
-import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectOutOfCore;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.Rectangle2D;
@@ -62,6 +59,18 @@ import java.awt.print.PrinterException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Vector;
+
+import javax.swing.JComponent;
+import javax.swing.JViewport;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectByte;
+import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObjectOutOfCore;
 
 /**
  * A component that can render ImageObjects. This class will render an
@@ -85,53 +94,53 @@ import java.util.Vector;
  * left corner will be visible. To overcome this, the component can be placed
  * inside a JScrollPane.
  * <p/>
- *
+ * 
  * @author Rob Kooper
  * @version 1.0
  */
 public class ImageComponent extends JComponent implements Scrollable, Printable {
-    private boolean autozoom = false;
-    private boolean fakergb = false;
-    private boolean useTotals = false;
-    private double zoomfactor = 1.0;
-    transient private BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_BYTE_GRAY);
-    private ImageObject imageobject = null;
-    private Rectangle crop = new Rectangle();
-    private int redBand = 0;
-    private int greenBand = 1;
-    private int blueBand = 2;
-    private int grayBand = 0;
-    private boolean grayscale = false;
-    private double gamma = 1.0;
-    private int[] gammatable = null;
-    private Vector listeners = new Vector();
-    private int imagex = 0;
-    private int imagey = 0;
-    private Dimension preferredsize = null;
-    private double[] scale = new double[]{0, 1};
-    private boolean userScale = false;
-    private Rectangle visregion = new Rectangle();
-    private double[] imagescale = new double[2];
-    private double[] oneoverimagescale = new double[2];
-    private double paintscale = 1.0;
+    private boolean                           autozoom          = false;
+    private boolean                           fakergb           = false;
+    private boolean                           useTotals         = false;
+    private double                            zoomfactor        = 1.0;
+    transient private BufferedImage           image             = new BufferedImage(1, 1, BufferedImage.TYPE_BYTE_GRAY);
+    private ImageObject                       imageobject       = null;
+    private Rectangle                         crop              = new Rectangle();
+    private int                               redBand           = 0;
+    private int                               greenBand         = 1;
+    private int                               blueBand          = 2;
+    private int                               grayBand          = 0;
+    private boolean                           grayscale         = false;
+    private double                            gamma             = 1.0;
+    private int[]                             gammatable        = null;
+    private Vector                            listeners         = new Vector();
+    private int                               imagex            = 0;
+    private int                               imagey            = 0;
+    private Dimension                         preferredsize     = null;
+    private double[]                          scale             = new double[] { 0, 1 };
+    private boolean                           userScale         = false;
+    private Rectangle                         visregion         = new Rectangle();
+    private double[]                          imagescale        = new double[2];
+    private double[]                          oneoverimagescale = new double[2];
+    private double                            paintscale        = 1.0;
 
     transient private ResizeComponentListener resizer;
 
-    private static Log logger = LogFactory.getLog(ImageComponent.class);
+    private static Log                        logger            = LogFactory.getLog(ImageComponent.class);
 
     /**
      * ImageObject used if no image is specified.
      */
-    private static ImageObject dummy = new ImageObjectByte(1, 1, 1);
+    private static ImageObject                dummy             = new ImageObjectByte(1, 1, 1);
 
     /**
      * Default size of the panel is 640x480
      */
-    private Dimension panelsize = new Dimension(640, 480);
-    
+    private Dimension                         panelsize         = new Dimension(640, 480);
+
     static {
-    	// prevent dummy from showing up in multimagepanel
-    	dummy.setProperty("_MIP", dummy.hashCode());
+        // prevent dummy from showing up in multimagepanel
+        dummy.setProperty("_MIP", dummy.hashCode());
     }
 
     /**
@@ -143,8 +152,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
 
     /**
      * Craetes imagecomponent that will display the imageobject.
-     *
-     * @param imageobject that is displayed in this imagecomponent.
+     * 
+     * @param imageobject
+     *            that is displayed in this imagecomponent.
      */
     public ImageComponent(ImageObject imageobject) {
         resizer = new ResizeComponentListener();
@@ -171,7 +181,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Returns the current band used for the green color when displaying the
      * image as RGB. For more information see setRedBand().
-     *
+     * 
      * @return the band shown as red if image is displayed as RGB.
      */
     public int getRedBand() {
@@ -184,15 +194,16 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * updated to reflect this change. After changing the value and repainting
      * all imageupdate listeneres will be notified with the new red band as an
      * Integer.
-     *
-     * @param redBand the new band to use for red when showing the image as
-     *                RGB.
-     * @throws IllegalArgumentException if the band is less than 0, or larger
-     *                                  than the number of bands in the image.
+     * 
+     * @param redBand
+     *            the new band to use for red when showing the image as RGB.
+     * @throws IllegalArgumentException
+     *             if the band is less than 0, or larger than the number of
+     *             bands in the image.
      */
     public void setRedBand(int redBand) throws IllegalArgumentException {
         if ((redBand < -1) || (redBand >= imageobject.getNumBands())) {
-            throw(new IllegalArgumentException("redBand less than 0 or larger than number of bands."));
+            throw (new IllegalArgumentException("redBand less than 0 or larger than number of bands."));
         }
         if (this.redBand == redBand) {
             return;
@@ -208,7 +219,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Returns the current band used for the green color when displaying the
      * image as RGB. For more information see setGreenBand().
-     *
+     * 
      * @return the band shown as green if image is displayed as RGB.
      */
     public int getGreenBand() {
@@ -221,15 +232,16 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * updated to reflect this change. After changing the value and repainting
      * all imageupdate listeneres will be notified with the new green band as an
      * Integer.
-     *
-     * @param greenBand the new band to use for green when showing the image as
-     *                  RGB.
-     * @throws IllegalArgumentException if the band is less than 0, or larger
-     *                                  than the number of bands in the image.
+     * 
+     * @param greenBand
+     *            the new band to use for green when showing the image as RGB.
+     * @throws IllegalArgumentException
+     *             if the band is less than 0, or larger than the number of
+     *             bands in the image.
      */
     public void setGreenBand(int greenBand) throws IllegalArgumentException {
         if ((greenBand < -1) || (greenBand >= imageobject.getNumBands())) {
-            throw(new IllegalArgumentException("greenBand less than 0 or larger than number of bands."));
+            throw (new IllegalArgumentException("greenBand less than 0 or larger than number of bands."));
         }
         if (this.greenBand == greenBand) {
             return;
@@ -245,7 +257,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Returns the current band used for the blue color when displaying the
      * image as RGB. For more information see setBlueBand().
-     *
+     * 
      * @return the band shown as blue if image is displayed as RGB.
      */
     public int getBlueBand() {
@@ -258,15 +270,16 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * updated to reflect this change. After changing the value and repainting
      * all imageupdate listeneres will be notified with the new blue band as an
      * Integer.
-     *
-     * @param blueBand the new band to use for blue when showing the image as
-     *                 RGB.
-     * @throws IllegalArgumentException if the band is less than 0, or larger
-     *                                  than the number of bands in the image.
+     * 
+     * @param blueBand
+     *            the new band to use for blue when showing the image as RGB.
+     * @throws IllegalArgumentException
+     *             if the band is less than 0, or larger than the number of
+     *             bands in the image.
      */
     public void setBlueBand(int blueBand) throws IllegalArgumentException {
         if ((blueBand < -1) || (blueBand >= imageobject.getNumBands())) {
-            throw(new IllegalArgumentException("blueBand less than 0 or larger than number of bands."));
+            throw (new IllegalArgumentException("blueBand less than 0 or larger than number of bands."));
         }
         if (this.blueBand == blueBand) {
             return;
@@ -285,25 +298,26 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * is immediatly updated to reflect this change. After changing the value
      * and repainting all imageupdate listeneres will be notified with the new
      * red, green and blue bands as an int array.
-     *
-     * @param redBand   the new band to use for red when showing the image as
-     *                  RGB.
-     * @param greenBand the new band to use for green when showing the image as
-     *                  RGB.
-     * @param blueBand  the new band to use for blue when showing the image as
-     *                  RGB.
-     * @throws IllegalArgumentException if the band is less than 0, or larger
-     *                                  than the number of bands in the image.
+     * 
+     * @param redBand
+     *            the new band to use for red when showing the image as RGB.
+     * @param greenBand
+     *            the new band to use for green when showing the image as RGB.
+     * @param blueBand
+     *            the new band to use for blue when showing the image as RGB.
+     * @throws IllegalArgumentException
+     *             if the band is less than 0, or larger than the number of
+     *             bands in the image.
      */
     public void setRGBBand(int redBand, int greenBand, int blueBand) throws IllegalArgumentException {
         if ((redBand < -1) || (blueBand >= imageobject.getNumBands())) {
-            throw(new IllegalArgumentException("redBand less than 0 or larger than number of bands."));
+            throw (new IllegalArgumentException("redBand less than 0 or larger than number of bands."));
         }
         if ((greenBand < -1) || (greenBand >= imageobject.getNumBands())) {
-            throw(new IllegalArgumentException("greenBand less than 0 or larger than number of bands."));
+            throw (new IllegalArgumentException("greenBand less than 0 or larger than number of bands."));
         }
         if ((blueBand < -1) || (blueBand >= imageobject.getNumBands())) {
-            throw(new IllegalArgumentException("blueBand less than 0 or larger than number of bands."));
+            throw (new IllegalArgumentException("blueBand less than 0 or larger than number of bands."));
         }
         if ((this.redBand == redBand) && (this.greenBand == greenBand) && (this.blueBand == blueBand)) {
             return;
@@ -315,13 +329,13 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
             makeImage();
             repaint();
         }
-        fireImageUpdate(ImageUpdateEvent.CHANGE_RGBBAND, new int[]{redBand, greenBand, blueBand});
+        fireImageUpdate(ImageUpdateEvent.CHANGE_RGBBAND, new int[] { redBand, greenBand, blueBand });
     }
 
     /**
      * Returns the current band used when displaying the image as grayscale. For
      * more information see setGrayBand().
-     *
+     * 
      * @return the band shown if image is displayed as grayscale.
      */
     public int getGrayBand() {
@@ -334,14 +348,16 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * updated to reflect this change. After changing the value and repainting
      * all imageupdate listeneres will be notified with the new gray band as an
      * Integer.
-     *
-     * @param grayBand the new band to use when showing the image as grayscale.
-     * @throws IllegalArgumentException if the band is less than 0, or larger
-     *                                  than the number of bands in the image.
+     * 
+     * @param grayBand
+     *            the new band to use when showing the image as grayscale.
+     * @throws IllegalArgumentException
+     *             if the band is less than 0, or larger than the number of
+     *             bands in the image.
      */
     public void setGrayBand(int grayBand) throws IllegalArgumentException {
         if ((grayBand < 0) || (grayBand >= imageobject.getNumBands())) {
-            throw(new IllegalArgumentException("grayBand less than 0 or larger than number of bands."));
+            throw (new IllegalArgumentException("grayBand less than 0 or larger than number of bands."));
         }
         if (this.grayBand == grayBand) {
             return;
@@ -357,7 +373,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Returns whether a single band of the image is currently rendered. For
      * more information see setGrayScale().
-     *
+     * 
      * @return true if only a single band of the image rendered.
      */
     public boolean isGrayScale() {
@@ -370,8 +386,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * one band this will always be true. After changing the value and
      * repainting all imageupdate listeneres will be notified with the new
      * grayscale as a Boolean.
-     *
-     * @param grayscale set this to true to render a single band of the image.
+     * 
+     * @param grayscale
+     *            set this to true to render a single band of the image.
      */
     public void setGrayScale(boolean grayscale) {
         if (imageobject.getNumBands() == 1) {
@@ -388,7 +405,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
 
     /**
      * Returns the current gamma value. For more information see setGamma().
-     *
+     * 
      * @return the current gamma value.
      */
     public double getGamma() {
@@ -402,29 +419,31 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * brighten the image allowing the user to see details in dark areas. After
      * changing the value and repainting all imageupdate listeneres will be
      * notified with the new gamma as a Double.
-     *
-     * @param gamma the gamma value to use.
-     * @throws IllegalArgumentException if the gamma is 0 or less.
+     * 
+     * @param gamma
+     *            the gamma value to use.
+     * @throws IllegalArgumentException
+     *             if the gamma is 0 or less.
      */
     public void setGamma(double gamma) throws IllegalArgumentException {
         if (gamma <= 0) {
-            throw(new IllegalArgumentException("Gamma should not be 0 or smaller."));
+            throw (new IllegalArgumentException("Gamma should not be 0 or smaller."));
         }
         if (this.gamma == 1 / gamma) {
             return;
         }
         this.gamma = 1 / gamma;
         if (gamma == 1.0) {
-        	gammatable = null;
+            gammatable = null;
         } else {
-        	if(gammatable == null){
-        		gammatable = new int[256];
-        	}
-	        for (int i = 0; i < 256; i++) {
-	            gammatable[i] = (int) (255 * Math.pow(i / 255.0, this.gamma));
-	            if (gammatable[i] > 255)
-	                gammatable[i] = 255;
-	        }
+            if (gammatable == null) {
+                gammatable = new int[256];
+            }
+            for (int i = 0; i < 256; i++) {
+                gammatable[i] = (int) (255 * Math.pow(i / 255.0, this.gamma));
+                if (gammatable[i] > 255)
+                    gammatable[i] = 255;
+            }
         }
         makeImage();
         repaint();
@@ -434,7 +453,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Returns whether the image is using autozoom. For more information see
      * setAutozoom().
-     *
+     * 
      * @return true if the image is in autozoom.
      */
     public boolean isAutozoom() {
@@ -447,9 +466,10 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * repaint the image. After changing the value and repainting all
      * imageupdate listeneres will be notified with the new autozoom as a
      * Boolean.
-     *
-     * @param autozoom set this to true to automatically zoom the image to the
-     *                 maximum space available.
+     * 
+     * @param autozoom
+     *            set this to true to automatically zoom the image to the
+     *            maximum space available.
      */
     public void setAutozoom(boolean autozoom) {
         if (autozoom == this.autozoom) {
@@ -465,10 +485,10 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     }
 
     /**
-     * Returns the current zoomfactor.  If the image is using autzoom this will
+     * Returns the current zoomfactor. If the image is using autzoom this will
      * be the zoomfactor as calculated by the autozoom, if no autozoom is used
      * this will be the last zoomfactor set.
-     *
+     * 
      * @return the current zoomfactor.
      */
     public double getZoomFactor() {
@@ -480,13 +500,15 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * before this will be disabled and the new zoomfactor will be used. After
      * changing the value and repainting all imageupdate listeneres will be
      * notified with the new zoomfactor as a Double.
-     *
-     * @param zoomfactor the new zoomfactor to use.
-     * @throws IllegalArgumentException if the zoomfactor is 0 or less.
+     * 
+     * @param zoomfactor
+     *            the new zoomfactor to use.
+     * @throws IllegalArgumentException
+     *             if the zoomfactor is 0 or less.
      */
     public void setZoomFactor(double zoomfactor) throws IllegalArgumentException {
         if (zoomfactor <= 0) {
-            throw(new IllegalArgumentException("Zoom should not be 0 or smaller."));
+            throw (new IllegalArgumentException("Zoom should not be 0 or smaller."));
         }
         this.autozoom = false;
         if (this.zoomfactor == zoomfactor) {
@@ -498,19 +520,19 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
         repaint();
         fireImageUpdate(ImageUpdateEvent.CHANGE_ZOOMFACTOR, new Double(zoomfactor));
     }
-    
+
     public double getPaintScale() {
-    	return paintscale;
+        return paintscale;
     }
-    
+
     public void setPaintScale(double ps) {
-    	if ((ps <= 0) || (ps > 1)) {
-            throw(new IllegalArgumentException("PaintScale should be larger than 0 and less or equal to 1."));
-    	}
-    	if (ps == paintscale) {
-    		return;
-    	}
-    	paintscale = ps;
+        if ((ps <= 0) || (ps > 1)) {
+            throw (new IllegalArgumentException("PaintScale should be larger than 0 and less or equal to 1."));
+        }
+        if (ps == paintscale) {
+            return;
+        }
+        paintscale = ps;
         makeImage();
         repaint();
         fireImageUpdate(ImageUpdateEvent.CHANGE_PAINTSCALE, new Double(paintscale));
@@ -519,7 +541,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Returns true if the absolute minimum and maximum of the image are used to
      * show the image. For more details see setUseTotals().
-     *
+     * 
      * @return true if the maximum value in the image should be used.
      */
     public boolean isUseTotals() {
@@ -539,9 +561,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * <p/>
      * After changing the value and repainting all imageupdate listeneres will
      * be notified with the new usetotals as a Boolean.
-     *
-     * @param useTotals is true if the maximum value in the image should be
-     *                  used.
+     * 
+     * @param useTotals
+     *            is true if the maximum value in the image should be used.
      */
     public void setUseTotals(boolean useTotals) {
         if (this.useTotals == useTotals) {
@@ -559,7 +581,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * false the code will find the minimum and maximum values in the image and
      * scale all values with respect to these to fit the full color spectrum.
      * Otherwise it will use the user specified minimum and maximum values.
-     *
+     * 
      * @return true if the user has specified the minumum and maximum values.
      */
     public boolean isUserScale() {
@@ -571,9 +593,10 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * image and scale all values with respect to these to fit the full color
      * spectrum. Otherwise it will use the user specified minimum and maximum
      * values.
-     *
-     * @param userScale set this to true to use the user specified minimum and
-     *                  maximum.
+     * 
+     * @param userScale
+     *            set this to true to use the user specified minimum and
+     *            maximum.
      */
     public void setUserScale(boolean userScale) {
         if (this.userScale == userScale) {
@@ -592,9 +615,11 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * colorspectrum. Any values that fall outside the minimum and maximum will
      * be clipped. Normally the code will find the best minimum and maximum to
      * use.
-     *
-     * @param min the minimum value in the image.
-     * @param max the maximum value in the image.
+     * 
+     * @param min
+     *            the minimum value in the image.
+     * @param max
+     *            the maximum value in the image.
      */
     public void setUserScale(double min, double max) {
         this.userScale = true;
@@ -603,13 +628,13 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
         makeImage();
         revalidate();
         repaint();
-        fireImageUpdate(ImageUpdateEvent.CHANGE_USERSCALEVALUE, new double[]{min, max});
+        fireImageUpdate(ImageUpdateEvent.CHANGE_USERSCALEVALUE, new double[] { min, max });
     }
 
     /**
      * Returns the user scale. This will return minimum (result[0]) and maximum
      * (result[1]) values as set by the user.
-     *
+     * 
      * @return an array with the minimum and maximum values specified by the
      *         user.
      */
@@ -623,8 +648,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * appropriate color for the image. This takes into account gamma, grayband
      * selectected and the minimum and maximum values of the image, or those set
      * by the user.
-     *
-     * @param gray the gray value to convert to a color.
+     * 
+     * @param gray
+     *            the gray value to convert to a color.
      * @return the Color that corresponds to the gray value.
      */
     public Color getColor(double gray) {
@@ -652,9 +678,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
                 gray = max;
             }
             gray = (gray - min) * div;
-        	g = (int)gray & 0xff;
+            g = (int) gray & 0xff;
             if (gammatable != null) {
-            	g = gammatable[g];
+                g = gammatable[g];
             }
         }
 
@@ -667,10 +693,13 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * the appropriate color for the image. This takes into account gamma,
      * redband, greenband, blueband selectected and the minimum and maximum
      * values of the image, or those set by the user.
-     *
-     * @param red   the red value to convert to a color.
-     * @param green the green value to convert to a color.
-     * @param blue  the blue value to convert to a color.
+     * 
+     * @param red
+     *            the red value to convert to a color.
+     * @param green
+     *            the green value to convert to a color.
+     * @param blue
+     *            the blue value to convert to a color.
      * @return the Color that corresponds to the red, green and blue values.
      */
     public Color getColor(double red, double green, double blue) {
@@ -714,10 +743,10 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
                 red = max[0];
             }
             red = (red - min[0]) * div[0];
-        	r = (int) red & 0xff;
+            r = (int) red & 0xff;
             if (gammatable != null) {
-            	r = gammatable[r];
-            }            
+                r = gammatable[r];
+            }
         }
         if (l >= 0) {
             if (green <= min[0]) {
@@ -728,7 +757,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
             green = (green - min[0]) * div[0];
             g = (int) green & 0xff;
             if (gammatable != null) {
-            	g = gammatable[g];
+                g = gammatable[g];
             }
         }
         if (m >= 0) {
@@ -740,7 +769,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
             blue = (blue - min[0]) * div[0];
             b = (int) blue & 0xff;
             if (gammatable != null) {
-            	b = gammatable[b];
+                b = gammatable[b];
             }
         }
 
@@ -750,7 +779,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Returns true if the image is using fakergb. For more information see
      * setFakeRGBcolor().
-     *
+     * 
      * @return true if the image is using pseudocolors.
      */
     public boolean isFakeRGBcolor() {
@@ -763,8 +792,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * this single value and split it. After changing the value and repainting
      * all imageupdate listeneres will be notified with the new fakergb as a
      * Boolean.
-     *
-     * @param pseudocolor set this to true to use pseudocolors.
+     * 
+     * @param pseudocolor
+     *            set this to true to use pseudocolors.
      */
     public void setFakeRGBcolor(boolean pseudocolor) {
         if (this.fakergb == pseudocolor) {
@@ -781,7 +811,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * Return the area of the image that is shown. It is possible for the user
      * to select an area of the image to be shown. This call will return the
      * currently selected area.
-     *
+     * 
      * @return area of the image currently shown.
      */
     public Rectangle getCrop() {
@@ -798,8 +828,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * will not limit the bands that can be shown, just the area in each band.
      * After changing the value and repainting all imageupdate listeneres will
      * be notified with the new crop.
-     *
-     * @param crop the area to show.
+     * 
+     * @param crop
+     *            the area to show.
      */
     public void setCrop(Rectangle2D crop) {
         if (crop == null) {
@@ -819,7 +850,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Return the imageobject currently shown. If setImageObject is called with
      * null, this will return null as well.
-     *
+     * 
      * @return imageobject currently shown.
      */
     public ImageObject getImageObject() {
@@ -836,8 +867,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * null a 1x1x1 imageobject is used to render to the screen. After changing
      * the value and repainting all imageupdate listeneres will be notified with
      * the new imageobject.
-     *
-     * @param imageobject to be displayed
+     * 
+     * @param imageobject
+     *            to be displayed
      */
     public void setImageObject(ImageObject imageobject) {
         // in case of a null object use the dummy 1x1x1 object.
@@ -902,16 +934,16 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
         crop.y = 0;
 
         // undo fakergb selection
-        fakergb = ((imageobject.getType() == ImageObject.TYPE_INT) &&
-        		   (imageobject.getNumBands() == 1));
-        
+        fakergb = ((imageobject.getType() == ImageObject.TYPE_INT) && (imageobject.getNumBands() == 1));
+
         // set the paintscale
         if (imageobject instanceof ImageObjectOutOfCore) {
-        	paintscale = ((ImageObjectOutOfCore)imageobject).getSuggestedScale();
+            paintscale = ((ImageObjectOutOfCore) imageobject).getSuggestedScale();
         } else {
-        	paintscale = 1.0;
+            paintscale = 1.0;
         }
-        // if imageobject instanceof OOC) paintscale = imageobject.getInCoreScale(); else 1.
+        // if imageobject instanceof OOC) paintscale =
+        // imageobject.getInCoreScale(); else 1.
 
         // create image to be rendered
         makeImage();
@@ -936,17 +968,14 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
 
         // create the new bufferedimage
         synchronized (getTreeLock()) {
-            //System.out.println("Fake RGB : " + fakergb);
-            image = imageobject.toBufferedImage(image, fakergb,
-                                                (userScale ? scale : null), useTotals,
-                                                redBand, greenBand, blueBand,
-                                                grayscale, grayBand,
-                                                gammatable, 255, paintscale);
-            
-            imagescale[0] = (double)imageobject.getNumCols() / image.getWidth(); 
-            imagescale[1] = (double)imageobject.getNumRows() / image.getHeight(); 
-            oneoverimagescale[0] = 1.0 / imagescale[0]; 
-            oneoverimagescale[1] = 1.0 / imagescale[1]; 
+            // System.out.println("Fake RGB : " + fakergb);
+            image = imageobject.toBufferedImage(image, fakergb, (userScale ? scale : null), useTotals, redBand, greenBand, blueBand, grayscale, grayBand, gammatable, 255, paintscale,
+                    imageobject.getInvalidData());
+
+            imagescale[0] = (double) imageobject.getNumCols() / image.getWidth();
+            imagescale[1] = (double) imageobject.getNumRows() / image.getHeight();
+            oneoverimagescale[0] = 1.0 / imagescale[0];
+            oneoverimagescale[1] = 1.0 / imagescale[1];
         }
 
         // show normal cursor
@@ -958,24 +987,24 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * and image location.
      */
     public void paintComponent(Graphics g) {
-    	Graphics2D g2d = (Graphics2D)g;
+        Graphics2D g2d = (Graphics2D) g;
         synchronized (getTreeLock()) {
-        	g2d.setClip(getVisibleRect());
+            g2d.setClip(getVisibleRect());
             setupGraphics(g2d);
-            
+
             // scale for image
-        	g2d.scale(imagescale[0], imagescale[1]);
-        	g2d.drawImage(image, 0, 0, null);
-        	g2d.scale(oneoverimagescale[0], oneoverimagescale[1]);
+            g2d.scale(imagescale[0], imagescale[1]);
+            g2d.drawImage(image, 0, 0, null);
+            g2d.scale(oneoverimagescale[0], oneoverimagescale[1]);
 
             Rectangle curclip = g2d.getClipBounds();
             if (!curclip.equals(visregion)) {
                 fireImageUpdate(ImageUpdateEvent.CHANGE_VISIBLEREGION, curclip);
-                visregion = curclip;                
+                visregion = curclip;
             }
         }
     }
-    
+
     /**
      * Returns the region of the image that is visible in image coordinates.
      * 
@@ -989,7 +1018,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * Return the image that is currently drawn on the screen. This image will
      * be the representation of the ImageObject with gamma, selected bands, etc.
      * applied to it.
-     *
+     * 
      * @return The currently shown image.
      */
     public BufferedImage getImage() {
@@ -999,10 +1028,11 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Apply zoom, translation and crop to graphics object. Use this function to
      * setup the graphics after calling getGraphics() or createGraphics().
-     *
-     * @param g2d graphics that needs to match the painted graphics.
+     * 
+     * @param g2d
+     *            graphics that needs to match the painted graphics.
      */
-    public void setupGraphics(Graphics2D g2d) {    	
+    public void setupGraphics(Graphics2D g2d) {
         g2d.translate(imagex, imagey);
         g2d.scale(zoomfactor, zoomfactor);
         g2d.translate(-crop.x, -crop.y);
@@ -1012,8 +1042,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
     /**
      * Returns the location of the point in image coordinates, this will take
      * the zoom and translation into account.
-     *
-     * @param e the point tp be checked.
+     * 
+     * @param e
+     *            the point tp be checked.
      */
     public Point getImageLocation(Point e) {
         int x = crop.x + (int) Math.floor((e.getX() - imagex) / zoomfactor);
@@ -1026,8 +1057,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * Set the preferredsize of the imagecomponent. This will prevent the
      * component from calculating its preferred size and simply use what the
      * user has given.
-     *
-     * @param preferredSize the preferred size of the component.
+     * 
+     * @param preferredSize
+     *            the preferred size of the component.
      */
     public void setPreferredSize(Dimension preferredSize) {
         preferredsize = preferredSize;
@@ -1039,7 +1071,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * is a viewport make sure that the minimal size is the size of the
      * viewport. This will make sure that even in a scrollable pane we are
      * centered. If the user has set the preferredsize simply return this.
-     *
+     * 
      * @return size based on crop and zoomfactor.
      */
     public Dimension getPreferredSize() {
@@ -1047,8 +1079,7 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
             return preferredsize;
         }
 
-        Dimension size = new Dimension((int) (crop.width * zoomfactor),
-                                       (int) (crop.height * zoomfactor));
+        Dimension size = new Dimension((int) (crop.width * zoomfactor), (int) (crop.height * zoomfactor));
 
         if (getParent() instanceof JViewport) {
             Dimension parent = getParent().getSize();
@@ -1068,18 +1099,22 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * it is centered in the component and in the case of autozoom as large as
      * possible. If the zoomfactor changes all imageupdate listeners will be
      * notified with the new zoomfactor as a Double.
-     *
-     * @param x     number of pixels added to the x location.
-     * @param y     number of pixels added to the y location.
-     * @param size  the size that the imagecomponent can take up.
-     * @param print is true if this is called from the true function and no
-     *              events are broadcasted if zoom changes.
+     * 
+     * @param x
+     *            number of pixels added to the x location.
+     * @param y
+     *            number of pixels added to the y location.
+     * @param size
+     *            the size that the imagecomponent can take up.
+     * @param print
+     *            is true if this is called from the true function and no events
+     *            are broadcasted if zoom changes.
      */
     protected void calcLocation(int x, int y, Dimension size, boolean print) {
         // if autozoom, calculate the zoom
         if (autozoom) {
-            float sx = (float)size.width / crop.width;
-            float sy = (float)size.height / crop.height;
+            float sx = (float) size.width / crop.width;
+            float sy = (float) size.height / crop.height;
             float sc = (sx < sy) ? sx : sy;
 
             if (this.zoomfactor != sc) {
@@ -1089,10 +1124,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
                 }
             }
         }
-        
+
         // center image based on imagesize and available screenspace
-        Dimension imgsize = new Dimension((int) (crop.width * zoomfactor),
-                                          (int) (crop.height * zoomfactor));
+        Dimension imgsize = new Dimension((int) (crop.width * zoomfactor), (int) (crop.height * zoomfactor));
 
         // calculate center of screen adding user offset
         imagex = x;
@@ -1112,8 +1146,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * Add the specified image update listener to receive image update events
      * from this component. If l is null no exception is thrown and no action is
      * performed.
-     *
-     * @param l the image update listener
+     * 
+     * @param l
+     *            the image update listener
      */
     public void addImageUpdateListener(ImageUpdateListener l) {
         if ((l != null) && !listeners.contains(l)) {
@@ -1127,8 +1162,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * function, nor does it throw an exception, if the listener specified by
      * the argument was not previously added to this component. If listener l is
      * null, no exception is thrown and no action is performed.
-     *
-     * @param l the image update listener
+     * 
+     * @param l
+     *            the image update listener
      */
     public void removeImageUpdateListener(ImageUpdateListener l) {
         if ((l != null) && listeners.contains(l)) {
@@ -1140,8 +1176,9 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
      * Support for reporting image property changes . This method can be called
      * when an image property has changed and it will send the appropriate
      * ImageUpdateEvent to any registered ImageUpdateListener.
-     *
-     * @param id the reason this property is fired.
+     * 
+     * @param id
+     *            the reason this property is fired.
      */
     protected void fireImageUpdate(int id, Object obj) {
         ImageUpdateEvent event = new ImageUpdateEvent(this, id, obj);
@@ -1252,12 +1289,10 @@ public class ImageComponent extends JComponent implements Scrollable, Printable 
             double oldzoom = zoomfactor;
 
             // setup paper size
-            Dimension size = new Dimension((int) pf.getImageableWidth(),
-                                           (int) pf.getImageableHeight());
+            Dimension size = new Dimension((int) pf.getImageableWidth(), (int) pf.getImageableHeight());
 
             // calculate zoom and location
-            calcLocation((int) pf.getImageableX(), (int) pf.getImageableY(),
-                         size, true);
+            calcLocation((int) pf.getImageableX(), (int) pf.getImageableY(), size, true);
 
             // paint/print
             paint(g);

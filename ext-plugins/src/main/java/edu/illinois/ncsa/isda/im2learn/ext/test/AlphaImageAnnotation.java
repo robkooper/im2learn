@@ -49,73 +49,72 @@ import edu.illinois.ncsa.isda.im2learn.core.datatype.ImageObject;
 import edu.illinois.ncsa.isda.im2learn.core.display.ImageAnnotation;
 import edu.illinois.ncsa.isda.im2learn.core.display.ImagePanel;
 
-
 /**
- * Created by IntelliJ IDEA. User: kooper Date: Feb 2, 2005 Time: 3:31:25 PM To change this template use File | Settings |
- * File Templates.
+ * Created by IntelliJ IDEA. User: kooper Date: Feb 2, 2005 Time: 3:31:25 PM To
+ * change this template use File | Settings | File Templates.
  */
 public class AlphaImageAnnotation implements ImageAnnotation {
-	private double			alpha	= 0;
-	private ImageObject		imgobj;
-	private BufferedImage	image;
-	private int				y;
-	private int				x;
-	private double			r;
+    private double        alpha = 0;
+    private ImageObject   imgobj;
+    private BufferedImage image;
+    private int           y;
+    private int           x;
+    private double        r;
 
-	public void setImageObject(ImageObject imgobj) {
-		this.imgobj = imgobj;
-		if (imgobj == null) {
-			this.image = null;
-		} else {
-			image = imgobj.toBufferedImage(image, false, null, false, 0, 1, 2, false, 0, null, alpha, 1.0);
-		}
-		System.gc();
-	}
+    public void setImageObject(ImageObject imgobj) {
+        this.imgobj = imgobj;
+        if (imgobj == null) {
+            this.image = null;
+        } else {
+            image = imgobj.toBufferedImage(image, false, null, false, 0, 1, 2, false, 0, null, alpha, 1.0, Double.NaN);
+        }
+        System.gc();
+    }
 
-	public void setAlpha(double alpha) {
-		this.alpha = alpha;
-		if (imgobj == null) {
-			image = null;
-		} else {
-			image = imgobj.toBufferedImage(image, false, null, false, 0, 1, 2, false, 0, null, alpha, 1.0);
-		}
-		System.gc();
-	}
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
+        if (imgobj == null) {
+            image = null;
+        } else {
+            image = imgobj.toBufferedImage(image, false, null, false, 0, 1, 2, false, 0, null, alpha, 1.0, Double.NaN);
+        }
+        System.gc();
+    }
 
-	public double getAlpha() {
-		return alpha;
-	}
+    public double getAlpha() {
+        return alpha;
+    }
 
-	public void setX(int x) {
-		this.x = x;
-	}
+    public void setX(int x) {
+        this.x = x;
+    }
 
-	public int getX() {
-		return x;
-	}
+    public int getX() {
+        return x;
+    }
 
-	public void setY(int y) {
-		this.y = y;
-	}
+    public void setY(int y) {
+        this.y = y;
+    }
 
-	public int getY() {
-		return y;
-	}
+    public int getY() {
+        return y;
+    }
 
-	public void setRotation(double r) {
-		this.r = r;
-	}
+    public void setRotation(double r) {
+        this.r = r;
+    }
 
-	public double getRotation() {
-		return r;
-	}
+    public double getRotation() {
+        return r;
+    }
 
-	public void paint(Graphics2D g, ImagePanel imagepanel) {
-		if (image != null) {
-			g.translate(x + image.getWidth() / 2.0, y + image.getHeight() / 2.0);
-			g.rotate(r);
-			g.translate(-image.getWidth() / 2.0, -image.getHeight() / 2.0);
-			g.drawImage(image, 0, 0, null);
-		}
-	}
+    public void paint(Graphics2D g, ImagePanel imagepanel) {
+        if (image != null) {
+            g.translate(x + image.getWidth() / 2.0, y + image.getHeight() / 2.0);
+            g.rotate(r);
+            g.translate(-image.getWidth() / 2.0, -image.getHeight() / 2.0);
+            g.drawImage(image, 0, 0, null);
+        }
+    }
 }

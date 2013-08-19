@@ -1142,7 +1142,9 @@ public abstract class ImageObject implements Cloneable {
             } else // one is out-of-core
             {
                 // Compute a transform from source to target.
-                SubAreaTransform transform = new SubAreaTransform(this.getTileBoxes(), // all tile boxes.
+                SubAreaTransform transform = new SubAreaTransform(this.getTileBoxes(), // all
+                                                                                       // tile
+                                                                                       // boxes.
                         new SubArea(0, 0, this.numcols, this.numrows), // map
                         // whole
                         // of
@@ -1227,7 +1229,11 @@ public abstract class ImageObject implements Cloneable {
             } else // one is out-of-core. // no optimized (full-band) version.
             {
                 // Compute a transform from source to target.
-                SubAreaTransform transform = new SubAreaTransform(this.getTileBoxes(area), // tile boxes in the area.
+                SubAreaTransform transform = new SubAreaTransform(this.getTileBoxes(area), // tile
+                                                                                           // boxes
+                                                                                           // in
+                                                                                           // the
+                                                                                           // area.
                         area, // "area" parameter is the source area.
                         new SubArea(0, 0, result.numcols, result.numrows)); // onto
                 // whole
@@ -1350,7 +1356,10 @@ public abstract class ImageObject implements Cloneable {
                 SubArea resultArea = new SubArea(0, 0, images[i].numcols, images[i].numrows);
 
                 // iterate over target sub-areas.
-                SubAreaTransform transform = new SubAreaTransform(images[i].getTileBoxes(), // all image tile boxes
+                SubAreaTransform transform = new SubAreaTransform(images[i].getTileBoxes(), // all
+                                                                                            // image
+                                                                                            // tile
+                                                                                            // boxes
                         resultArea, resultArea); // same areas in source and
                 // in result
                 for (SubArea target : result.getTileBoxes(resultArea)) {
@@ -1433,7 +1442,8 @@ public abstract class ImageObject implements Cloneable {
                 SubArea resultArea = new SubArea(0, 0, numcols, numrows);
 
                 // iterate over target sub-areas.
-                SubAreaTransform transform = new SubAreaTransform(this.getTileBoxes(), resultArea, resultArea); // take all
+                SubAreaTransform transform = new SubAreaTransform(this.getTileBoxes(), resultArea, resultArea); // take
+                                                                                                                // all
                 // everywhere.
                 for (SubArea target : result.getTileBoxes()) {
                     for (SubArea area : transform.getTargetTileBoxes(target)) {
@@ -1513,8 +1523,10 @@ public abstract class ImageObject implements Cloneable {
             }
         } else // otherwise, use iterative pattern.
         { // note that in this case, "this" is the target and "img" is the
-            // source.
-            SubAreaTransform transform = new SubAreaTransform(img.getTileBoxes(), // all of img.
+          // source.
+            SubAreaTransform transform = new SubAreaTransform(img.getTileBoxes(), // all
+                                                                                  // of
+                                                                                  // img.
                     new SubArea(0, 0, numColsImg, numRowsImg), // source area.
                     new SubArea(insCol, insRow, numColsImg, numRowsImg)); // target
             // area.
@@ -1924,7 +1936,7 @@ public abstract class ImageObject implements Cloneable {
         if (rgb == null) {
             rgb = new int[] { 0, 1, 2 };
         }
-        return toBufferedImage(null, false, null, false, rgb[0], rgb[1], rgb[2], false, 0, null, 255, 1.0);
+        return toBufferedImage(null, false, null, false, rgb[0], rgb[1], rgb[2], false, 0, null, 255, 1.0, Double.NaN);
     }
 
     /**
@@ -1938,7 +1950,7 @@ public abstract class ImageObject implements Cloneable {
      * @return a bufferedimage that contains the imageobject.
      */
     public BufferedImage makeBufferedImage(int grayband) {
-        return toBufferedImage(null, false, null, false, 0, 0, 0, true, grayband, null, 255, 1.0);
+        return toBufferedImage(null, false, null, false, 0, 0, 0, true, grayband, null, 255, 1.0, Double.NaN);
     }
 
     /**
@@ -1958,12 +1970,12 @@ public abstract class ImageObject implements Cloneable {
      * @return a bufferedimage that contains the imageobject.
      */
     public BufferedImage makeBufferedImage(int redband, int greenband, int blueband) {
-        return toBufferedImage(null, false, null, false, redband, greenband, blueband, false, 0, null, 255, 1.0);
+        return toBufferedImage(null, false, null, false, redband, greenband, blueband, false, 0, null, 255, 1.0, Double.NaN);
     }
 
     public BufferedImage toBufferedImage(BufferedImage bi, boolean fakergb, double[] scale, boolean usetotals, int redband, int greenband, int blueband, boolean grayscale, int grayband,
             int[] gammatable, double alpha) {
-        return toBufferedImage(bi, fakergb, scale, usetotals, redband, greenband, blueband, grayscale, grayband, gammatable, alpha, 1.0);
+        return toBufferedImage(bi, fakergb, scale, usetotals, redband, greenband, blueband, grayscale, grayband, gammatable, alpha, 1.0, Double.NaN);
     }
 
     // //////////////////////
@@ -2021,7 +2033,7 @@ public abstract class ImageObject implements Cloneable {
     // ------------------------------------------------------------------------
 
     public abstract BufferedImage toBufferedImage(BufferedImage bi, boolean fakergb, double[] scale, boolean usetotals, int redband, int greenband, int blueband, boolean grayscale, int grayband,
-            int[] gammatable, double alpha, double imagescale);
+            int[] gammatable, double alpha, double imagescale, double invaliddata);
 
     /**
      * @return a list of SubArea tiles representing the object (single tile for
