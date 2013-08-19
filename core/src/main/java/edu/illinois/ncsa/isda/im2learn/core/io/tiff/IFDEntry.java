@@ -577,6 +577,64 @@ class IFDEntry {
     }
 
     /**
+     * Will return a single float value.
+     * 
+     * @return a single value
+     * @throws IOException
+     *             if not double type, or more than 1 entry.
+     */
+    public double getFloatValue() throws IOException {
+        if (entries != 1) {
+            throw (new IOException("Only expected 1 entry."));
+        }
+        return getFloatValues()[0];
+    }
+
+    /**
+     * Will return an array of float values.
+     * 
+     * @return array with entries.
+     * @throws IOException
+     *             if not short type or error reading data.
+     */
+    public float[] getFloatValues() throws IOException {
+        if (this.type != TYPE_FLOAT) {
+            throw (new IOException("Can't handle type " + type + " for tag " + tag + "."));
+        }
+
+        float[] s = new float[(int) entries];
+
+        // 1 long stored as offset!
+        if (entries == 1) {
+            s[0] = tiffimage.getFloat(hdr, 0);
+            return s;
+
+        }
+        if ((entries == 2) && tiffimage.isBigTiff()) {
+            s[0] = tiffimage.getFloat(hdr, 0);
+            s[1] = tiffimage.getFloat(hdr, 4);
+            return s;
+        }
+
+        // jumpt to offset in file
+        tiffimage.getFile().seek(offset);
+
+        // read the data from the file
+        byte[] b = new byte[(int) entries * 4];
+        if (tiffimage.getFile().read(b) != entries * 4) {
+            throw (new IOException("Could not read enough bytes."));
+        }
+
+        // parse the rationals
+        for (int i = 0, j = 0; i < entries; i++, j += 8) {
+            s[i] = tiffimage.getFloat(b, j);
+        }
+
+        // return array
+        return s;
+    }
+
+    /**
      * Will return a single double value.
      * 
      * @return a single value

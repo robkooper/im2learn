@@ -321,12 +321,18 @@ class TIFFimage {
                 break;
 
             case IFDEntry.TAG_GDALNoData:
-                String invalid = ifd.getString();
-                try {
-                    invaliddata = Double.parseDouble(invalid);
-                } catch (NumberFormatException exc) {
-                    logger.debug("Could not parse number, returning first byte as invalid data.", exc);
-                    invaliddata = invalid.charAt(0);
+                if (ifd.getType() == IFDEntry.TYPE_ASCII) {
+                    String invalid = ifd.getString();
+                    try {
+                        invaliddata = Double.parseDouble(invalid);
+                    } catch (NumberFormatException exc) {
+                        logger.debug("Could not parse number, returning first byte as invalid data.", exc);
+                        invaliddata = invalid.charAt(0);
+                    }
+                } else if (ifd.getType() == IFDEntry.TYPE_FLOAT) {
+                    invaliddata = ifd.getFloatValue();
+                } else {
+                    throw (new IOException("Can not parse invalid data number." + ifd.toString()));
                 }
                 break;
 
@@ -378,7 +384,9 @@ class TIFFimage {
                 break;
 
             case IFDEntry.TAG_NewSubfileType:
-                logger.debug("TAG_NewSubfileType: " + ifd.getUnsignedLongValue());
+                // logger.debug("TAG_NewSubfileType: " +
+                // ifd.getUnsignedLongValue());
+                logger.debug("TAG_NewSubfileType: " + ifd.getUnsignedShortValue());
                 break;
 
             case IFDEntry.TAG_PhotometricInterpretation:
@@ -1170,6 +1178,19 @@ class TIFFimage {
             return (long) (data[offset] & 0xff) << 56 | (long) (data[offset + 1] & 0xff) << 48 | (long) (data[offset + 2] & 0xff) << 40 | (long) (data[offset + 3] & 0xff) << 32
                     | (long) (data[offset + 4] & 0xff) << 24 | (long) (data[offset + 5] & 0xff) << 16 | (long) (data[offset + 6] & 0xff) << 8 | (data[offset + 7] & 0xff);
         }
+    }
+
+    /**
+     * Based on endianess will convert the data to a float.
+     * 
+     * @param data
+     *            containing the bytes
+     * @param offset
+     *            into data where data is located.
+     * @return double value
+     */
+    public float getFloat(byte[] data, int offset) {
+        return Float.intBitsToFloat((int) getLong(data, offset));
     }
 
     /**
