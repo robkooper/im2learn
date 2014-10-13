@@ -384,8 +384,6 @@ class TIFFimage {
                 break;
 
             case IFDEntry.TAG_NewSubfileType:
-                // logger.debug("TAG_NewSubfileType: " +
-                // ifd.getUnsignedLongValue());
                 logger.debug("TAG_NewSubfileType: " + ifd.getUnsignedShortValue());
                 break;
 
@@ -546,6 +544,14 @@ class TIFFimage {
                 }
                 break;
 
+            case 64:
+                if (SampleFormat == 3) {
+                    image = ImageObject.createImage(h, w, b, ImageObject.TYPE_DOUBLE, true);
+                } else {
+                    image = ImageObject.createImage(h, w, b, ImageObject.TYPE_LONG, true);
+                }
+                break;
+
             default:
                 throw (new IOException("Can't read this many bits per sample."));
             }
@@ -642,7 +648,7 @@ class TIFFimage {
         }
 
         // no planarconfiguration
-        if (PlanarConfiguration != 1) {
+        if ((PlanarConfiguration != 1) && ((sampling != 1) || (subarea != null))) {
             // throw(new IOException("Can not handle planarconfiguration."));
             logger.warn("Can not handle planarconfiguration.");
             return;
@@ -654,38 +660,38 @@ class TIFFimage {
                 // TODO add tiled image support
                 // throw(new IOException("No tiled image support."));
                 switch (PhotometricInterpretation) {
-                case 0:
-                case 1:
-                    // TODO readImageTileGrayscale
-                    throw new IOException("No Grayscale tiled image support.");
-                case 2:
-                    // TODO readImageTileRGB
-                    throw (new IOException("No RGB tiled image support."));
-                case 3:
-                    readImageTilePalette();
-                    break;
-                default:
-                    logger.debug("PhotometricInterpretation = " + PhotometricInterpretation);
-                    throw (new IOException("Can not read this type of tiled TIFF image."));
+                    case 0:
+                    case 1:
+                        readImageTileGrayscale();
+                        break;
+                    case 2:
+                        // TODO readImageTileRGB
+                        throw (new IOException("No RGB tiled image support."));
+                    case 3:
+                        readImageTilePalette();
+                        break;
+                    default:
+                        logger.debug("PhotometricInterpretation = " + PhotometricInterpretation);
+                        throw (new IOException("Can not read this type of tiled TIFF image."));
                 }
             } else {
                 switch (PhotometricInterpretation) {
-                case 0:
-                case 1:
-                    readImageStripGrayscale();
-                    break;
+                    case 0:
+                    case 1:
+                        readImageStripGrayscale();
+                        break;
 
-                case 2:
-                    readImageStripRGB();
-                    break;
+                    case 2:
+                        readImageStripRGB();
+                        break;
 
-                case 3:
-                    readImageStripPalette();
-                    break;
+                    case 3:
+                        readImageStripPalette();
+                        break;
 
-                default:
-                    logger.debug("PhotometricInterpretation = " + PhotometricInterpretation);
-                    throw (new IOException("Can not read this type of TIFF image."));
+                    default:
+                        logger.debug("PhotometricInterpretation = " + PhotometricInterpretation);
+                        throw (new IOException("Can not read this type of TIFF image."));
                 }
             }
         } else {
@@ -700,6 +706,25 @@ class TIFFimage {
                         }
                     }
                 }
+            }
+        }
+
+        if ((PlanarConfiguration != 1) && (SamplesPerPixel == 3)) {
+            ImageObject planar = image;
+            try {
+                image = (ImageObject) planar.clone();
+                int third = image.getSize() / 3;
+                int red = 0;
+                int green = red + third;
+                int blue = green + third;
+                for (int i = 0; i < image.getSize(); red++, green++, blue++) {
+                    image.set(i++, image.getDouble(red));
+                    image.set(i++, image.getDouble(green));
+                    image.set(i++, image.getDouble(blue));
+                }
+            } catch (CloneNotSupportedException e) {
+                logger.error("Could not clone/fix image", e);
+                image = planar;
             }
         }
     }
@@ -1030,6 +1055,121 @@ class TIFFimage {
         }
     }
 
+    private void readImageTileGrayscale() throws IOException {
+        if (SamplesPerPixel != 1) {
+            throw (new IOException("Expected only 1 sample per pixel."));
+        }
+        // if ((BitsPerSample[0] != 4) && (BitsPerSample[0] != 8)) {
+        if ((BitsPerSample[0] != 4) && (BitsPerSample[0] != 8) && (BitsPerSample[0] != 16) && (BitsPerSample[0] != 32) && (BitsPerSample[0] != 64)) {
+            throw (new IOException("Expected 4, 8, 16, 32 or 64 bits per sample."));
+        }
+
+        SubArea area = subarea;
+        if (area == null) {
+            area = new SubArea(0, 0, (int) ImageWidth, (int) ImageLength);
+        }
+        if (area.getNumBands() == 0) {
+            area.setBand(0);
+            area.setNumBands(1);
+        }
+
+        // LAM --- this is the only difference between readImageStripPalette()
+        // and
+        // readImageTilePalette()...
+        TiledDataReader reader = new TiledDataReader();
+
+        long x = 0;
+        int size = image.getSize();
+
+        int col = 0;
+        int row = area.getRow();
+        int rowskip = (int) Math.ceil(ImageWidth * BitsPerSample[0] / 8.0);
+        int off = area.getCol() * BitsPerSample[0];
+        int start = rowskip * row + off / 8;
+        off = off % 8;
+        for (int i = 0; i < size;) {
+            if (start >= reader.total) {
+                reader.read(start);
+            }
+
+            switch (BitsPerSample[0]) {
+                case 64:
+                    x = 0;
+                    if (littleendian) {
+                        for(int j=7; j>=0; j--) {
+                            x = x << 8 | (reader.getByte(start + j) & 0x0ff);
+                        }
+                    } else {
+                        for(int j=0; j<8; j++) {
+                            x = x << 8 | (reader.getByte(start + j) & 0x0ff);
+                        }
+                    }
+                    if (SampleFormat == 3) {
+                        image.set(i++, Double.longBitsToDouble(x));
+                    } else {
+                        image.set(i++, x);
+                    }
+                    off += 64 * sampling;
+                    start += off / 8;
+                    off = off % 8;
+                    break;
+
+                case 32:
+                    x = 0;
+                    if (littleendian) {
+                        for(int j=3; j>=0; j--) {
+                            x = x << 8 | (reader.getByte(start + j) & 0x0ff);
+                        }
+                    } else {
+                        for(int j=0; j<4; j++) {
+                            x = x << 8 | (reader.getByte(start + j) & 0x0ff);
+                        }
+                    }
+                    if (SampleFormat == 3) {
+                        image.set(i++, Float.intBitsToFloat((int)x));
+                    } else {
+                        image.set(i++, (int)x);
+                    }
+                    off += 32 * sampling;
+                    start += off / 8;
+                    off = off % 8;
+                    break;
+
+                case 16:
+                    x = (reader.getByte(start) & 0x0ff) << 8;
+                    x = x | (reader.getByte(start) & 0x0ff);
+                    off += 16 * sampling;
+                    start += off / 8;
+                    off = off % 8;
+                    image.set(i++, x);
+                    break;
+
+                case 8:
+                    x = reader.getByte(start);
+                    start += sampling;
+                    image.set(i++, x);
+                    break;
+
+                case 4:
+                    x = (reader.getByte(start) >> (8 - off)) & 0x0f << 4;
+                    off += 4 * sampling;
+                    start += off / 8;
+                    off = off % 8;
+                    image.set(i++, x);
+                    break;
+            }
+
+            col += sampling;
+            if (col >= area.width) {
+                row += sampling;
+                off = area.getCol() * BitsPerSample[0];
+                start = rowskip * row + off / 8;
+                off = off % 8;
+                col = 0;
+            }
+        }
+    }
+
     private void readImageTilePalette() throws IOException {
         if (SamplesPerPixel != 1) {
             throw (new IOException("Expected only 1 sample per pixel."));
@@ -1163,7 +1303,7 @@ class TIFFimage {
 
     /**
      * Based on endianess will convert the data to a unsigned long.
-     * 
+     *
      * @param data
      *            containing the bytes
      * @param offset
@@ -1233,12 +1373,14 @@ class TIFFimage {
         int     tileNum     = 0;
         int     loc         = 0;
         int     currow      = 0;
+        byte[]  compressed  = new byte[0];
         boolean firsttime   = true;
 
         private void read(long offset) throws IOException {
             switch (Compression) {
             case 1:
-                noCompressionRead(offset);
+            case 32773:
+                readTiles(offset);
                 break;
 
             // TODO compressed read
@@ -1265,17 +1407,16 @@ class TIFFimage {
         }
 
         /**
-         * 
          * @param start
          * @throws IOException
          */
-        private void noCompressionRead(long start) throws IOException {
+        private void readTiles(long start) throws IOException {
+            int bytes = BitsPerSample[0] /8;
+
             while (start >= total) {
                 // len = the number of bytes needed to hold an entire row of
                 // tiles
-                len = (int) (ImageWidth * TileLength);// (int) (TilesAcross *
-                // TileWidth *
-                // TileLength);
+                len = (int) (ImageWidth * TileLength * bytes);
                 total += len;
                 if (start < total) {
                     // allocate space
@@ -1283,24 +1424,10 @@ class TIFFimage {
                         imagebyte = new byte[len];
                     }
 
-                    // int curLocation = 0;
-
-                    // we are going to read in each row of tiles
-                    // thus, we only need to keep one row of tiles at a time
-                    // byte[][] row = new byte[(int) TilesAcross][(int)
-                    // (TileLength *
-                    // TileWidth)];
                     // a pointer to a tile in the row
-                    byte[] tilepointer = new byte[(int) (TileLength * TileWidth)];
+                    byte[] tilepointer = new byte[(int) (TileLength * TileWidth * bytes)];
 
                     // now we want to read the data.
-
-                    // for each row of tiles
-                    // for (int down = 0; down < TilesDown - 1; down++) {
-
-                    // if this is not the last row of tiles
-                    // if(currow < (TilesDown-1)) {
-                    // for each tile
 
                     // offset is the location of the first column of a tile
                     // in a scan row.
@@ -1314,11 +1441,33 @@ class TIFFimage {
 
                         // move the seek pointer to the offset
                         file.seek(TileOffsets[tileNum]);
-                        // read the data in
-                        // file.read(row[across], 0, (int)
-                        // TileByteCounts[tileNum]);
-                        // read in a tile
-                        file.read(tilepointer, 0, (int) TileByteCounts[tileNum]);
+                        if (Compression == 1) {
+                            file.read(tilepointer, 0, (int) TileByteCounts[tileNum]);
+                        } else if (Compression == 32773) {
+                            int clen = (int) TileByteCounts[(int) tileNum];
+                            // allocate space
+                            if (compressed.length < clen) {
+                                compressed = new byte[clen];
+                            }
+                            if (file.read(compressed, 0, clen) != clen) {
+                                throw (new IOException("Could not read enough bytes."));
+                            }
+                            int n;
+                            for (int j = 0, i = 0; i < clen; i++) {
+                                n = compressed[i];
+                                if (n >= 0) {
+                                    i++;
+                                    System.arraycopy(compressed, i, tilepointer, j, n + 1);
+                                    j += n + 1;
+                                    i += n;
+                                } else if (n != -128) {
+                                    n = -n;
+                                    i++;
+                                    Arrays.fill(tilepointer, j, j + n + 1, compressed[i]);
+                                    j += n + 1;
+                                }
+                            }
+                        }
 
                         // now, copy the scan lines of the tile into imagebyte
 
@@ -1348,74 +1497,12 @@ class TIFFimage {
 
                         // for each row of the tile
                         for (int tilerow = 0; tilerow < numRowsInTile; tilerow++) {
-                            // we want to copy the entire row into the correct
-                            // spot
-                            // in imagebyte
-
-                            // try {
-                            System.arraycopy(tilepointer, (int) (tilerow * numColsInTile), imagebyte, (int) ((tilerow * ImageWidth) + offset), (int) numColsInTile);
-                            /*
-                             * } catch(RuntimeException ex) {
-                             * System.out.println(
-                             * "tile len: "+tilepointer.length);
-                             * System.out.println
-                             * ("tile start: "+(tilerownumColsInTile));
-                             * System.out.println("imagebyte len:
-                             * "+imagebyte.length); System.out.println("
-                             * imagebyte start:
-                             * "+((tilerow*ImageWidth)+offset)); System.out.println("
-                             * offset: "+offset);
-                             * System.out.println("numColsInTile: "
-                             * +numColsInTile);
-                             * System.out.println("numRowsInTile:
-                             * "+numRowsInTile); System.out.println("tilenum:
-                             * "+tileNum); System.out.println("tilerow:
-                             * "+tilerow); throw ex; }
-                             */
+                            System.arraycopy(tilepointer, (int) (tilerow * TileWidth * bytes), imagebyte, (int) ((tilerow * ImageWidth * bytes) + offset), (int) (numColsInTile * bytes));
                         }
 
-                        offset += numColsInTile;
+                        offset += numColsInTile * bytes;
                         tileNum++;
                     }
-
-                    // now we have a row of tiles in memory. copy their contents
-                    // to imagebyte
-                    /*
-                     * for (int pixelrow = 0; pixelrow < TileLength; pixelrow++)
-                     * { for (int tilecol = 0; tilecol < TilesAcross - 1;
-                     * tilecol++) { // point to a specific tile tilepointer =
-                     * row[tilecol]; // copy the row of the tile into _image
-                     * System.arraycopy(tilepointer, (int) (pixelrow TileWidth),
-                     * imagebyte, curLocation, (int) TileWidth); curLocation +=
-                     * TileWidth; } // pick up the last tile. it is a special
-                     * case because it // could have padding tilepointer = row[
-                     * (int) (TilesAcross - 1)]; int sz = (int) (ImageWidth -
-                     * (TilesAcross - 1) TileWidth);
-                     * System.arraycopy(tilepointer, (int) (pixelrow TileWidth),
-                     * imagebyte, curLocation, sz); curLocation += sz; }
-                     * currow++; } else { // pick up the last row of tiles, it
-                     * is a special case because // it could have padding on the
-                     * bottom, as well as on the right of the // last tile for
-                     * (int across = 0; across < TilesAcross; across++) { //
-                     * read the tile in file.seek(TileOffsets[tileNum]);
-                     * file.read(row[across], 0, (int) TileByteCounts[tileNum]);
-                     * tileNum++; } // now we have the last row of tiles in
-                     * memory. copy their // contents to imagebyte // find the
-                     * number of rows that contain image data. all other // rows
-                     * will just be padding int numRowsToRead = (int)
-                     * (ImageLength - (TilesDown - 1) TileLength); for (int
-                     * pixelrow = 0; pixelrow < numRowsToRead; pixelrow++) { for
-                     * (int tilecol = 0; tilecol < TilesAcross - 1; tilecol++) {
-                     * tilepointer = row[tilecol]; System.arraycopy(tilepointer,
-                     * (int) (pixelrow TileWidth), imagebyte, curLocation, (int)
-                     * TileWidth); curLocation += TileWidth; } // now pick up
-                     * the lower right corner tile. it could have // padding
-                     * both on the bottom and on the right tilepointer = row[
-                     * (int) (TilesAcross - 1)]; int sz = (int) (ImageWidth -
-                     * (TilesAcross - 1) TileWidth);
-                     * System.arraycopy(tilepointer, (int) (pixelrow TileWidth),
-                     * imagebyte, curLocation, sz); curLocation += sz; } }
-                     */
                 } // if
                 loc = len - total;
             } // while
